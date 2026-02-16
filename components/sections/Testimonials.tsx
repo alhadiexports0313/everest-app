@@ -50,20 +50,20 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-stone-50">
       <div className="container-custom">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center max-w-3xl mx-auto mb-20"
         >
-          <h2 className="font-display text-display-3 font-bold text-neutral-900 mb-4">
+          <h2 className="font-display text-display-3 font-bold text-charcoal-900 mb-6 tracking-tight">
             Trusted by Thousands Worldwide
           </h2>
-          <p className="text-lg text-neutral-600 leading-relaxed">
+          <p className="text-lg text-stone-700 leading-relaxed font-light">
             Join thousands of satisfied customers who have experienced the benefits of
             authentic Himalayan Shilajet.
           </p>
@@ -77,13 +77,13 @@ export default function Testimonials() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="bg-neutral-50 rounded-xl p-6 hover:shadow-premium transition-shadow relative"
+              transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
+              className="glass-card rounded-xl p-7 hover:shadow-premium transition-all duration-500 relative border border-stone-200/50"
             >
-              <Quote className="absolute top-6 right-6 w-8 h-8 text-primary-200" />
+              <Quote className="absolute top-7 right-7 w-8 h-8 text-primary-200/40" />
               
               {/* Rating */}
-              <div className="flex items-center space-x-1 mb-4">
+              <div className="flex items-center space-x-1 mb-5">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star
                     key={i}
@@ -93,20 +93,20 @@ export default function Testimonials() {
               </div>
 
               {/* Testimonial Text */}
-              <p className="text-neutral-700 mb-6 leading-relaxed relative z-10">
+              <p className="text-stone-700 mb-7 leading-relaxed relative z-10 font-light">
                 "{testimonial.text}"
               </p>
 
               {/* Author */}
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-semibold text-sm">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white font-semibold text-sm shadow-soft">
                   {testimonial.image}
                 </div>
                 <div>
-                  <div className="font-semibold text-neutral-900">
+                  <div className="font-semibold text-charcoal-900">
                     {testimonial.name}
                   </div>
-                  <div className="text-sm text-neutral-600">
+                  <div className="text-sm text-stone-600 font-light">
                     {testimonial.location}
                   </div>
                 </div>
@@ -120,32 +120,32 @@ export default function Testimonials() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
         >
           <div>
-            <div className="text-3xl font-display font-bold text-primary-700 mb-2">
+            <div className="text-3xl font-display font-bold text-primary-700 mb-2 tracking-tight">
               10,000+
             </div>
-            <div className="text-sm text-neutral-600">Happy Customers</div>
+            <div className="text-sm text-stone-600 font-light">Happy Customers</div>
           </div>
           <div>
-            <div className="text-3xl font-display font-bold text-primary-700 mb-2">
+            <div className="text-3xl font-display font-bold text-primary-700 mb-2 tracking-tight">
               4.9/5
             </div>
-            <div className="text-sm text-neutral-600">Average Rating</div>
+            <div className="text-sm text-stone-600 font-light">Average Rating</div>
           </div>
           <div>
-            <div className="text-3xl font-display font-bold text-primary-700 mb-2">
+            <div className="text-3xl font-display font-bold text-primary-700 mb-2 tracking-tight">
               50+
             </div>
-            <div className="text-sm text-neutral-600">Countries Served</div>
+            <div className="text-sm text-stone-600 font-light">Countries Served</div>
           </div>
           <div>
-            <div className="text-3xl font-display font-bold text-primary-700 mb-2">
+            <div className="text-3xl font-display font-bold text-primary-700 mb-2 tracking-tight">
               99.9%
             </div>
-            <div className="text-sm text-neutral-600">Satisfaction Rate</div>
+            <div className="text-sm text-stone-600 font-light">Satisfaction Rate</div>
           </div>
         </motion.div>
       </div>

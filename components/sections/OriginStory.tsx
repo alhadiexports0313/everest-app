@@ -5,49 +5,49 @@ import { Mountain, MapPin, Users, Heart } from "lucide-react";
 
 export default function OriginStory() {
   return (
-    <section id="origin" className="section-padding bg-gradient-himalayan relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+    <section id="origin" className="section-padding earth-gradient relative overflow-hidden">
+      {/* Subtle Background Texture */}
+      <div className="absolute inset-0 opacity-[0.015]">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
         }} />
       </div>
 
       <div className="container-custom relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-primary-200 mb-6">
-              <MapPin className="w-4 h-4 text-primary-600" />
-              <span className="text-sm font-medium text-primary-700">
+            <div className="inline-flex items-center space-x-2 glass-card px-5 py-2.5 rounded-full border border-stone-200/50 mb-8 shadow-soft">
+              <MapPin className="w-4 h-4 text-primary-700" />
+              <span className="text-sm font-medium text-primary-800">
                 Gilgit-Baltistan, Pakistan
               </span>
             </div>
 
-            <h2 className="font-display text-display-3 font-bold text-neutral-900 mb-6">
+            <h2 className="font-display text-display-3 font-bold text-charcoal-900 mb-8 tracking-tight">
               From the Heart of the Himalayas
             </h2>
 
-            <div className="space-y-6 text-neutral-700 leading-relaxed">
-              <p className="text-lg">
+            <div className="space-y-6 text-stone-700 leading-relaxed">
+              <p className="text-lg font-light">
                 Founded by Fazal, Everest Organic Shilajet represents a deep connection
                 to the pristine mountains of Gilgit-Baltistan, where Shilajet has been
                 harvested for centuries.
               </p>
 
-              <p>
+              <p className="font-light">
                 Our journey begins at altitudes above 3,000 meters, where the purest
                 Shilajet naturally exudes from Himalayan rock faces. We work directly
                 with local harvesters who have inherited this ancient knowledge,
                 ensuring ethical sourcing and fair trade practices.
               </p>
 
-              <p>
+              <p className="font-light">
                 Every batch is carefully collected, tested, and processed to preserve its
                 natural potency and bioactive compounds. We're committed to bringing
                 you the most authentic, premium-quality Shilajet while supporting the
@@ -56,38 +56,38 @@ export default function OriginStory() {
             </div>
 
             {/* Values */}
-            <div className="grid grid-cols-2 gap-6 mt-8">
+            <div className="grid grid-cols-2 gap-6 mt-10">
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center shadow-soft">
                   <Mountain className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-neutral-900 mb-1">Mountain Sourced</h4>
-                  <p className="text-sm text-neutral-600">
+                  <h4 className="font-semibold text-charcoal-900 mb-1.5">Mountain Sourced</h4>
+                  <p className="text-sm text-stone-600 font-light">
                     Directly from high-altitude Himalayan sources
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center shadow-soft">
                   <Users className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-neutral-900 mb-1">Ethical Trade</h4>
-                  <p className="text-sm text-neutral-600">
+                  <h4 className="font-semibold text-charcoal-900 mb-1.5">Ethical Trade</h4>
+                  <p className="text-sm text-stone-600 font-light">
                     Supporting local communities and fair practices
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center shadow-soft">
                   <Heart className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-neutral-900 mb-1">Pure & Natural</h4>
-                  <p className="text-sm text-neutral-600">
+                  <h4 className="font-semibold text-charcoal-900 mb-1.5">Pure & Natural</h4>
+                  <p className="text-sm text-stone-600 font-light">
                     No additives, fillers, or processing chemicals
                   </p>
                 </div>
@@ -100,16 +100,16 @@ export default function OriginStory() {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1, ease: "easeOut" }}
             className="relative"
           >
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 p-8 flex items-center justify-center shadow-premium-lg">
+            <div className="aspect-square rounded-2xl bg-gradient-forest p-10 flex items-center justify-center shadow-premium-lg border border-primary-800/20">
               <div className="text-center text-white">
-                <div className="text-8xl mb-4">🏔️</div>
-                <div className="text-2xl font-display font-bold mb-2">
+                <div className="text-8xl mb-5">🏔️</div>
+                <div className="text-2xl font-display font-bold mb-2 tracking-tight">
                   Gilgit-Baltistan
                 </div>
-                <div className="text-primary-200">
+                <div className="text-stone-300 font-light">
                   The Source of Authentic Shilajet
                 </div>
               </div>

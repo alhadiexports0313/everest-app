@@ -14,6 +14,7 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
   display: "swap",
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -55,8 +56,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body
-        className={`${inter.variable} ${playfair.variable} font-sans antialiased bg-white text-neutral-900`}
+        className={`${inter.variable} ${playfair.variable} font-sans antialiased bg-stone-50 text-charcoal-900`}
       >
         <Header />
         <main className="min-h-screen">{children}</main>

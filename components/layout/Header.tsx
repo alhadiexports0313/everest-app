@@ -17,64 +17,64 @@ export default function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-neutral-100">
-      <nav className="container-custom section-padding py-4">
+    <header className="sticky top-0 z-50 glass-card border-b border-stone-200/50">
+      <nav className="container-custom section-padding py-5">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center space-x-2 group"
+            className="flex items-center space-x-3 group"
             aria-label="Everest Organic Shilajet Home"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg opacity-20 group-hover:opacity-30 transition-opacity" />
-              <div className="relative bg-gradient-to-br from-primary-600 to-primary-800 text-white px-3 py-1.5 rounded-lg font-display font-bold text-xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-700 to-primary-900 rounded-lg opacity-10 group-hover:opacity-15 transition-opacity duration-500" />
+              <div className="relative bg-gradient-to-br from-primary-700 to-primary-900 text-white px-3 py-2 rounded-lg font-display font-bold text-xl shadow-soft">
                 E
               </div>
             </div>
             <div className="hidden sm:block">
-              <div className="font-display text-xl font-bold text-neutral-900">
+              <div className="font-display text-xl font-bold text-charcoal-900 tracking-tight">
                 Everest Organic
               </div>
-              <div className="text-xs text-neutral-600 font-medium">
+              <div className="text-xs text-stone-600 font-medium">
                 Himalayan Shilajet
               </div>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-10">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors relative group"
+                className="text-sm font-medium text-charcoal-700 hover:text-primary-700 transition-colors duration-300 relative group"
               >
                 {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300" />
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-700 to-accent-500 group-hover:w-full transition-all duration-500 ease-out" />
               </Link>
             ))}
           </div>
 
           {/* Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             <button
-              className="p-2 text-neutral-700 hover:text-primary-600 transition-colors"
+              className="p-2.5 text-charcoal-600 hover:text-primary-700 transition-colors duration-300 rounded-lg hover:bg-stone-100"
               aria-label="Search"
             >
               <Search className="w-5 h-5" />
             </button>
             <button
-              className="relative p-2 text-neutral-700 hover:text-primary-600 transition-colors"
+              className="relative p-2.5 text-charcoal-600 hover:text-primary-700 transition-colors duration-300 rounded-lg hover:bg-stone-100"
               aria-label="Shopping Cart"
             >
               <ShoppingBag className="w-5 h-5" />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-accent-500 rounded-full" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent-500 rounded-full ring-2 ring-white" />
             </button>
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 text-neutral-700 hover:text-primary-600 transition-colors"
+              className="lg:hidden p-2.5 text-charcoal-600 hover:text-primary-700 transition-colors duration-300 rounded-lg hover:bg-stone-100"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle Menu"
             >
@@ -90,14 +90,15 @@ export default function Header() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden mt-4 border-t border-neutral-100 pt-4"
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="lg:hidden mt-6 border-t border-stone-200 pt-6"
             >
               <div className="flex flex-col space-y-4">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-base font-medium text-neutral-700 hover:text-primary-600 transition-colors py-2"
+                    className="text-base font-medium text-charcoal-700 hover:text-primary-700 transition-colors duration-300 py-2"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.label}

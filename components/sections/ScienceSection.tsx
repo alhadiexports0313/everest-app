@@ -39,20 +39,20 @@ const stats = [
 
 export default function ScienceSection() {
   return (
-    <section id="science" className="section-padding bg-white">
+    <section id="science" className="section-padding bg-stone-50">
       <div className="container-custom">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center max-w-3xl mx-auto mb-20"
         >
-          <h2 className="font-display text-display-3 font-bold text-neutral-900 mb-4">
+          <h2 className="font-display text-display-3 font-bold text-charcoal-900 mb-6 tracking-tight">
             Backed by Science
           </h2>
-          <p className="text-lg text-neutral-600 leading-relaxed">
+          <p className="text-lg text-stone-700 leading-relaxed font-light">
             Our commitment to quality is grounded in scientific research and traditional
             wisdom, ensuring you receive the most potent and pure Shilajet available.
           </p>
@@ -63,18 +63,18 @@ export default function ScienceSection() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16"
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
         >
           {stats.map((stat, index) => (
             <div
               key={stat.label}
-              className="text-center p-6 bg-gradient-himalayan rounded-xl"
+              className="text-center p-7 matte-card rounded-xl border border-stone-200/50 shadow-soft"
             >
-              <div className="text-4xl font-display font-bold text-primary-700 mb-2">
+              <div className="text-4xl font-display font-bold text-primary-700 mb-2 tracking-tight">
                 {stat.value}
               </div>
-              <div className="text-sm text-neutral-600 font-medium">{stat.label}</div>
+              <div className="text-sm text-stone-600 font-medium">{stat.label}</div>
             </div>
           ))}
         </motion.div>
@@ -89,18 +89,18 @@ export default function ScienceSection() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="p-8 bg-neutral-50 rounded-2xl hover:shadow-premium transition-shadow"
+                transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
+                className="p-8 glass-card rounded-2xl hover:shadow-premium transition-all duration-500 border border-stone-200/50"
               >
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-white" />
+                <div className="flex items-start space-x-5">
+                  <div className="flex-shrink-0 w-14 h-14 rounded-lg bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center shadow-soft">
+                    <Icon className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl font-bold text-neutral-900 mb-2">
+                    <h3 className="font-display text-xl font-bold text-charcoal-900 mb-3 tracking-tight">
                       {point.title}
                     </h3>
-                    <p className="text-neutral-600 leading-relaxed">{point.description}</p>
+                    <p className="text-stone-700 leading-relaxed font-light">{point.description}</p>
                   </div>
                 </div>
               </motion.div>
@@ -113,12 +113,12 @@ export default function ScienceSection() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-12"
+          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+          className="text-center mt-16"
         >
           <a
             href="#"
-            className="inline-flex items-center text-primary-600 font-semibold hover:text-primary-700 transition-colors"
+            className="inline-flex items-center text-primary-700 font-semibold hover:text-primary-800 transition-colors duration-300"
           >
             Read Research Papers
             <span className="ml-2">→</span>

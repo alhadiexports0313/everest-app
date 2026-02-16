@@ -9,32 +9,61 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Premium Himalayan theme
+        // Earth Luxury: Deep Forest Green
         primary: {
-          50: "#f0f9f4",
-          100: "#dcf2e3",
-          200: "#bce5cc",
-          300: "#8fd1a9",
-          400: "#5ab47f",
-          500: "#369862", // Main brand green (Himalayan nature)
-          600: "#2a7a4f",
-          700: "#246142",
-          800: "#204e37",
-          900: "#1c412f",
-          950: "#0e2419",
+          50: "#f0f4f2",
+          100: "#d9e4dd",
+          200: "#b8cdc0",
+          300: "#8aad9a",
+          400: "#5d8770",
+          500: "#456b56", // Deep forest green
+          600: "#365546",
+          700: "#2d4538",
+          800: "#26382f",
+          900: "#1f2e26",
+          950: "#0f1813", // Deepest forest
         },
+        // Premium Gold Accents
         accent: {
-          50: "#fef7ed",
-          100: "#fdecd4",
-          200: "#fbd5a8",
-          300: "#f8b771",
-          400: "#f49038", // Warm gold accent
-          500: "#f27612",
-          600: "#e35d08",
-          700: "#bc4609",
-          800: "#96380f",
-          900: "#793010",
-          950: "#411706",
+          50: "#fefbf3",
+          100: "#fdf6e3",
+          200: "#faebc5",
+          300: "#f6d99d",
+          400: "#f1c074",
+          500: "#d4a574", // Luxury gold
+          600: "#b8935f",
+          700: "#98764d",
+          800: "#7d6041",
+          900: "#685037",
+          950: "#38281c",
+        },
+        // Stone & Warm Browns
+        stone: {
+          50: "#faf9f7",
+          100: "#f3f1ed",
+          200: "#e8e3d9",
+          300: "#d9d1c0",
+          400: "#c7baa5",
+          500: "#b5a68f",
+          600: "#9d8e7a",
+          700: "#827466",
+          800: "#6b6056",
+          900: "#585049",
+          950: "#2e2924",
+        },
+        // Charcoal & Black
+        charcoal: {
+          50: "#f7f7f7",
+          100: "#e3e3e3",
+          200: "#c8c8c8",
+          300: "#a4a4a4",
+          400: "#818181",
+          500: "#666666",
+          600: "#515151",
+          700: "#434343",
+          800: "#383838",
+          900: "#313131",
+          950: "#1a1a1a", // Deep charcoal
         },
         neutral: {
           50: "#fafafa",
@@ -54,6 +83,7 @@ const config: Config = {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
         serif: ["var(--font-playfair)", "Georgia", "serif"],
         display: ["var(--font-playfair)", "Georgia", "serif"],
+        urdu: ["var(--font-urdu)", "Noto Nastaliq Urdu", "serif"],
       },
       fontSize: {
         "display-1": ["4.5rem", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
@@ -61,12 +91,19 @@ const config: Config = {
         "display-3": ["3rem", { lineHeight: "1.2", letterSpacing: "-0.01em" }],
       },
       boxShadow: {
-        "premium": "0 20px 60px -12px rgba(0, 0, 0, 0.15)",
-        "premium-lg": "0 25px 80px -12px rgba(0, 0, 0, 0.2)",
+        "soft": "0 2px 8px rgba(0, 0, 0, 0.04)",
+        "premium": "0 8px 24px rgba(0, 0, 0, 0.08)",
+        "premium-lg": "0 16px 48px rgba(0, 0, 0, 0.12)",
+        "glass": "0 8px 32px rgba(0, 0, 0, 0.06)",
       },
       backgroundImage: {
-        "gradient-himalayan": "linear-gradient(135deg, #f0f9f4 0%, #dcf2e3 100%)",
-        "gradient-premium": "linear-gradient(135deg, #1c412f 0%, #246142 100%)",
+        "gradient-earth": "linear-gradient(135deg, #faf9f7 0%, #f3f1ed 100%)",
+        "gradient-forest": "linear-gradient(135deg, #2d4538 0%, #1f2e26 100%)",
+        "gradient-gold": "linear-gradient(135deg, #d4a574 0%, #b8935f 100%)",
+        "gradient-stone": "linear-gradient(135deg, #faf9f7 0%, #e8e3d9 100%)",
+      },
+      backdropBlur: {
+        xs: "2px",
       },
     },
   },

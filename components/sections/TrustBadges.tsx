@@ -38,7 +38,7 @@ const badges = [
 
 export default function TrustBadges() {
   return (
-    <section className="bg-white py-12 border-y border-neutral-100">
+    <section className="bg-stone-50 py-16 border-y border-stone-200/50">
       <div className="container-custom px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           {badges.map((badge, index) => {
@@ -49,16 +49,16 @@ export default function TrustBadges() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex flex-col items-center text-center p-4 group"
+                transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
+                className="flex flex-col items-center text-center p-6 group"
               >
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700/10 to-primary-800/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 border border-stone-200/50">
                   <Icon className="w-6 h-6 text-primary-700" />
                 </div>
-                <h3 className="font-semibold text-sm text-neutral-900 mb-1">
+                <h3 className="font-semibold text-sm text-charcoal-900 mb-1.5">
                   {badge.title}
                 </h3>
-                <p className="text-xs text-neutral-600">{badge.description}</p>
+                <p className="text-xs text-stone-600 leading-relaxed">{badge.description}</p>
               </motion.div>
             );
           })}

@@ -6,6 +6,7 @@
   :root {
     --font-inter: "Inter", system-ui, sans-serif;
     --font-playfair: "Playfair Display", Georgia, serif;
+    --font-urdu: "Noto Nastaliq Urdu", serif;
   }
 
   html {
@@ -13,11 +14,11 @@
   }
 
   body {
-    @apply antialiased;
+    @apply antialiased bg-stone-50 text-charcoal-900;
   }
 
   * {
-    @apply border-neutral-200;
+    @apply border-stone-200;
   }
 }
 
@@ -27,7 +28,11 @@
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-700 to-primary-900 bg-clip-text text-transparent;
+  }
+
+  .gradient-gold-text {
+    @apply bg-gradient-to-r from-accent-500 to-accent-600 bg-clip-text text-transparent;
   }
 
   .section-padding {
@@ -36,5 +41,17 @@
 
   .container-custom {
     @apply max-w-7xl mx-auto;
+  }
+
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-stone-200/50;
+  }
+
+  .matte-card {
+    @apply bg-stone-50 border border-stone-200;
+  }
+
+  .earth-gradient {
+    @apply bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50;
   }
 }
