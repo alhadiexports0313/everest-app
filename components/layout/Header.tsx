@@ -9,11 +9,11 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { label: "Products", href: "#products" },
-    { label: "Science", href: "#science" },
-    { label: "Origin", href: "#origin" },
-    { label: "About", href: "#about" },
-    { label: "Contact", href: "#contact" },
+    { label: "Products", href: "/products" },
+    { label: "Authenticity & Quality", href: "/authenticity-quality" },
+    { label: "Knowledge Hub", href: "/knowledge-hub" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
   ];
 
   return (
