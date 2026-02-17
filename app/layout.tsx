@@ -3,7 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { MessageCircle } from "lucide-react";
+import WhatsAppFloat from "@/components/ui/WhatsAppFloat";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -68,18 +68,7 @@ export default function RootLayout({
       >
         <Header />
         <main className="min-h-screen">{children}</main>
-
-        {/* WhatsApp floating button */}
-        <a
-          href="https://wa.me/923001234567"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="fixed bottom-24 right-4 z-40 inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-premium hover:shadow-premium-lg active:scale-95 transition-all"
-          aria-label="Chat on WhatsApp"
-        >
-          <MessageCircle className="w-7 h-7" />
-        </a>
-
+        <WhatsAppFloat phoneNumber="923001234567" />
         <Footer />
       </body>
     </html>

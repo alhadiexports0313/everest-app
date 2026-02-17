@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, ShoppingBag, Search } from "lucide-react";
+import { Menu, X, ShoppingBag, Search, Globe2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,7 +43,6 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-10">
             {navItems.map((item) => (
               <Link
@@ -56,8 +56,17 @@ export default function Header() {
             ))}
           </div>
 
-          {/* Actions */}
           <div className="flex items-center space-x-3">
+            <div className="hidden sm:flex items-center space-x-2">
+              <Globe2 className="w-4 h-4 text-stone-500" />
+              <LanguageSwitcher
+                languages={[
+                  { code: "en", label: "EN" },
+                  { code: "ur", label: "اردو" },
+                ]}
+                current="en"
+              />
+            </div>
             <button
               className="p-2.5 text-charcoal-600 hover:text-primary-700 transition-colors duration-300 rounded-lg hover:bg-stone-100"
               aria-label="Search"
