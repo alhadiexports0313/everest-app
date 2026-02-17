@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, ShoppingBag, Search, Globe2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const navItems = [
     { label: "Products", href: "/products" },
@@ -17,8 +19,24 @@ export default function Header() {
     { label: "Contact", href: "/contact" },
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 glass-card border-b border-stone-200/50">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/95 backdrop-blur-md border-b border-stone-200/60 shadow-soft"
+          : "bg-transparent"
+      }`}
+    >
       <nav className="container-custom section-padding py-5">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -27,11 +45,13 @@ export default function Header() {
             className="flex items-center space-x-3 group"
             aria-label="Everest Organic Shilajet Home"
           >
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-700 to-primary-900 rounded-lg opacity-10 group-hover:opacity-15 transition-opacity duration-500" />
-              <div className="relative bg-gradient-to-br from-primary-700 to-primary-900 text-white px-3 py-2 rounded-lg font-display font-bold text-xl shadow-soft">
-                E
-              </div>
+            <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-white/80 shadow-soft">
+              <Image
+                src="/images/brand/logo.jpeg"
+                alt="Everest Organic Shilajet logo"
+                fill
+                className="object-cover"
+              />
             </div>
             <div className="hidden sm:block">
               <div className="font-display text-xl font-bold text-charcoal-900 tracking-tight">
@@ -81,6 +101,13 @@ export default function Header() {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent-500 rounded-full ring-2 ring-white" />
             </button>
 
+            <Link
+              href="/products"
+              className="hidden md:inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-gradient-to-r from-primary-700 to-primary-800 text-white text-sm font-semibold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] transition-all"
+            >
+              Order Now
+            </Link>
+
             {/* Mobile Menu Button */}
             <button
               className="lg:hidden p-2.5 text-charcoal-600 hover:text-primary-700 transition-colors duration-300 rounded-lg hover:bg-stone-100"
@@ -113,6 +140,13 @@ export default function Header() {
                     {item.label}
                   </Link>
                 ))}
+                <Link
+                  href="/products"
+                  className="mt-2 inline-flex items-center justify-center px-5 py-3 rounded-full bg-gradient-to-r from-primary-700 to-primary-800 text-white text-sm font-semibold shadow-premium hover:shadow-premium-lg transition-all"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Order Now
+                </Link>
               </div>
             </motion.div>
           )}
