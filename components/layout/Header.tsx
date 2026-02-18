@@ -21,9 +21,8 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 20);
     };
-
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -31,54 +30,79 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 left-0 w-full z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-white/95 backdrop-blur-md border-b border-stone-200/60 shadow-soft"
+          ? "bg-gradient-forest backdrop-blur-xl border-b border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
           : "bg-transparent"
       }`}
     >
-      <nav className="container-custom section-padding py-5">
-        <div className="flex items-center justify-between">
+      <nav className="max-w-[1400px] mx-auto px-6 lg:px-10">
+        <div className="flex items-center justify-between h-[76px]">
+
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center space-x-3 group"
-            aria-label="Everest Organic Shilajet Home"
+            className="flex items-center gap-3 group"
           >
-            <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-white/80 shadow-soft">
+            <div className="relative w-11 h-11 rounded-xl overflow-hidden shadow-md ring-1 ring-black/5">
               <Image
                 src="/images/brand/logo.jpeg"
                 alt="Everest Organic Shilajet logo"
                 fill
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div className="hidden sm:block">
-              <div className="font-display text-xl font-bold text-charcoal-900 tracking-tight">
+
+            <div className="hidden sm:block leading-tight">
+              <div
+                className={`text-[18px] font-semibold tracking-tight transition-colors duration-300 ${
+                  isScrolled ? "text-white" : "text-charcoal-900"
+                }`}
+              >
                 Everest Organic
               </div>
-              <div className="text-xs text-stone-600 font-medium">
+              <div
+                className={`text-[11px] uppercase tracking-[0.18em] transition-colors duration-300 ${
+                  isScrolled ? "text-stone-300" : "text-stone-500"
+                }`}
+              >
                 Himalayan Shilajet
               </div>
             </div>
           </Link>
 
-          <div className="hidden lg:flex items-center space-x-10">
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-10">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-charcoal-700 hover:text-primary-700 transition-colors duration-300 relative group"
+                className={`relative text-[14px] font-medium tracking-wide transition-colors duration-300 group ${
+                  isScrolled
+                    ? "text-white hover:text-amber-300"
+                    : "text-charcoal-700 hover:text-primary-700"
+                }`}
               >
                 {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-700 to-accent-500 group-hover:w-full transition-all duration-500 ease-out" />
+                <span
+                  className={`absolute -bottom-1 left-0 w-0 h-[1.5px] transition-all duration-400 group-hover:w-full ${
+                    isScrolled ? "bg-amber-300" : "bg-primary-700"
+                  }`}
+                />
               </Link>
             ))}
           </div>
 
-          <div className="flex items-center space-x-3">
-            <div className="hidden sm:flex items-center space-x-2">
-              <Globe2 className="w-4 h-4 text-stone-500" />
+          {/* Right Side */}
+          <div className="flex items-center gap-3">
+
+            {/* Language */}
+            <div
+              className={`hidden sm:flex items-center gap-2 transition-colors duration-300 ${
+                isScrolled ? "text-white/80" : "text-stone-500"
+              }`}
+            >
+              <Globe2 className="w-4 h-4" />
               <LanguageSwitcher
                 languages={[
                   { code: "en", label: "EN" },
@@ -87,34 +111,56 @@ export default function Header() {
                 current="en"
               />
             </div>
+
+            {/* Search */}
             <button
-              className="p-2.5 text-charcoal-600 hover:text-primary-700 transition-colors duration-300 rounded-lg hover:bg-stone-100"
-              aria-label="Search"
+              className={`p-2.5 rounded-lg transition-all duration-300 ${
+                isScrolled
+                  ? "text-white hover:text-amber-300 hover:bg-white/10"
+                  : "text-charcoal-600 hover:text-primary-700 hover:bg-stone-100/70"
+              }`}
             >
               <Search className="w-5 h-5" />
             </button>
+
+            {/* Cart */}
             <button
-              className="relative p-2.5 text-charcoal-600 hover:text-primary-700 transition-colors duration-300 rounded-lg hover:bg-stone-100"
-              aria-label="Shopping Cart"
+              className={`relative p-2.5 rounded-lg transition-all duration-300 ${
+                isScrolled
+                  ? "text-white hover:text-amber-300 hover:bg-white/10"
+                  : "text-charcoal-600 hover:text-primary-700 hover:bg-stone-100/70"
+              }`}
             >
               <ShoppingBag className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent-500 rounded-full ring-2 ring-white" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-400 rounded-full ring-2 ring-white" />
             </button>
 
+            {/* CTA */}
             <Link
               href="/products"
-              className="hidden md:inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-gradient-to-r from-primary-700 to-primary-800 text-white text-sm font-semibold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] transition-all"
+              className={`hidden md:inline-flex items-center justify-center px-6 py-2.5 rounded-full text-[13px] font-semibold tracking-wide transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.03] ${
+                isScrolled
+                  ? "bg-amber-500 text-black hover:bg-amber-400"
+                  : "bg-primary-800 text-white hover:bg-primary-700"
+              }`}
             >
               Order Now
             </Link>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Button */}
             <button
-              className="lg:hidden p-2.5 text-charcoal-600 hover:text-primary-700 transition-colors duration-300 rounded-lg hover:bg-stone-100"
+              className={`lg:hidden p-2.5 rounded-lg transition-all duration-300 ${
+                isScrolled
+                  ? "text-white hover:bg-white/10"
+                  : "text-charcoal-700 hover:bg-stone-100"
+              }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle Menu"
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -123,30 +169,29 @@ export default function Header() {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="lg:hidden mt-6 border-t border-stone-200 pt-6"
+              initial={{ opacity: 0, y: -15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.3 }}
+              className={`lg:hidden pb-6 pt-4 border-t ${
+                isScrolled ? "border-white/10" : "border-stone-200"
+              }`}
             >
-              <div className="flex flex-col space-y-4">
+              <div className="flex flex-col gap-5">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-base font-medium text-charcoal-700 hover:text-primary-700 transition-colors duration-300 py-2"
                     onClick={() => setIsMenuOpen(false)}
+                    className={`text-base font-medium transition-colors ${
+                      isScrolled
+                        ? "text-white hover:text-amber-300"
+                        : "text-charcoal-700 hover:text-primary-700"
+                    }`}
                   >
                     {item.label}
                   </Link>
                 ))}
-                <Link
-                  href="/products"
-                  className="mt-2 inline-flex items-center justify-center px-5 py-3 rounded-full bg-gradient-to-r from-primary-700 to-primary-800 text-white text-sm font-semibold shadow-premium hover:shadow-premium-lg transition-all"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Order Now
-                </Link>
               </div>
             </motion.div>
           )}
