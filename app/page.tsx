@@ -2,6 +2,7 @@ import Hero from "@/components/sections/Hero";
 import TickerStrip from "@/components/ui/TickerStrip";
 import TrustBadges from "@/components/sections/TrustBadges";
 import BenefitsGrid from "@/components/sections/BenefitsGrid";
+import MountainToBottleJourney from "@/components/sections/MountainToBottleJourney";
 import ProductShowcase from "@/components/sections/ProductShowcase";
 import ScienceSection from "@/components/sections/ScienceSection";
 import OriginStory from "@/components/sections/OriginStory";
@@ -42,6 +43,7 @@ export default function Home() {
       />
       <TrustBadges />
       <BenefitsGrid />
+      <MountainToBottleJourney />
       <ProductShowcase />
       <ScienceSection />
       <OriginStory />
