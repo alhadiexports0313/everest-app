@@ -79,7 +79,7 @@ export default function Header() {
                 href={item.href}
                 className={`relative text-[14px] font-medium tracking-wide transition-colors duration-300 group ${
                   isScrolled
-                    ? "text-white hover:text-amber-300"
+                    ? "text-stone-500 hover:text-amber-300"
                     : "text-charcoal-700 hover:text-primary-700"
                 }`}
               >

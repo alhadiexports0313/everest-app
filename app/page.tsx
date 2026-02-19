@@ -3,6 +3,7 @@ import TickerStrip from "@/components/ui/TickerStrip";
 import TrustBadges from "@/components/sections/TrustBadges";
 import BenefitsGrid from "@/components/sections/BenefitsGrid";
 import MountainToBottleJourney from "@/components/sections/MountainToBottleJourney";
+import FeaturedProduct from "@/components/sections/FeaturedProduct";
 import ProductShowcase from "@/components/sections/ProductShowcase";
 import ScienceSection from "@/components/sections/ScienceSection";
 import OriginStory from "@/components/sections/OriginStory";
@@ -44,6 +45,7 @@ export default function Home() {
       <TrustBadges />
       <BenefitsGrid />
       <MountainToBottleJourney />
+      <FeaturedProduct />
       <ProductShowcase />
       <ScienceSection />
       <OriginStory />

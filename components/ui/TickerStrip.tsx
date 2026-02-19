@@ -36,7 +36,7 @@ export default function TickerStrip({ items, speed = 40 }: TickerStripProps) {
         {content.map((item, index) => (
           <div
             key={index}
-            className="flex items-center gap-3 px-6 py-2.5 text-[16px] font-medium tracking-[0.18em] text-white/90 whitespace-nowrap"
+            className="flex items-center gap-3 px-6 py-2.5 text-[16px] font-medium tracking-[0.18em] text-amber-300 whitespace-nowrap"
           >
             <span className="h-1 w-1 rounded-full bg-amber-500/70" />
             {item}
