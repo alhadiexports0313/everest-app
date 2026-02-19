@@ -7,6 +7,7 @@ import FeaturedProduct from "@/components/sections/FeaturedProduct";
 import CertificationBlock from "@/components/sections/CertificationBlock";
 import ProductShowcase from "@/components/sections/ProductShowcase";
 import ScienceSection from "@/components/sections/ScienceSection";
+import KnowledgePreview from "@/components/sections/KnowledgePreview";
 import OriginStory from "@/components/sections/OriginStory";
 import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
@@ -50,6 +51,7 @@ export default function Home() {
       <CertificationBlock />
       <ProductShowcase />
       <ScienceSection />
+      <KnowledgePreview />
       <OriginStory />
       <Testimonials />
       <CTA />
