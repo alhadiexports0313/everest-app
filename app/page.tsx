@@ -4,6 +4,7 @@ import TrustBadges from "@/components/sections/TrustBadges";
 import BenefitsGrid from "@/components/sections/BenefitsGrid";
 import MountainToBottleJourney from "@/components/sections/MountainToBottleJourney";
 import FeaturedProduct from "@/components/sections/FeaturedProduct";
+import CertificationBlock from "@/components/sections/CertificationBlock";
 import ProductShowcase from "@/components/sections/ProductShowcase";
 import ScienceSection from "@/components/sections/ScienceSection";
 import OriginStory from "@/components/sections/OriginStory";
@@ -46,6 +47,7 @@ export default function Home() {
       <BenefitsGrid />
       <MountainToBottleJourney />
       <FeaturedProduct />
+      <CertificationBlock />
       <ProductShowcase />
       <ScienceSection />
       <OriginStory />
