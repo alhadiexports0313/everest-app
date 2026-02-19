@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
 import type { Testimonial } from "@/types";
@@ -12,6 +12,14 @@ interface TestimonialsCarouselProps {
 export default function TestimonialsCarousel({ items }: TestimonialsCarouselProps) {
   const [index, setIndex] = useState(0);
   const current = items[index] ?? items[0];
+
+  useEffect(() => {
+    if (items.length <= 1) return undefined;
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % items.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [items.length]);
 
   const handleNext = () => {
     setIndex((prev) => (prev + 1) % items.length);

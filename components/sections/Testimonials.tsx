@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import TestimonialsCarousel from "@/components/ui/TestimonialsCarousel";
+import type { Testimonial } from "@/types";
 
-const testimonials = [
+const testimonials: Testimonial[] = [
   {
     name: "Sarah Johnson",
     location: "United States",
@@ -69,51 +70,7 @@ export default function Testimonials() {
           </p>
         </motion.div>
 
-        {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
-              className="glass-card rounded-xl p-7 hover:shadow-premium transition-all duration-500 relative border border-stone-200/50"
-            >
-              <Quote className="absolute top-7 right-7 w-8 h-8 text-primary-200/40" />
-              
-              {/* Rating */}
-              <div className="flex items-center space-x-1 mb-5">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-4 h-4 text-accent-500 fill-accent-500"
-                  />
-                ))}
-              </div>
-
-              {/* Testimonial Text */}
-              <p className="text-stone-700 mb-7 leading-relaxed relative z-10 font-light">
-                "{testimonial.text}"
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center space-x-3">
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white font-semibold text-sm shadow-soft">
-                  {testimonial.image}
-                </div>
-                <div>
-                  <div className="font-semibold text-charcoal-900">
-                    {testimonial.name}
-                  </div>
-                  <div className="text-sm text-stone-600 font-light">
-                    {testimonial.location}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <TestimonialsCarousel items={testimonials} />
 
         {/* Stats */}
         <motion.div
