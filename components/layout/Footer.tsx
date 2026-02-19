@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mountain, Mail, MapPin, Instagram, Facebook } from "lucide-react";
+import { Mountain, Mail, MapPin, Instagram, Facebook, MessageCircle } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -15,8 +15,8 @@ export default function Footer() {
               <span className="font-display text-xl font-bold tracking-tight">Everest Organic</span>
             </div>
             <p className="text-stone-300 text-sm leading-relaxed font-light">
-              Premium Himalayan Shilajet from Gilgit-Baltistan. Authentic, pure, and
-              backed by science.
+              Premium Himalayan Shilajet from Gilgit-Baltistan, crafted for purity and
+              daily wellness.
             </p>
             <div className="flex space-x-4">
               <a
@@ -100,8 +100,22 @@ export default function Footer() {
               </li>
               <li className="flex items-start space-x-2">
                 <Mail className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <a href="mailto:info@everestorganicshilajet.com" className="hover:text-white transition-colors duration-300">
-                  info@everestorganicshilajet.com
+                <a
+                  href="mailto:everestorganicshilajet@gmail.com"
+                  className="hover:text-white transition-colors duration-300"
+                >
+                  everestorganicshilajet@gmail.com
+                </a>
+              </li>
+              <li className="flex items-start space-x-2">
+                <MessageCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <a
+                  href="https://wa.me/923454490326"
+                  className="hover:text-white transition-colors duration-300"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  WhatsApp: 0345 449 0326
                 </a>
               </li>
             </ul>
