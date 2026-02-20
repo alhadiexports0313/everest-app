@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ShoppingCart, Star, Check } from "lucide-react";
 import Link from "next/link";
+import { useMemo } from "react";
 
 const products = [
   {
@@ -59,7 +60,28 @@ const products = [
   },
 ];
 
+const productImageNames = [
+  "3. Premium Product Close-Up.jpg",
+  "12. Product in Luxury Packaging Setting.jpg",
+  "14. Himalayan Sunrise with Jar.jpg",
+  "7. Minimalist Product on Stone.jpg",
+  "1. Himalayan Landscape with Shilajit Jar.jpg",
+  "2. Wellness Morning Routine.jpg",
+];
+
+const productImages = productImageNames.map(
+  (name) => `/images/products/${encodeURIComponent(name)}`
+);
+
 export default function ProductShowcase() {
+  const assignedImages = useMemo(() => {
+    const pool = [...productImages];
+    return products.map((_, index) => {
+      const pick = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+      return pick ?? productImages[index % productImages.length];
+    });
+  }, []);
+
   return (
     <section id="products" className="section-padding bg-white">
       <div className="container-custom">
@@ -93,11 +115,13 @@ export default function ProductShowcase() {
             >
               {/* Product Image */}
               <div className="relative aspect-square bg-gradient-stone overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-32 h-32 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center border border-stone-200/50">
-                    <span className="text-4xl">🏔️</span>
-                  </div>
-                </div>
+                <Image
+                  src={assignedImages[index]}
+                  alt={product.name}
+                  fill
+                  className="object-cover lux-image"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                 {product.badge && (
                   <div className="absolute top-4 right-4 bg-gradient-gold text-white px-4 py-1.5 rounded-full text-xs font-semibold shadow-soft">
                     {product.badge}
