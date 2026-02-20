@@ -77,6 +77,15 @@
     }
   }
 
+  @keyframes ticker-vertical {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+
   @keyframes luxuryShift {
     0% {
       background-position: 0% 50%;

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Mountain, MapPin, Users, Heart } from "lucide-react";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 const originImages = [
   "14. Himalayan Sunrise with Jar.jpg",
@@ -18,8 +18,11 @@ const originImagePaths = originImages.map(
 );
 
 export default function OriginStory() {
-  const originImage = useMemo(() => {
-    return originImagePaths[Math.floor(Math.random() * originImagePaths.length)];
+  const [originImage, setOriginImage] = useState(originImagePaths[0]);
+
+  useEffect(() => {
+    const pick = originImagePaths[Math.floor(Math.random() * originImagePaths.length)];
+    setOriginImage(pick);
   }, []);
 
   return (
