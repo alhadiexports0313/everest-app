@@ -89,7 +89,7 @@ export default function ProductShowcase() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
-              className="group matte-card rounded-2xl overflow-hidden shadow-soft hover:shadow-premium transition-all duration-500 border border-stone-200/50"
+              className="group matte-card rounded-2xl overflow-hidden shadow-soft hover:shadow-premium transition-all duration-500 hover:-translate-y-1 border border-stone-200/50"
             >
               {/* Product Image */}
               <div className="relative aspect-square bg-gradient-stone overflow-hidden">
@@ -155,7 +155,7 @@ export default function ProductShowcase() {
                       </span>
                     )}
                   </div>
-                  <button className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary-700 to-primary-800 text-white rounded-lg hover:shadow-premium transition-all duration-500 group-hover:scale-110">
+                  <button className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary-700 to-primary-800 text-white rounded-lg hover:shadow-premium transition-all duration-500 group-hover:scale-[1.03]">
                     <ShoppingCart className="w-5 h-5" />
                   </button>
                 </div>

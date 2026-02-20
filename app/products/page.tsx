@@ -113,7 +113,7 @@ export default function ProductsPage() {
                       src={activeImage}
                       alt="Pure Himalayan Shilajet resin texture"
                       fill
-                      className="object-cover"
+                      className="object-cover lux-image"
                       priority
                     />
                   </div>
@@ -134,7 +134,7 @@ export default function ProductsPage() {
                         src={image}
                         alt="Shilajet resin close-up"
                         fill
-                        className="object-cover"
+                      className="object-cover lux-image"
                       />
                     </button>
                   ))}
@@ -229,14 +229,14 @@ export default function ProductsPage() {
                     href={whatsappLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-premium hover:shadow-premium-lg transition-all"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-premium lux-button"
                   >
                     <MessageCircle className="w-4 h-4" />
                     Order on WhatsApp
                   </a>
                   <a
                     href={emailLink}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-soft hover:border-primary-300 transition-all"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button hover:border-primary-300"
                   >
                     <Mail className="w-4 h-4" />
                     Order via Email

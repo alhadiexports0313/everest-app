@@ -52,7 +52,7 @@ export default function TrustBadges() {
                 transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
                 className="flex flex-col items-center text-center p-6 group"
               >
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700/10 to-primary-800/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 border border-stone-200/50">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700/10 to-primary-800/10 flex items-center justify-center mb-4 group-hover:scale-[1.03] transition-transform duration-700 border border-stone-200/50">
                   <Icon className="w-6 h-6 text-primary-700" />
                 </div>
                 <h3 className="font-semibold text-sm text-charcoal-900 mb-1.5">

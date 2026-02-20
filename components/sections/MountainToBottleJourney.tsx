@@ -139,7 +139,7 @@ export default function MountainToBottleJourney() {
                         src={step.image}
                         alt={step.altEn}
                         fill
-                        className="object-cover"
+                        className="object-cover lux-image"
                       />
                     </div>
                   </motion.div>

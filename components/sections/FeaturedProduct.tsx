@@ -72,7 +72,7 @@ export default function FeaturedProduct() {
                 src={resinImages[0]}
                 alt="Pure Himalayan Shilajet resin"
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                className="object-cover lux-image"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
               <div className="absolute left-4 bottom-4 inline-flex items-center gap-2 rounded-full bg-white/85 px-3 py-1.5 text-xs font-semibold text-stone-700 shadow-soft">
@@ -86,7 +86,7 @@ export default function FeaturedProduct() {
                   key={image}
                   className="relative aspect-video overflow-hidden rounded-xl border border-stone-200/60 bg-stone-100"
                 >
-                  <Image src={image} alt="Shilajet resin texture" fill className="object-cover" />
+                  <Image src={image} alt="Shilajet resin texture" fill className="object-cover lux-image" />
                 </div>
               ))}
             </div>
@@ -155,14 +155,14 @@ export default function FeaturedProduct() {
                 href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-premium hover:shadow-premium-lg transition-all"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-premium lux-button"
               >
                 <MessageCircle className="w-4 h-4" />
                 Order on WhatsApp
               </a>
               <a
                 href={emailLink}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-soft hover:border-primary-300 transition-all"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button hover:border-primary-300"
               >
                 <Mail className="w-4 h-4" />
                 Order via Email
@@ -177,14 +177,14 @@ export default function FeaturedProduct() {
             href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-premium"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-premium lux-button"
           >
             <MessageCircle className="w-4 h-4" />
             Order on WhatsApp
           </a>
           <a
             href={emailLink}
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-700 shadow-soft"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button"
           >
             <Mail className="w-4 h-4" />
             Order via Email

@@ -89,7 +89,7 @@ export default function HeroCarousel({
                 alt={current.label}
                 fill
                 priority
-                className="object-cover"
+                className="object-cover lux-image"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
             </motion.div>

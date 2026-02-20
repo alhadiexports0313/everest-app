@@ -191,7 +191,7 @@ export default function ProductDetailPage() {
 
             {/* CTA Buttons - desktop */}
             <div className="hidden lg:flex gap-4 pt-4">
-              <button className="flex-1 flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-lg shadow-premium hover:shadow-premium-lg transition-all duration-300 hover:scale-105">
+              <button className="flex-1 flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-lg shadow-premium lux-button">
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 Add to Cart
               </button>

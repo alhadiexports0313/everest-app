@@ -123,7 +123,7 @@ export default function Hero() {
           >
             <Link
               href="#shop"
-              className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-10 py-4 font-bold text-black transition-transform hover:scale-105 active:scale-95"
+              className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-10 py-4 font-bold text-black shadow-premium lux-button active:scale-95"
             >
               Shop Collection
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />

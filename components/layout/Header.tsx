@@ -49,7 +49,7 @@ export default function Header() {
                 src="/images/brand/logo.jpeg"
                 alt="Everest Organic Shilajet logo"
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.02]"
               />
             </div>
 

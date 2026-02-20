@@ -39,14 +39,14 @@ export default function CTA() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="#products"
-              className="group inline-flex items-center justify-center px-10 py-4.5 bg-white text-primary-700 font-semibold rounded-lg shadow-premium hover:shadow-premium-lg transition-all duration-500 hover:scale-[1.02]"
+              className="group inline-flex items-center justify-center px-10 py-4.5 bg-white text-primary-700 font-semibold rounded-lg shadow-premium lux-button"
             >
               <span>Shop Now</span>
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
             <Link
               href="#contact"
-              className="inline-flex items-center justify-center px-10 py-4.5 bg-white/10 backdrop-blur-md text-white font-semibold rounded-lg border-2 border-white/30 hover:bg-white/15 transition-all duration-500 shadow-soft"
+              className="inline-flex items-center justify-center px-10 py-4.5 bg-white/10 backdrop-blur-md text-white font-semibold rounded-lg border-2 border-white/30 hover:bg-white/15 shadow-soft lux-button"
             >
               Contact Us
             </Link>

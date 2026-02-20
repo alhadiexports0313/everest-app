@@ -44,15 +44,23 @@
   }
 
   .glass-card {
-    @apply bg-white/80 backdrop-blur-md border border-stone-200/50;
+    @apply bg-white/80 backdrop-blur-md border border-stone-200/50 shadow-soft transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-premium;
   }
 
   .matte-card {
-    @apply bg-stone-50 border border-stone-200;
+    @apply bg-stone-50 border border-stone-200 shadow-soft transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-premium;
   }
 
   .earth-gradient {
     @apply bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50;
+  }
+
+  .lux-button {
+    @apply transition-all duration-500 ease-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-premium-lg;
+  }
+
+  .lux-image {
+    @apply transition-transform duration-[1600ms] ease-out hover:scale-[1.03];
   }
 
   @keyframes ticker {

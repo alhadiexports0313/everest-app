@@ -56,10 +56,10 @@ export default function BenefitsGrid() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: index * 0.08, ease: "easeOut" }}
-                className="group rounded-2xl border border-stone-200/60 bg-white shadow-soft transition-all duration-500 hover:-translate-y-2 hover:border-amber-200/70 hover:shadow-[0_18px_48px_rgba(212,165,116,0.18)]"
+                className="group rounded-2xl border border-stone-200/60 bg-white shadow-soft transition-all duration-500 hover:-translate-y-1 hover:border-amber-200/70 hover:shadow-[0_14px_36px_rgba(212,165,116,0.16)]"
               >
                 <div className="p-7">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary-700 to-primary-800 shadow-soft transition-transform duration-500 group-hover:scale-105">
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary-700 to-primary-800 shadow-soft transition-transform duration-700 group-hover:scale-[1.02]">
                     <Icon className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="font-display text-xl font-bold text-charcoal-900 mb-2 tracking-tight">
