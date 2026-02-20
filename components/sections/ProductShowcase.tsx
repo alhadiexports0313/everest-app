@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ShoppingCart, Star, Check } from "lucide-react";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 const products = [
   {
@@ -74,12 +74,19 @@ const productImages = productImageNames.map(
 );
 
 export default function ProductShowcase() {
-  const assignedImages = useMemo(() => {
+  const [assignedImages, setAssignedImages] = useState(() =>
+    products.map((product, index) => {
+      return productImages[index % productImages.length] ?? product.image;
+    })
+  );
+
+  useEffect(() => {
     const pool = [...productImages];
-    return products.map((_, index) => {
+    const picks = products.map((product, index) => {
       const pick = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
-      return pick ?? productImages[index % productImages.length];
+      return pick ?? productImages[index % productImages.length] ?? product.image;
     });
+    setAssignedImages(picks);
   }, []);
 
   return (
