@@ -2,8 +2,26 @@
 
 import { motion } from "framer-motion";
 import { Mountain, MapPin, Users, Heart } from "lucide-react";
+import Image from "next/image";
+import { useMemo } from "react";
+
+const originImages = [
+  "14. Himalayan Sunrise with Jar.jpg",
+  "1. Himalayan Landscape with Shilajit Jar.jpg",
+  "12. Product in Luxury Packaging Setting.jpg",
+  "3. Premium Product Close-Up.jpg",
+  "7. Minimalist Product on Stone.jpg",
+];
+
+const originImagePaths = originImages.map(
+  (name) => `/images/products/${encodeURIComponent(name)}`
+);
 
 export default function OriginStory() {
+  const originImage = useMemo(() => {
+    return originImagePaths[Math.floor(Math.random() * originImagePaths.length)];
+  }, []);
+
   return (
     <section id="origin" className="section-padding earth-gradient relative overflow-hidden">
       {/* Subtle Background Texture */}
@@ -103,13 +121,19 @@ export default function OriginStory() {
             transition={{ duration: 1, ease: "easeOut" }}
             className="relative"
           >
-            <div className="aspect-square rounded-2xl bg-gradient-forest p-10 flex items-center justify-center shadow-premium-lg border border-primary-800/20">
-              <div className="text-center text-white">
-                <div className="text-8xl mb-5">🏔️</div>
-                <div className="text-2xl font-display font-bold mb-2 tracking-tight">
+            <div className="relative aspect-square overflow-hidden rounded-2xl bg-gradient-forest shadow-premium-lg border border-primary-800/20">
+              <Image
+                src={originImage}
+                alt="Gilgit-Baltistan origin product imagery"
+                fill
+                className="object-cover lux-image"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/10 bg-black/40 px-6 py-4 backdrop-blur-md">
+                <div className="text-white text-2xl font-display font-bold mb-1 tracking-tight">
                   Gilgit-Baltistan
                 </div>
-                <div className="text-stone-300 font-light">
+                <div className="text-stone-200 text-sm font-light">
                   The Source of Authentic Shilajet
                 </div>
               </div>
