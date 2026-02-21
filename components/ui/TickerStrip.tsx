@@ -41,7 +41,7 @@ export default function TickerStrip({
   }, [speed]);
 
   const content = [...items, ...items];
-
+                                 // 
   return (
     <div className="overflow-hidden bg-gradient-forest backdrop-blur-xl border-b border-white/10">
       <div
@@ -51,7 +51,7 @@ export default function TickerStrip({
         {content.map((item, index) => (
           <div
             key={index}
-            className="flex items-center gap-3 px-6 py-3 text-amber-300 whitespace-nowrap"
+            className="flex items-center gap-3 px-6 py-3 text-white whitespace-nowrap"
           >
             {item}
           </div>
