@@ -61,12 +61,12 @@ const products = [
 ];
 
 const productImageNames = [
-  "3. Premium Product Close-Up.jpg",
-  "12. Product in Luxury Packaging Setting.jpg",
-  "14. Himalayan Sunrise with Jar.jpg",
-  "7. Minimalist Product on Stone.jpg",
-  "1. Himalayan Landscape with Shilajit Jar.jpg",
-  "2. Wellness Morning Routine.jpg",
+  "product_1.jpg",
+  "product_2.jpg",
+  "product_3.jpg",
+  "product_12.jpg",
+  "product_13.jpg",
+  "product_16.jpg",
 ];
 
 const productImages = productImageNames.map(

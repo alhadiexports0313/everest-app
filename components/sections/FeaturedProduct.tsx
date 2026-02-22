@@ -12,9 +12,11 @@ const sizes = [
 ];
 
 const resinImages = [
-  "/images/banners/resin-texture-macro-1.jpg",
-  "/images/banners/resin-texture-macro-2.jpg",
+  "/images/products/product_1.jpg",
+  "/images/products/product_3.jpg",
 ];
+
+
 
 const highlights = [
   "Authenticity Promise: 100% Himalayan Resin",

@@ -23,7 +23,7 @@ const sizes = [
 
 const galleryImages = [
   "/images/banners/resin-texture-macro-1.jpg",
-  "/images/banners/resin-texture-macro-2.jpg",
+  "/images/products/product_3.jpg",
 ];
 
 const authenticityPoints = [

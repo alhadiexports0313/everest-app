@@ -6,11 +6,11 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const originImages = [
-  "14. Himalayan Sunrise with Jar.jpg",
-  "1. Himalayan Landscape with Shilajit Jar.jpg",
-  "12. Product in Luxury Packaging Setting.jpg",
-  "3. Premium Product Close-Up.jpg",
-  "7. Minimalist Product on Stone.jpg",
+  "product_9.jpg",
+  "product_10.jpg",
+  "product_11.jpg",
+  "product_13.jpg",
+  "product_23.jpg",
 ];
 
 const originImagePaths = originImages.map(
