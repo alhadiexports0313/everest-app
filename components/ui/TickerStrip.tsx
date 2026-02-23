@@ -43,7 +43,7 @@ export default function TickerStrip({
   const content = [...items, ...items];
                                  // 
   return (
-    <div className="overflow-hidden bg-gradient-forest backdrop-blur-xl border-b border-white/10">
+    <div className="overflow-hidden bg-black backdrop-blur-xl border-b border-white/10">
       <div
         ref={containerRef}
         className="flex w-max animate-[ticker_var(--ticker-duration)_linear_infinite]"

@@ -8,6 +8,7 @@ import CertificationBlock from "@/components/sections/CertificationBlock";
 import ProductShowcase from "@/components/sections/ProductShowcase";
 import ScienceSection from "@/components/sections/ScienceSection";
 import KnowledgePreview from "@/components/sections/KnowledgePreview";
+import LuxuryImageCarousel from "@/components/sections/LuxuryImageCarousel";
 import OriginStory from "@/components/sections/OriginStory";
 import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
@@ -112,7 +113,7 @@ export default function Home() {
               dir={isUrdu ? "rtl" : "ltr"}
               className={
                 isUrdu
-                  ? "font-urdu text-[12px] inline-flex items-center gap-2 flex-row-reverse"
+                  ? "font-urdu text-[14px] inline-flex items-center gap-2 flex-row-reverse"
                   : "inline-flex items-center gap-2"
               }
             >
@@ -131,6 +132,7 @@ export default function Home() {
       <ProductShowcase />
       <ScienceSection />
       <KnowledgePreview />
+      <LuxuryImageCarousel />
       <OriginStory />
       <Testimonials />
       <CTA />

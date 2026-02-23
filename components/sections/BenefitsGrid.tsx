@@ -73,7 +73,7 @@ export default function BenefitsGrid() {
               className="absolute inset-0"
             >
               <Image
-                src="/images/products/product_26.jpg"
+                src="/images/products/product_27.jpg"
                 alt="Himalayan landscape"
                 fill
                 className="object-cover"
