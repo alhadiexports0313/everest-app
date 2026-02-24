@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 
 const cards = [
@@ -9,6 +10,8 @@ const cards = [
     urdu: "فوائد",
     slug: "benefits",
     cta: "Explore Insights",
+    image: "/images/products/product_13.jpg",
+    imageAlt: "Everest Organic Shilajet jar with mountain backdrop",
     description:
       "Discover how Shilajet supports daily energy, resilience, and overall wellness.",
     descriptionUrdu:
@@ -19,6 +22,8 @@ const cards = [
     urdu: "استعمال",
     slug: "usage",
     cta: "Read the Full Guide",
+    image: "/images/products/product_12.jpg",
+    imageAlt: "Premium Shilajet resin texture for usage guidance",
     description:
       "Learn ideal timing, dosage, and safe routines for consistent results.",
     descriptionUrdu:
@@ -29,6 +34,8 @@ const cards = [
     urdu: "ماحولیاتی احترام",
     slug: "environmental-respect",
     cta: "Discover More",
+    image: "/images/products/product_23.jpg",
+    imageAlt: "Everest Organic Shilajet crafted with ethical mountain sourcing",
     description:
       "Understand ethical sourcing and responsible harvesting practices.",
     descriptionUrdu:
@@ -73,8 +80,17 @@ export default function KnowledgePreview() {
             >
               <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-200/0 via-amber-300/40 to-amber-200/0 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
               <div className="pointer-events-none absolute inset-0 rounded-2xl border border-amber-200/40 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              <Link href={`/knowledge-hub/${card.slug}`} className="relative block h-full">
-                <div className="inline-flex items-center rounded-full border border-primary-700/20 bg-primary-700/5 px-3 py-1 text-xs font-semibold text-primary-700">
+              <Link href={`/${card.slug}`} className="relative block h-full">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/60 bg-stone-100 shadow-soft">
+                  <Image
+                    src={card.image}
+                    alt={card.imageAlt}
+                    fill
+                    className="object-cover lux-image transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
+                </div>
+                <div className="inline-flex items-center rounded-full border border-primary-700/20 bg-primary-700/5 px-3 py-1 text-xs font-semibold text-primary-700 mt-5">
                   {card.title}
                 </div>
                 <h3 className="font-display text-2xl font-bold text-charcoal-900 mt-4 tracking-tight">
