@@ -1,11 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const cards = [
   {
     title: "Benefits",
     urdu: "فوائد",
+    slug: "benefits",
+    cta: "Explore Insights",
     description:
       "Discover how Shilajet supports daily energy, resilience, and overall wellness.",
     descriptionUrdu:
@@ -14,6 +17,8 @@ const cards = [
   {
     title: "Usage",
     urdu: "استعمال",
+    slug: "usage",
+    cta: "Read the Full Guide",
     description:
       "Learn ideal timing, dosage, and safe routines for consistent results.",
     descriptionUrdu:
@@ -22,6 +27,8 @@ const cards = [
   {
     title: "Environmental Respect",
     urdu: "ماحولیاتی احترام",
+    slug: "environmental-respect",
+    cta: "Discover More",
     description:
       "Understand ethical sourcing and responsible harvesting practices.",
     descriptionUrdu:
@@ -62,23 +69,30 @@ export default function KnowledgePreview() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: index * 0.08, ease: "easeOut" }}
-              className="rounded-2xl glass-card border border-stone-200/50 shadow-soft p-7"
+              className="group relative rounded-2xl border border-stone-200/60 bg-white/80 p-7 shadow-soft transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:scale-[1.02] hover:shadow-premium"
             >
-              <div className="inline-flex items-center rounded-full border border-primary-700/20 bg-primary-700/5 px-3 py-1 text-xs font-semibold text-primary-700">
-                {card.title}
-              </div>
-              <h3 className="font-display text-2xl font-bold text-charcoal-900 mt-4 tracking-tight">
-                {card.title}
-              </h3>
-              <p className="font-urdu text-base text-stone-600 mt-1">
-                {card.urdu}
-              </p>
-              <p className="text-stone-700 leading-relaxed font-light mt-4">
-                {card.description}
-              </p>
-              <p className="font-urdu text-sm text-stone-600 mt-3">
-                {card.descriptionUrdu}
-              </p>
+              <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-200/0 via-amber-300/40 to-amber-200/0 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="pointer-events-none absolute inset-0 rounded-2xl border border-amber-200/40 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <Link href={`/knowledge-hub/${card.slug}`} className="relative block h-full">
+                <div className="inline-flex items-center rounded-full border border-primary-700/20 bg-primary-700/5 px-3 py-1 text-xs font-semibold text-primary-700">
+                  {card.title}
+                </div>
+                <h3 className="font-display text-2xl font-bold text-charcoal-900 mt-4 tracking-tight">
+                  {card.title}
+                </h3>
+                <p className="font-urdu text-base text-stone-600 mt-1">
+                  {card.urdu}
+                </p>
+                <p className="text-stone-700 leading-relaxed font-light mt-4">
+                  {card.description}
+                </p>
+                <p className="font-urdu text-sm text-stone-600 mt-3">
+                  {card.descriptionUrdu}
+                </p>
+                <div className="mt-6 inline-flex items-center justify-center rounded-full px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-white lux-gold-button shadow-premium transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-0.5">
+                  {card.cta}
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>
