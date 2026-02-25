@@ -1,62 +1,66 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { ShoppingCart, Star, Check } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+const sizes = [
+  { label: "10g", price: 1500 },
+  { label: "20g", price: 3000 },
+  { label: "50g", price: 6000 },
+];
+
+const currencies = [
+  { code: "PKR", label: "PKR ₨" },
+  { code: "USD", label: "USD $" },
+] as const;
+
+const DEFAULT_USD_PKR_RATE = 300;
+
 const products = [
   {
     id: 1,
-    name: "Premium Shilajet Resin",
+    name: "Premium Shilajit Resin",
     description: "Pure, unprocessed resin sourced from high-altitude Himalayan mountains",
-    price: "$89",
-    originalPrice: "$119",
     rating: 4.9,
     reviews: 1247,
     image: "/api/placeholder/400/400",
     features: [
       "100% Pure Resin",
       "Lab Tested",
-      "30g Jar",
-      "3-Month Supply",
     ],
     badge: "Best Seller",
+    type: "resin",
   },
   {
     id: 2,
-    name: "Shilajet Capsules",
+    name: "Shilajit Capsules",
     description: "Convenient, standardized capsules for daily wellness support",
-    price: "$69",
-    originalPrice: "$89",
-    rating: 4.8,
-    reviews: 892,
     image: "/api/placeholder/400/400",
     features: [
       "60 Capsules",
       "Easy to Take",
       "Standardized Extract",
-      "2-Month Supply",
     ],
-    badge: "Popular",
+    badge: "Coming Soon",
+    comingSoon: true,
+    type: "capsules",
   },
   {
     id: 3,
-    name: "Shilajet Powder",
+    name: "Shilajit Powder",
     description: "Fine powder form for maximum versatility and absorption",
-    price: "$79",
-    originalPrice: "$99",
-    rating: 4.7,
-    reviews: 634,
     image: "/api/placeholder/400/400",
     features: [
       "100g Powder",
       "Versatile Use",
       "High Purity",
-      "3-Month Supply",
     ],
-    badge: "New",
+    badge: "Coming Soon",
+    comingSoon: true,
+    type: "powder",
   },
 ];
 
@@ -74,11 +78,56 @@ const productImages = productImageNames.map(
 );
 
 export default function ProductShowcase() {
+  const [selectedSize, setSelectedSize] = useState(sizes[1]);
+  const [currency, setCurrency] = useState<(typeof currencies)[number]["code"]>(
+    "PKR"
+  );
+  const [usdToPkrRate, setUsdToPkrRate] = useState(DEFAULT_USD_PKR_RATE);
   const [assignedImages, setAssignedImages] = useState(() =>
     products.map((product, index) => {
       return productImages[index % productImages.length] ?? product.image;
     })
   );
+
+  useEffect(() => {
+    const cachedRate = Number(localStorage.getItem("usdToPkrRate"));
+    const cachedTimestamp = Number(localStorage.getItem("usdToPkrRateTimestamp"));
+    const now = Date.now();
+    const isFresh =
+      Number.isFinite(cachedRate) &&
+      cachedRate > 0 &&
+      Number.isFinite(cachedTimestamp) &&
+      now - cachedTimestamp < 24 * 60 * 60 * 1000;
+
+    if (isFresh) {
+      setUsdToPkrRate(cachedRate);
+      return;
+    }
+
+    const loadRate = async () => {
+      try {
+        const response = await fetch("https://open.er-api.com/v6/latest/USD");
+        if (!response.ok) throw new Error("rate_fetch_failed");
+        const data = await response.json();
+        const rate = Number(data?.rates?.PKR);
+        if (Number.isFinite(rate) && rate > 0) {
+          setUsdToPkrRate(rate);
+          localStorage.setItem("usdToPkrRate", String(rate));
+          localStorage.setItem("usdToPkrRateTimestamp", String(Date.now()));
+          return;
+        }
+        if (Number.isFinite(cachedRate) && cachedRate > 0) {
+          setUsdToPkrRate(cachedRate);
+        }
+      } catch {
+        if (Number.isFinite(cachedRate) && cachedRate > 0) {
+          setUsdToPkrRate(cachedRate);
+        }
+      }
+    };
+
+    loadRate();
+  }, []);
 
   useEffect(() => {
     const pool = [...productImages];
@@ -111,16 +160,24 @@ export default function ProductShowcase() {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product, index) => (
+          {products.map((product, index) => {
+            const isResin = product.type === "resin";
+            const isComingSoon = Boolean(product.comingSoon);
+            const priceInPkr = selectedSize.price;
+            const priceLabel =
+              currency === "PKR"
+                ? `PKR ${priceInPkr.toLocaleString()}`
+                : `$${(priceInPkr / usdToPkrRate).toFixed(2)}`;
+
+            return (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
-              className="group matte-card rounded-2xl overflow-hidden shadow-soft hover:shadow-premium transition-all duration-500 hover:-translate-y-1 border border-stone-200/50"
+              className="group relative rounded-2xl overflow-hidden border border-stone-200/70 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(15,23,42,0.12)]"
             >
-              {/* Product Image */}
               <div className="relative aspect-square bg-gradient-stone overflow-hidden">
                 <Image
                   src={assignedImages[index]}
@@ -130,69 +187,146 @@ export default function ProductShowcase() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                 {product.badge && (
-                  <div className="absolute top-4 right-4 bg-gradient-gold text-white px-4 py-1.5 rounded-full text-xs font-semibold shadow-soft">
+                  <div className="absolute top-4 right-4 rounded-full bg-gradient-to-r from-[#C6A052] via-[#D9B56A] to-[#B7893C] px-4 py-1.5 text-xs font-semibold text-white shadow-soft">
                     {product.badge}
+                  </div>
+                )}
+                {isComingSoon && (
+                  <div className="absolute top-4 left-4 rounded-full bg-[#C6A052] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-white shadow-[0_12px_30px_rgba(198,160,82,0.35)]">
+                    Coming Soon
                   </div>
                 )}
               </div>
 
-              {/* Product Info */}
-              <div className="p-7">
+              <div className={`relative p-7 ${isComingSoon ? "opacity-70" : ""}`}>
                 <h3 className="font-display text-2xl font-bold text-charcoal-900 mb-3 tracking-tight">
                   {product.name}
                 </h3>
                 <p className="text-stone-600 mb-5 text-sm leading-relaxed font-light">
                   {product.description}
                 </p>
+                {isResin && (
+                  <div className="absolute right-7 top-7">
+                    <div className="relative">
+                      <select
+                        value={currency}
+                        onChange={(event) =>
+                          setCurrency(event.target.value as (typeof currencies)[number]["code"])
+                        }
+                        className="appearance-none rounded-full border border-stone-200 bg-white px-3 py-1.5 pr-7 text-xs font-semibold text-stone-600 shadow-[0_8px_18px_rgba(15,23,42,0.08)] transition-all duration-300 hover:border-[#C6A052]/60"
+                      >
+                        {currencies.map((option) => (
+                          <option key={option.code} value={option.code}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-stone-500">
+                        ▼
+                      </span>
+                    </div>
+                  </div>
+                )}
 
-                {/* Features */}
                 <ul className="space-y-2.5 mb-6">
                   {product.features.map((feature) => (
                     <li key={feature} className="flex items-center text-sm text-stone-700">
-                      <Check className="w-4 h-4 text-primary-700 mr-2.5 flex-shrink-0" />
+                      <Check className="w-4 h-4 text-[#C6A052] mr-2.5 flex-shrink-0" />
                       {feature}
                     </li>
                   ))}
                 </ul>
 
-                {/* Rating */}
-                <div className="flex items-center space-x-2 mb-5">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(product.rating)
-                            ? "text-accent-500 fill-accent-500"
-                            : "text-stone-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm text-stone-600">
-                    {product.rating} ({product.reviews.toLocaleString()} reviews)
-                  </span>
-                </div>
-
-                {/* Price & CTA */}
-                <div className="flex items-center justify-between pt-5 border-t border-stone-200">
-                  <div>
-                    <span className="text-2xl font-bold text-charcoal-900">
-                      {product.price}
+                {!isComingSoon && (
+                  <div className="flex items-center space-x-2 mb-5">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < Math.floor(product.rating ?? 0)
+                              ? "text-[#C6A052] fill-[#C6A052]"
+                              : "text-stone-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-stone-600">
+                      {product.rating} ({product.reviews?.toLocaleString()} reviews)
                     </span>
-                    {product.originalPrice && (
-                      <span className="ml-2 text-sm text-stone-500 line-through">
-                        {product.originalPrice}
-                      </span>
-                    )}
                   </div>
-                  <button className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary-700 to-primary-800 text-white rounded-lg hover:shadow-premium transition-all duration-500 group-hover:scale-[1.03]">
-                    <ShoppingCart className="w-5 h-5" />
-                  </button>
-                </div>
+                )}
+
+                {isResin && (
+                  <div className="rounded-2xl border border-stone-200/70 bg-stone-50/70 p-4 mb-6">
+                    <div className="text-xs uppercase tracking-[0.28em] text-stone-500 font-semibold">
+                      Select Size
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {sizes.map((size) => {
+                        const active = size.label === selectedSize.label;
+                        return (
+                          <button
+                            key={size.label}
+                            type="button"
+                            onClick={() => setSelectedSize(size)}
+                            className={[
+                              "rounded-full border px-4 py-2 text-xs font-semibold transition-all duration-300",
+                              active
+                                ? "border-[#C6A052] text-[#8C6C2B] shadow-[0_10px_24px_rgba(198,160,82,0.28)] bg-white"
+                                : "border-stone-200 text-stone-600 hover:border-[#C6A052]/60 hover:text-[#8C6C2B] bg-white",
+                            ].join(" ")}
+                          >
+                            {size.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {isResin && (
+                  <div className="flex items-center justify-between pt-5 border-t border-stone-200">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={`${currency}-${selectedSize.label}-${priceLabel}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        className="text-2xl font-bold text-charcoal-900"
+                      >
+                        {priceLabel}
+                      </motion.div>
+                    </AnimatePresence>
+                    <button className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.24em] text-white lux-gold-button shadow-[0_15px_35px_rgba(198,160,82,0.35)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5">
+                      <ShoppingCart className="w-4 h-4" />
+                      Add to Cart
+                    </button>
+                  </div>
+                )}
+
+                {isComingSoon && (
+                  <div className="flex items-center justify-between pt-5 border-t border-stone-200">
+                    <span className="text-sm font-semibold text-stone-500">
+                      Launching Soon
+                    </span>
+                    <button
+                      disabled
+                      className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-stone-100 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.24em] text-stone-400"
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      Add to Cart
+                    </button>
+                  </div>
+                )}
               </div>
+              {isComingSoon && (
+                <div className="pointer-events-none absolute inset-0 bg-white/50 backdrop-blur-[1px]" />
+              )}
             </motion.div>
-          ))}
+          );
+        })}
         </div>
 
         {/* View All CTA */}
