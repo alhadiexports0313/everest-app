@@ -1,8 +1,11 @@
+import Link from "next/link";
+
 const posts = [
   {
     title: "Understanding Shilajet: Origins, Formation, and Active Minerals",
     category: "Understanding Shilajet",
     readTime: "7 min read",
+    slug: "understanding-shilajet",
     excerpt:
       "Explore how Himalayan Shilajet forms, why its mineral profile matters, and how authenticity is verified.",
     urdu: "شلجت کو سمجھیں",
@@ -13,6 +16,7 @@ const posts = [
     title: "Usage Guide: Timing, Dosage, and Safe Daily Routine",
     category: "Usage",
     readTime: "6 min read",
+    slug: "usage-guide",
     excerpt:
       "A clear, practical routine for daily use, including timing, dosage, and safety considerations.",
     urdu: "استعمال",
@@ -23,6 +27,7 @@ const posts = [
     title: "Wellness Lifestyle: Energy, Recovery, and Daily Rituals",
     category: "Wellness Lifestyle",
     readTime: "5 min read",
+    slug: "wellness-lifestyle",
     excerpt:
       "How Shilajet fits into a balanced wellness lifestyle with mindful habits and recovery.",
     urdu: "ویلفئیر لائف اسٹائل",
@@ -33,6 +38,7 @@ const posts = [
     title: "Respecting Nature: Ethical Harvesting and Mountain Conservation",
     category: "Nature Respect",
     readTime: "5 min read",
+    slug: "nature-respect",
     excerpt:
       "The importance of ethical harvesting, community support, and protecting fragile Himalayan ecosystems.",
     urdu: "فطرت کا احترام",
@@ -59,9 +65,10 @@ export default function KnowledgeHubPage() {
         </div>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           {posts.map((post) => (
-            <div
+            <Link
               key={post.title}
-              className="p-6 rounded-2xl glass-card border border-stone-200/50 shadow-soft"
+              href={`/knowledge/${post.slug}`}
+              className="group p-6 rounded-2xl glass-card border border-stone-200/50 shadow-soft transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-premium hover:border-amber-200/60"
             >
               <div className="text-xs uppercase tracking-wide text-primary-700 font-semibold mb-3">
                 {post.category}
@@ -80,8 +87,13 @@ export default function KnowledgeHubPage() {
                   {post.excerptUrdu}
                 </p>
               )}
-              <div className="text-sm text-stone-500">{post.readTime}</div>
-            </div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="text-sm text-stone-500">{post.readTime}</div>
+                <div className="inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-white lux-gold-button shadow-soft transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-0.5">
+                  Read Article
+                </div>
+              </div>
+            </Link>
           ))}
         </div>
       </div>
