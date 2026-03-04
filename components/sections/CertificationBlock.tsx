@@ -2,31 +2,42 @@
 
 import { motion } from "framer-motion";
 import { BadgeCheck, ShieldCheck, Droplets, CheckCircle2 } from "lucide-react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const badges = [
   {
     title: "Lab Verification",
     description: "Third-party lab tested for purity and potency.",
+    urduTitle: "لیب تصدیق",
+    urduDescription: "خلوص اور اثر کے لیے تھرڈ پارٹی لیب ٹیسٹ شدہ۔",
     icon: BadgeCheck,
   },
   {
     title: "Heavy Metal Safety",
     description: "Screened for heavy metals and contaminants.",
+    urduTitle: "ہیوی میٹل سیفٹی",
+    urduDescription: "ہیوی میٹلز اور آلودگی کی اسکریننگ۔",
     icon: ShieldCheck,
   },
   {
     title: "Fulvic Acid Presence",
     description: "Rich in bioactive fulvic acids and minerals.",
+    urduTitle: "فولویِک ایسڈ کی موجودگی",
+    urduDescription: "بایوایکٹو فولویِک ایسڈ اور معدنیات سے بھرپور۔",
     icon: Droplets,
   },
   {
     title: "Authenticity Guarantee",
     description: "Verified Himalayan source with traceable batches.",
+    urduTitle: "اصلیت کی ضمانت",
+    urduDescription: "قابلِ تصدیق ہمالیائی ماخذ اور ٹریس ایبل بیچز۔",
     icon: CheckCircle2,
   },
 ];
 
 export default function CertificationBlock() {
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
   return (
     <section className="section-padding bg-gradient-to-br from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white">
       <div className="container-custom">
@@ -37,14 +48,20 @@ export default function CertificationBlock() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="text-center max-w-3xl mx-auto mb-14"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-stone-200">
-            Certification
+          <div
+            className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold text-stone-200 ${
+              isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-[0.3em]"
+            }`}
+          >
+            {isUrdu ? "تصدیقات" : "Certification"}
           </div>
-          <h2 className="font-display text-display-3 font-bold mt-5 tracking-tight">
-            Certified Purity & Trust
+          <h2 className={`font-display text-display-3 font-bold mt-5 tracking-tight ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu ? "تصدیق شدہ خلوص اور اعتماد" : "Certified Purity & Trust"}
           </h2>
-          <p className="text-lg text-stone-300 leading-relaxed font-light mt-4">
-            Every batch is verified for purity, safety, and authentic Himalayan origin.
+          <p className={`text-lg text-stone-300 leading-relaxed font-light mt-4 ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu
+              ? "ہر بیچ کی خلوص، حفاظت اور مستند ہمالیائی ماخذ کے لیے تصدیق کی جاتی ہے۔"
+              : "Every batch is verified for purity, safety, and authentic Himalayan origin."}
           </p>
         </motion.div>
 
@@ -63,11 +80,11 @@ export default function CertificationBlock() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#c6a75e] via-[#e3c98b] to-[#c6a75e] text-charcoal-900 shadow-[0_10px_24px_rgba(198,167,94,0.35)]">
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="font-display text-lg font-semibold mt-5 tracking-tight">
-                  {badge.title}
+                <h3 className={`font-display text-lg font-semibold mt-5 tracking-tight ${isUrdu ? "font-urdu" : ""}`}>
+                  {isUrdu ? badge.urduTitle : badge.title}
                 </h3>
-                <p className="text-sm text-stone-300 leading-relaxed mt-2">
-                  {badge.description}
+                <p className={`text-sm text-stone-300 leading-relaxed mt-2 ${isUrdu ? "font-urdu" : ""}`}>
+                  {isUrdu ? badge.urduDescription : badge.description}
                 </p>
               </motion.div>
             );

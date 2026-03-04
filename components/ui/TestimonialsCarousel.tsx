@@ -7,9 +7,10 @@ import type { Testimonial } from "@/types";
 
 interface TestimonialsCarouselProps {
   items: Testimonial[];
+  isUrdu?: boolean;
 }
 
-export default function TestimonialsCarousel({ items }: TestimonialsCarouselProps) {
+export default function TestimonialsCarousel({ items, isUrdu = false }: TestimonialsCarouselProps) {
   const [index, setIndex] = useState(0);
   const current = items[index] ?? items[0];
 
@@ -31,43 +32,57 @@ export default function TestimonialsCarousel({ items }: TestimonialsCarouselProp
 
   if (!current) return null;
 
+  const displayText = isUrdu ? current.urduText ?? current.text : current.text;
+  const displayName = isUrdu ? current.urduName ?? current.name : current.name;
+  const displayLocation = isUrdu ? current.urduLocation ?? current.location : current.location;
+
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div className="text-xs uppercase tracking-wide text-primary-700 font-semibold">
-          Testimonials
+    <div className="w-full max-w-3xl mx-auto" dir={isUrdu ? "rtl" : "ltr"}>
+      <div className={`flex items-center justify-between mb-6 ${isUrdu ? "flex-row-reverse" : ""}`}>
+        <div
+          className={`text-xs text-primary-700 font-semibold ${
+            isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-wide"
+          }`}
+        >
+          {isUrdu ? "تاثرات" : "Testimonials"}
         </div>
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${isUrdu ? "flex-row-reverse" : ""}`}>
           <button
             type="button"
-            onClick={handlePrev}
+            onClick={isUrdu ? handleNext : handlePrev}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-50"
-            aria-label="Previous testimonial"
+            aria-label={isUrdu ? "اگلا تاثر" : "Previous testimonial"}
           >
-            <ChevronLeft className="w-4 h-4" />
+            {isUrdu ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
           <button
             type="button"
-            onClick={handleNext}
+            onClick={isUrdu ? handlePrev : handleNext}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-50"
-            aria-label="Next testimonial"
+            aria-label={isUrdu ? "پچھلا تاثر" : "Next testimonial"}
           >
-            <ChevronRight className="w-4 h-4" />
+            {isUrdu ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
           </button>
         </div>
       </div>
       <div className="relative">
-        <Quote className="absolute top-6 right-6 w-10 h-10 text-primary-200/50" />
+        <Quote
+          className={`absolute top-6 w-10 h-10 text-primary-200/50 ${
+            isUrdu ? "left-6" : "right-6"
+          }`}
+        />
         <AnimatePresence mode="wait">
           <motion.div
             key={current.name}
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: isUrdu ? -40 : 40 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
+            exit={{ opacity: 0, x: isUrdu ? 40 : -40 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className="glass-card rounded-2xl p-8 border border-stone-200/50 shadow-soft"
+            className={`glass-card rounded-2xl p-8 border border-stone-200/50 shadow-soft ${
+              isUrdu ? "text-right" : "text-left"
+            }`}
           >
-            <div className="flex items-center space-x-1 mb-4">
+            <div className={`flex items-center space-x-1 mb-4 ${isUrdu ? "flex-row-reverse space-x-reverse" : ""}`}>
               {Array.from({ length: current.rating }).map((_, i) => (
                 <Star
                   key={i}
@@ -75,26 +90,26 @@ export default function TestimonialsCarousel({ items }: TestimonialsCarouselProp
                 />
               ))}
             </div>
-            <p className="text-stone-700 mb-6 leading-relaxed">
-              "{current.text}"
+            <p className={`text-stone-700 mb-6 leading-relaxed ${isUrdu ? "font-urdu" : ""}`}>
+              "{displayText}"
             </p>
-            <div className="flex items-center space-x-3">
+            <div className={`flex items-center space-x-3 ${isUrdu ? "flex-row-reverse space-x-reverse" : ""}`}>
               <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white font-semibold text-sm shadow-soft">
                 {current.image}
               </div>
-              <div>
-                <div className="font-semibold text-charcoal-900">
-                  {current.name}
+              <div className={isUrdu ? "text-right" : "text-left"}>
+                <div className={`font-semibold text-charcoal-900 ${isUrdu ? "font-urdu" : ""}`}>
+                  {displayName}
                 </div>
-                <div className="text-sm text-stone-600">
-                  {current.location}
+                <div className={`text-sm text-stone-600 ${isUrdu ? "font-urdu" : ""}`}>
+                  {displayLocation}
                 </div>
               </div>
             </div>
           </motion.div>
         </AnimatePresence>
       </div>
-      <div className="mt-4 text-center text-xs text-stone-500">
+      <div className={`mt-4 text-center text-xs text-stone-500 ${isUrdu ? "font-urdu" : ""}`} dir={isUrdu ? "ltr" : "ltr"}>
         {index + 1} / {items.length}
       </div>
     </div>

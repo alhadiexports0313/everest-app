@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "title": "Everest Organic Shilajit | Premium Himalayan Wellness",
+    "description": "Authentic, pure Shilajet from the Himalayas of Gilgit-Baltistan. Premium wellness supplement backed by science. Export quality, lab-tested, and trusted worldwide.",
+    "ogDescription": "Authentic, pure Shilajet from the Himalayas. Premium wellness supplement backed by science.",
+    "twitterTitle": "Everest Organic Shilajit",
+    "twitterDescription": "Premium Himalayan Wellness Supplement"
+  },
+  "header": {
+    "brand": {
+      "name": "Everest Organic",
+      "tagline": "Shilajit"
+    },
+    "nav": {
+      "products": "Products",
+      "authenticity": "Authenticity & Quality",
+      "knowledge": "Knowledge Hub",
+      "about": "About",
+      "contact": "Contact"
+    },
+    "orderNow": "Order Now",
+    "searchLabel": "Search",
+    "cartLabel": "Cart",
+    "languageLabel": "Language",
+    "menuLabel": "Toggle menu"
+  },
+  "footer": {
+    "brandName": "Everest Organic",
+    "brandDescription": "Everest Organic Shilajit from Gilgit-Baltistan, crafted for purity and daily wellness.",
+    "quickLinksTitle": "Quick Links",
+    "quickLinks": {
+      "products": "Products",
+      "authenticity": "Authenticity & Quality",
+      "knowledge": "Knowledge Hub",
+      "about": "About Us"
+    },
+    "supportTitle": "Support",
+    "support": {
+      "contact": "Contact Us",
+      "shipping": "Shipping Info",
+      "returns": "Returns",
+      "faq": "FAQ"
+    },
+    "contactTitle": "Contact",
+    "location": "Gilgit-Baltistan, Pakistan",
+    "email": "everestorganicshilajet@gmail.com",
+    "whatsapp": "WhatsApp: 0345 449 0326",
+    "rights": "Everest Organic Shilajit. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "home": {
+    "hero": {
+      "badge": "Authentic Himalayan Origin",
+      "titleLine1": "Everest Organic",
+      "titleLine2": "Shilajit",
+      "subtitle": "Sourced from the heart of Gilgit-Baltistan.",
+      "ctaPrimary": "Shop Collection",
+      "ctaSecondary": "Our Process",
+      "trustItems": ["100% Organic", "Lab Certified", "Export Grade"]
+    },
+    "ticker": {
+      "items": [
+        { "text": "Lab Tested & Verified for Ultimate Purity", "icon": "shield" },
+        { "text": "Directly from Gilgit-Baltistan Mountains", "icon": "map" },
+        { "text": "Rich in Fulvic & Trace Minerals", "icon": "sparkle" },
+        { "text": "Sustainably & Ethically Sourced", "icon": "leaf" },
+        { "text": "Eco-Friendly Packaging for Conscious Living", "icon": "recycle" },
+        { "text": "Trusted Quality, Nature’s Best", "icon": "star" },
+        { "text": "100% Everest Organic Shilajit", "icon": "sparkle" },
+        { "text": "Lab Tested for Authenticity", "icon": "beaker" }
+      ]
+    }
+  },
+  "knowledge": {
+    "breadcrumb": {
+      "home": "Home",
+      "hub": "Knowledge Hub"
+    },
+    "back": "Back to Knowledge Hub"
+  }
+}

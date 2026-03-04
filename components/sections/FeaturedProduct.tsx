@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Check, Mail, MessageCircle, ZoomIn } from "lucide-react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const sizes = [
   { label: "10g", price: 1500 },
@@ -19,26 +20,44 @@ const resinImages = [
 
 
 const highlights = [
-  "Authenticity Promise: 100% Himalayan Resin",
-  "Lab Tested Purity",
-  "Rich in Fulvic & Trace Minerals",
-  "Eco-Friendly Packaging",
+  {
+    text: "Authenticity Promise: 100% Himalayan Resin",
+    urdu: "اصلیت کی ضمانت: 100% ہمالیائی رال",
+  },
+  {
+    text: "Lab Tested Purity",
+    urdu: "لیب ٹیسٹڈ خلوص",
+  },
+  {
+    text: "Rich in Fulvic & Trace Minerals",
+    urdu: "فولویِک اور ٹریس منرلز سے بھرپور",
+  },
+  {
+    text: "Eco-Friendly Packaging",
+    urdu: "ماحول دوست پیکجنگ",
+  },
 ];
 
 export default function FeaturedProduct() {
   const [selectedSize, setSelectedSize] = useState(sizes[1]);
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
 
   const whatsappLink = useMemo(() => {
-    const message = `Order request: Pure Himalayan Shilajet (${selectedSize.label})`;
+    const message = isUrdu
+      ? `آرڈر کی درخواست: ایورسٹ آرگینک سلاجیت (${selectedSize.label})`
+      : `Order request: Everest Organic Shilajit (${selectedSize.label})`;
     return `https://wa.me/923001234567?text=${encodeURIComponent(message)}`;
-  }, [selectedSize.label]);
+  }, [isUrdu, selectedSize.label]);
 
   const emailLink = useMemo(() => {
-    const subject = `Order: Pure Himalayan Shilajet (${selectedSize.label})`;
+    const subject = isUrdu
+      ? `آرڈر: ایورسٹ آرگینک سلاجیت (${selectedSize.label})`
+      : `Order: Everest Organic Shilajit (${selectedSize.label})`;
     return `mailto:info@everestorganicshilajet.com?subject=${encodeURIComponent(
       subject
     )}`;
-  }, [selectedSize.label]);
+  }, [isUrdu, selectedSize.label]);
 
   return (
     <section id="featured" className="section-padding bg-stone-50">
@@ -50,14 +69,20 @@ export default function FeaturedProduct() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="text-center max-w-3xl mx-auto mb-14"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-stone-200/60 bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
-            Flagship
+          <div
+            className={`inline-flex items-center gap-2 rounded-full border border-stone-200/60 bg-white/70 px-4 py-1.5 text-xs font-semibold text-stone-500 ${
+              isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-[0.3em]"
+            }`}
+          >
+            {isUrdu ? "پرچم بردار" : "Flagship"}
           </div>
-          <h2 className="font-display text-display-3 font-bold text-charcoal-900 mt-5 tracking-tight">
-            Pure Himalayan Shilajet
+          <h2 className={`font-display text-display-3 font-bold text-charcoal-900 mt-5 tracking-tight ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu ? "ایورسٹ آرگینک سلاجیت" : "Everest Organic Shilajit"}
           </h2>
-          <p className="text-lg text-stone-700 leading-relaxed font-light mt-4">
-            Premium resin sourced from Gilgit-Baltistan, crafted for purity and potency.
+          <p className={`text-lg text-stone-700 leading-relaxed font-light mt-4 ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu
+              ? "گلگت بلتستان سے حاصل کردہ پریمیم رال، خلوص اور اثر کے لیے تیار کی گئی۔"
+              : "Premium resin sourced from Gilgit-Baltistan, crafted for purity and potency."}
           </p>
         </motion.div>
 
@@ -72,7 +97,7 @@ export default function FeaturedProduct() {
             <div className="group relative aspect-square overflow-hidden rounded-2xl bg-stone-100">
               <Image
                 src={resinImages[0]}
-                alt="Pure Himalayan Shilajet resin"
+                alt="Everest Organic Shilajit resin"
                 fill
                 className="object-cover lux-image"
               />
@@ -101,29 +126,33 @@ export default function FeaturedProduct() {
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.05 }}
             className="rounded-3xl border border-stone-200/60 bg-white/80 backdrop-blur-sm p-7 shadow-soft sticky top-24 lg:static"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs uppercase tracking-[0.3em] text-stone-400">
-                  Resin
+            <div className={`flex items-center justify-between ${isUrdu ? "flex-row-reverse" : ""}`}>
+              <div className={isUrdu ? "text-right" : "text-left"}>
+                <div
+                  className={`text-xs text-stone-400 ${
+                    isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-[0.3em]"
+                  }`}
+                >
+                  {isUrdu ? "رال" : "Resin"}
                 </div>
-                <div className="font-display text-2xl font-bold text-charcoal-900 mt-2">
-                  Pure Himalayan Shilajet
+                <div className={`font-display text-2xl font-bold text-charcoal-900 mt-2 ${isUrdu ? "font-urdu" : ""}`}>
+                  {isUrdu ? "ایورسٹ آرگینک سلاجیت" : "Everest Organic Shilajit"}
                 </div>
               </div>
-              <div className="text-right">
+              <div className={isUrdu ? "text-left font-urdu" : "text-right"}>
                 <div className="text-xs text-stone-500">PKR</div>
                 <div className="text-3xl font-bold text-charcoal-900">
                   {selectedSize.price.toLocaleString("en-PK")}
                 </div>
                 <div className="text-xs text-stone-500 mt-1">
-                  {selectedSize.label} jar
+                  {isUrdu ? `${selectedSize.label} جار` : `${selectedSize.label} jar`}
                 </div>
               </div>
             </div>
 
             <div className="mt-6">
-              <div className="text-sm font-semibold text-charcoal-900 mb-3">
-                Select Size
+              <div className={`text-sm font-semibold text-charcoal-900 mb-3 ${isUrdu ? "font-urdu" : ""}`}>
+                {isUrdu ? "سائز منتخب کریں" : "Select Size"}
               </div>
               <div className="flex flex-wrap gap-3">
                 {sizes.map((size) => (
@@ -143,11 +172,16 @@ export default function FeaturedProduct() {
               </div>
             </div>
 
-            <div className="mt-6 space-y-3">
+            <div className={`mt-6 space-y-3 ${isUrdu ? "text-right font-urdu" : "text-left"}`}>
               {highlights.map((item) => (
-                <div key={item} className="flex items-center text-sm text-stone-700">
-                  <Check className="w-4 h-4 text-primary-700 mr-2.5" />
-                  {item}
+                <div
+                  key={item.text}
+                  className={`flex items-center text-sm text-stone-700 ${
+                    isUrdu ? "flex-row-reverse gap-2" : ""
+                  }`}
+                >
+                  <Check className={`w-4 h-4 text-primary-700 ${isUrdu ? "" : "mr-2.5"}`} />
+                  {isUrdu ? item.urdu : item.text}
                 </div>
               ))}
             </div>
@@ -160,14 +194,14 @@ export default function FeaturedProduct() {
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-premium lux-button"
               >
                 <MessageCircle className="w-4 h-4" />
-                Order on WhatsApp
+                {isUrdu ? "واٹس ایپ پر آرڈر کریں" : "Order on WhatsApp"}
               </a>
               <a
                 href={emailLink}
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button hover:border-primary-300"
               >
                 <Mail className="w-4 h-4" />
-                Order via Email
+                {isUrdu ? "ای میل کے ذریعے آرڈر کریں" : "Order via Email"}
               </a>
             </div>
           </motion.div>
@@ -182,14 +216,14 @@ export default function FeaturedProduct() {
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-premium lux-button"
           >
             <MessageCircle className="w-4 h-4" />
-            Order on WhatsApp
+            {isUrdu ? "واٹس ایپ پر آرڈر کریں" : "Order on WhatsApp"}
           </a>
           <a
             href={emailLink}
             className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button"
           >
             <Mail className="w-4 h-4" />
-            Order via Email
+            {isUrdu ? "ای میل کے ذریعے آرڈر کریں" : "Order via Email"}
           </a>
         </div>
       </div>

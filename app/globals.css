@@ -17,6 +17,16 @@
     @apply antialiased bg-stone-50 text-charcoal-900;
   }
 
+  html[dir="rtl"] body {
+    direction: rtl;
+  }
+
+  html[dir="rtl"] .font-display,
+  html[dir="rtl"] .font-serif,
+  html[dir="rtl"] .font-sans {
+    font-family: var(--font-urdu);
+  }
+
   * {
     @apply border-stone-200;
   }

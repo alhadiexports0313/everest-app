@@ -1,47 +1,58 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
-interface LanguageSwitcherProps {
-  languages: { code: string; label: string }[];
-  current: string;
-}
+type LanguageSwitcherProps = {
+  tone?: "light" | "dark";
+};
 
-export default function LanguageSwitcher({
-  languages,
-  current,
-}: LanguageSwitcherProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const handleChange = (code: string) => {
-    if (code === current) return;
-    const search = typeof window !== "undefined" ? window.location.search : "";
-    const params = new URLSearchParams(search);
-    params.set("lang", code);
-    router.push(`${pathname}?${params.toString()}`);
-  };
+export default function LanguageSwitcher({ tone = "light" }: LanguageSwitcherProps) {
+  const { locale, setLocale, t } = useLanguage();
+  const isUrdu = locale === "ur";
+  const isDark = tone === "dark";
 
   return (
-    <div className="inline-flex rounded-full border border-stone-200 bg-white p-1 text-xs sm:text-sm">
-      {languages.map((lang) => {
-        const active = lang.code === current;
-        return (
-          <button
-            key={lang.code}
-            type="button"
-            onClick={() => handleChange(lang.code)}
-            className={[
-              "px-3 py-1 rounded-full transition-colors",
-              active
-                ? "bg-primary-700 text-white"
-                : "text-stone-700 hover:bg-stone-100",
-            ].join(" ")}
-          >
-            {lang.label}
-          </button>
-        );
-      })}
+    <div
+      dir="ltr"
+      className={`relative inline-flex items-center rounded-full border p-1 text-[11px] font-semibold uppercase tracking-[0.2em] shadow-[0_0_24px_rgba(0,0,0,0.25)] backdrop-blur-md transition-colors duration-300 ${
+        isDark ? "border-white/20 bg-white/10 text-white" : "border-stone-200/80 bg-white text-stone-700"
+      }`}
+      role="group"
+      aria-label={t("header.languageLabel")}
+    >
+      <span
+        className={`absolute inset-y-1 w-1/2 rounded-full bg-gradient-to-r from-[#C6A052] to-[#E2C07B] shadow-[0_10px_30px_rgba(198,160,82,0.35)] transition-transform duration-300 ${
+          isUrdu ? "translate-x-full" : "translate-x-0"
+        }`}
+      />
+      <button
+        type="button"
+        onClick={() => setLocale("en")}
+        className={`relative z-10 flex h-8 w-16 items-center justify-center rounded-full transition-colors ${
+          isUrdu
+            ? isDark
+              ? "text-white/70 hover:text-white"
+              : "text-stone-500 hover:text-stone-900"
+            : "text-black"
+        }`}
+        aria-pressed={!isUrdu}
+      >
+        EN
+      </button>
+      <button
+        type="button"
+        onClick={() => setLocale("ur")}
+        className={`relative z-10 flex h-8 w-16 items-center justify-center rounded-full transition-colors ${
+          isUrdu
+            ? "text-black"
+            : isDark
+              ? "text-white/70 hover:text-white"
+              : "text-stone-500 hover:text-stone-900"
+        }`}
+        aria-pressed={isUrdu}
+      >
+        اردو
+      </button>
     </div>
   );
 }

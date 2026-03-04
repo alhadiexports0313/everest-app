@@ -3,6 +3,7 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const steps = [
   {
@@ -12,11 +13,11 @@ const steps = [
     altEn:
       "Pure Shilajit resin carefully harvested from pristine Himalayan rocks in Gilgit-Baltistan.",
     altUr:
-      "گلگت بلتستان کے بلند و بالا پہاڑوں سے خالص شلاجیت رال احتیاط سے حاصل کی جاتی ہے۔",
+      "گلگت بلتستان کے بلند و بالا پہاڑوں سے خالص سلاجیت رال احتیاط سے حاصل کی جاتی ہے۔",
     descriptionEn:
       "Pure Shilajit resin carefully harvested from pristine Himalayan rocks in Gilgit-Baltistan, preserving nature’s authenticity and mountain potency.",
     descriptionUr:
-      "گلگت بلتستان کے بلند و بالا پہاڑوں سے خالص شلاجیت رال احتیاط سے حاصل کی جاتی ہے، قدرتی طاقت اور خالص پن کو محفوظ رکھتے ہوئے۔",
+      "گلگت بلتستان کی بلند پہاڑی چٹانوں سے خالص سلاجیت رال احتیاط سے حاصل کی جاتی ہے تاکہ قدرتی خلوص اور پہاڑی طاقت محفوظ رہے۔",
   },
   {
     title: "Initial Cleaning",
@@ -25,11 +26,11 @@ const steps = [
     altEn:
       "Raw Shilajit being dissolved and filtered using purified water in a controlled environment.",
     altUr:
-      "کچا شلاجیت صاف پانی میں حل کر کے فلٹر کیا جا رہا ہے۔",
+      "کچی سلاجیت صاف پانی میں حل کر کے فلٹر کی جا رہی ہے۔",
     descriptionEn:
       "Raw Shilajit is carefully dissolved and filtered using purified water to remove natural impurities while preserving its bioactive compounds.",
     descriptionUr:
-      "کچا شلاجیت صاف پانی میں حل کر کے فلٹر کیا جاتا ہے تاکہ قدرتی نجاستیں دور ہوں اور اس کی حیاتیاتی خصوصیات محفوظ رہیں۔",
+      "کچی سلاجیت صاف شدہ پانی میں حل کر کے فلٹر کی جاتی ہے تاکہ قدرتی آلودگیاں دور ہوں اور حیاتیاتی اجزاء محفوظ رہیں۔",
   },
   {
     title: "Purification",
@@ -38,11 +39,11 @@ const steps = [
     altEn:
       "Gentle heating and scientific purification process of Shilajit in a modern lab.",
     altUr:
-      "جدید لیبارٹری میں شلاجیت کی تطہیر کا عمل۔",
+      "جدید لیبارٹری میں سلاجیت کی تطہیر کا عمل۔",
     descriptionEn:
       "Through gentle heating and advanced quality testing, Shilajit is purified to ensure optimal mineral richness and safety standards.",
     descriptionUr:
-      "ہلکی حرارت اور جدید لیبارٹری ٹیسٹنگ کے ذریعے شلاجیت کو خالص بنایا جاتا ہے تاکہ معدنیات کی بھرپور مقدار اور محفوظ معیار یقینی بنایا جا سکے۔",
+      "ہلکی حرارت اور جدید لیب ٹیسٹنگ سے سلاجیت کو خالص کیا جاتا ہے تاکہ معدنی بھرپوریت اور محفوظ معیار برقرار رہے۔",
   },
   {
     title: "Concentration & Drying",
@@ -51,7 +52,7 @@ const steps = [
     altEn:
       "Shilajit extract being concentrated and dried into smooth resin.",
     altUr:
-      "شلاجیت کو گاڑھا اور خشک کر کے رال کی شکل دی جا رہی ہے۔",
+      "سلاجیت کو گاڑھا اور خشک کر کے رال کی صورت دی جا رہی ہے۔",
     descriptionEn:
       "The purified extract is gently concentrated and dried to achieve a smooth, potent resin with maximum nutritional integrity.",
     descriptionUr:
@@ -62,18 +63,20 @@ const steps = [
     urdu: "حتمی پیکجنگ",
     image: "/images/journey/packaging.jpg",
     altEn:
-      "Everest Organic Shilajet sealed in eco-friendly airtight glass container.",
+      "Everest Organic Shilajit sealed in eco-friendly airtight glass container.",
     altUr:
-      "ایورسٹ آرگینک شلاجیت ایئر ٹائٹ ماحول دوست پیکجنگ میں محفوظ۔",
+      "ایورسٹ آرگینک سلاجیت ائیر ٹائٹ ماحول دوست پیکجنگ میں محفوظ۔",
     descriptionEn:
       "Carefully sealed in eco-friendly airtight packaging to preserve freshness, potency, and purity — ready for your wellness journey.",
     descriptionUr:
-      "ماحول دوست، ایئر ٹائٹ پیکجنگ میں محفوظ کیا جاتا ہے تاکہ تازگی، طاقت اور خالص پن برقرار رہے۔",
+      "ماحول دوست ائیر ٹائٹ پیکجنگ میں محفوظ کیا جاتا ہے تاکہ تازگی، طاقت اور خلوص برقرار رہے۔",
   },
 ];
 
 export default function MountainToBottleJourney() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -96,11 +99,11 @@ export default function MountainToBottleJourney() {
 
         {/* HEADER */}
         <div className="text-center max-w-3xl mx-auto mb-28">
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-neutral-900">
-            MOUNTAIN → BOTTLE JOURNEY
+          <h2 className={`text-4xl lg:text-5xl font-bold tracking-tight text-neutral-900 ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu ? "پہاڑ سے جار تک کا سفر" : "MOUNTAIN → BOTTLE JOURNEY"}
           </h2>
-          <p className="mt-4 text-lg text-neutral-600">
-            From Himalayan Origin to Pure Wellness
+          <p className={`mt-4 text-lg text-neutral-600 ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu ? "ہمالیائی ماخذ سے خالص ویلنَس تک" : "From Himalayan Origin to Pure Wellness"}
           </p>
         </div>
 
@@ -137,7 +140,7 @@ export default function MountainToBottleJourney() {
                     <div className="relative aspect-video rounded-3xl overflow-hidden shadow-xl">
                       <Image
                         src={step.image}
-                        alt={step.altEn}
+                        alt={isUrdu ? step.altUr : step.altEn}
                         fill
                         className="object-cover lux-image"
                       />
@@ -150,22 +153,25 @@ export default function MountainToBottleJourney() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className={`${isLeft ? "lg:order-2" : "lg:order-1"} max-w-xl`}
+                    className={`${isLeft ? "lg:order-2" : "lg:order-1"} max-w-xl ${isUrdu ? "text-right" : "text-left"}`}
                   >
-                    <h3 className="text-2xl lg:text-3xl font-semibold text-neutral-900">
-                      {step.title}{" "}
-                      <span className="text-[#c6a75e]">
-                        | {step.urdu}
-                      </span>
+                    <h3 className={`text-2xl lg:text-3xl font-semibold text-neutral-900 ${isUrdu ? "font-urdu" : ""}`}>
+                      {isUrdu ? step.urdu : step.title}
                     </h3>
 
-                    <p className="mt-6 text-neutral-700 leading-relaxed">
-                      {step.descriptionEn}
+                    <p className={`mt-6 text-neutral-700 leading-relaxed ${isUrdu ? "font-urdu" : ""}`}>
+                      {isUrdu ? step.descriptionUr : step.descriptionEn}
                     </p>
 
-                    <p className="mt-4 text-neutral-600 leading-relaxed font-urdu">
-                      {step.descriptionUr}
-                    </p>
+                    {isUrdu ? (
+                      <p className="mt-4 text-neutral-500 leading-relaxed text-left font-sans" dir="ltr">
+                        {step.descriptionEn}
+                      </p>
+                    ) : (
+                      <p className="mt-4 text-neutral-500 leading-relaxed font-urdu">
+                        {step.descriptionUr}
+                      </p>
+                    )}
                   </motion.div>
                 </div>
               );
@@ -175,8 +181,10 @@ export default function MountainToBottleJourney() {
 
         {/* FINAL MESSAGE */}
         <div className="mt-32 text-center">
-          <p className="text-xl font-medium text-neutral-900">
-            From the Peaks of the Himalayas to Your Daily Wellness Ritual.
+          <p className={`text-xl font-medium text-neutral-900 ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu
+              ? "ہمالیہ کی چوٹیوں سے آپ کے روزمرہ ویلنَس معمول تک"
+              : "From the Peaks of the Himalayas to Your Daily Wellness Ritual."}
           </p>
         </div>
 

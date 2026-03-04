@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import { ArrowRight, Sparkles, Mountain } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const images = [
   "/images/banners/extraction-mountains.jpg",
@@ -25,6 +26,7 @@ const AUTO_DELAY = 7000;
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
+  const { t, getMessage } = useLanguage();
 
   // Parallax Logic with Spring
   const { scrollY } = useScroll();
@@ -84,7 +86,7 @@ export default function Hero() {
           >
             <Mountain className="h-4 w-4 text-amber-500" />
             <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-100/80">
-              Authentic Himalayan Origin
+              {t("home.hero.badge")}
             </span>
           </motion.div>
 
@@ -97,10 +99,10 @@ export default function Hero() {
           // >
           className="mb-8 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
 >
-            Pure Himalayan
+            {t("home.hero.titleLine1")}
             <br />
             <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-transparent">
-              Shilajit
+              {t("home.hero.titleLine2")}
             </span>
           </motion.h1>
 
@@ -111,7 +113,7 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.4 }}
             className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-gray-200 sm:text-xl"
           >
-            Sourced from the heart of Gilgit-Baltistan. 
+            {t("home.hero.subtitle")}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -125,7 +127,7 @@ export default function Hero() {
               href="#shop"
               className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-10 py-4 font-bold text-black shadow-premium lux-button active:scale-95"
             >
-              Shop Collection
+              {t("home.hero.ctaPrimary")}
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
 
@@ -133,7 +135,7 @@ export default function Hero() {
               href="#learn"
               className="rounded-full border border-white/20 bg-white/5 px-10 py-4 font-medium backdrop-blur-lg transition-colors hover:bg-white/10"
             >
-              Our Process
+              {t("home.hero.ctaSecondary")}
             </Link>
           </motion.div>
 
@@ -144,7 +146,7 @@ export default function Hero() {
             transition={{ duration: 1.5, delay: 1 }}
             className="mt-16 flex flex-wrap justify-center gap-x-10 gap-y-4"
           >
-            {["100% Organic", "Lab Certified", "Export Grade"].map((text) => (
+            {(getMessage<string[]>("home.hero.trustItems") ?? []).map((text) => (
               <div key={text} className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-white/50">
                 <Sparkles className="h-3 w-3 text-amber-500/50" />
                 {text}

@@ -2,41 +2,56 @@
 
 import { motion } from "framer-motion";
 import { Award, Shield, TestTube, Globe, Leaf, CheckCircle } from "lucide-react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const badges = [
   {
     icon: Award,
     title: "Premium Quality",
+    urduTitle: "پریمیم معیار",
     description: "Export-grade standards",
+    urduDescription: "ایکسپورٹ گریڈ معیار",
   },
   {
     icon: Shield,
     title: "Authentic Source",
+    urduTitle: "مستند ماخذ",
     description: "Direct from Himalayas",
+    urduDescription: "براہِ راست ہمالیہ سے",
   },
   {
     icon: TestTube,
     title: "Lab Tested",
+    urduTitle: "لیب ٹیسٹ شدہ",
     description: "Third-party verified",
+    urduDescription: "غیر جانبدارانہ تصدیق شدہ",
   },
   {
     icon: Globe,
     title: "Global Shipping",
+    urduTitle: "عالمی ترسیل",
     description: "Worldwide delivery",
+    urduDescription: "دنیا بھر میں ترسیل",
   },
   {
     icon: Leaf,
     title: "100% Organic",
+    urduTitle: "100% آرگینک",
     description: "No additives or fillers",
+    urduDescription: "کوئی ایڈیٹیوز یا فلرز نہیں",
   },
   {
     icon: CheckCircle,
     title: "Scientifically Backed",
+    urduTitle: "سائنسی توثیق",
     description: "Research-supported benefits",
+    urduDescription: "تحقیقی شواہد پر مبنی فوائد",
   },
 ];
 
 export default function TrustBadges() {
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
   return (
     <section className="bg-stone-50 py-16 border-y border-stone-200/50">
       <div className="container-custom px-4 sm:px-6 lg:px-8">
@@ -56,9 +71,11 @@ export default function TrustBadges() {
                   <Icon className="w-6 h-6 text-primary-700" />
                 </div>
                 <h3 className="font-semibold text-sm text-charcoal-900 mb-1.5">
-                  {badge.title}
+                  {isUrdu ? badge.urduTitle : badge.title}
                 </h3>
-                <p className="text-xs text-stone-600 leading-relaxed">{badge.description}</p>
+                <p className="text-xs text-stone-600 leading-relaxed">
+                  {isUrdu ? badge.urduDescription : badge.description}
+                </p>
               </motion.div>
             );
           })}

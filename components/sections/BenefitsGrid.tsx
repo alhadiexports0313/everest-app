@@ -15,25 +15,26 @@ import {
 import { VerticalTicker } from "@/components/ui/TickerStrip";
 import Image from "next/image";
 import { useRef } from "react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const benefits = [
   { label: "Reduces Stress & Anxiety", urdu: "تناؤ اور بے چینی میں کمی", icon: Moon },
   { label: "Enhanced Energy Levels", urdu: "توانائی میں اضافہ", icon: Zap },
   {
     label: "Improved Stamina & Athletic Performance",
-    urdu: "اسٹیمنا اور کھیلوں کی کارکردگی میں بہتری",
+    urdu: "برداشت اور کھیلوں کی کارکردگی میں بہتری",
     icon: Activity,
   },
   {
     label: "Mental Clarity & Cognitive Support",
-    urdu: "ذہنی وضاحت اور دماغی کارکردگی میں اضافہ",
+    urdu: "ذہنی وضاحت اور ادراکی کارکردگی میں بہتری",
     icon: Brain,
   },
   { label: "Clear Skin & Stronger Hair", urdu: "صاف جلد اور مضبوط بال", icon: Sparkles },
-  { label: "Anti-Aging Support", urdu: "بڑھتی عمر کے اثرات میں کمی", icon: Sparkles },
+  { label: "Anti-Aging Support", urdu: "عمر رسیدگی کے اثرات میں کمی", icon: Sparkles },
   {
     label: "Supports Healthy Testosterone Levels",
-    urdu: "صحت مند ٹیسٹوسٹیرون کی سطح میں معاون",
+    urdu: "صحت مند ٹیسٹوسٹیرون سطح کی معاونت",
     icon: Flame,
   },
   { label: "Peak Physical Performance", urdu: "بہترین جسمانی کارکردگی", icon: Target },
@@ -43,6 +44,8 @@ const benefits = [
 
 export default function BenefitsGrid() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -96,20 +99,14 @@ export default function BenefitsGrid() {
               <div className="relative">
                 <div className="text-center space-y-3">
                   <div>
-                    <h2 className="font-display text-3xl sm:text-4xl font-bold text-white tracking-tight">
-                      Power of Nature – Proven Benefits
+                    <h2 className={`font-display text-3xl sm:text-4xl font-bold text-white tracking-tight ${isUrdu ? "font-urdu" : ""}`}>
+                      {isUrdu ? "قدرت کی طاقت — ثابت شدہ فوائد" : "Power of Nature – Proven Benefits"}
                     </h2>
-                    <div className="mt-2 font-urdu text-xl sm:text-2xl text-amber-100/90">
-                      قدرت کی طاقت – ثابت شدہ فوائد
+                    <div className={`mt-2 text-sm sm:text-base text-amber-100/80 ${isUrdu ? "font-urdu" : ""}`}>
+                      {isUrdu
+                        ? "سائنسی شواہد کے ساتھ، خالص پہاڑی ماخذ سے"
+                        : "Science-backed. Mountain-sourced. Performance-driven."}
                     </div>
-                  </div>
-                  <div>
-                    <p className="text-base sm:text-lg text-stone-200 leading-relaxed font-light">
-                      Science-backed. Mountain-sourced. Performance-driven.
-                    </p>
-                    <p className="font-urdu text-sm sm:text-base text-stone-300 mt-2">
-                      سائنس سے ثابت شدہ، پہاڑوں سے حاصل شدہ، کارکردگی پر مبنی۔
-                    </p>
                   </div>
                 </div>
 
@@ -131,11 +128,11 @@ export default function BenefitsGrid() {
                           <span key={benefit.label} className="flex items-center gap-4">
                             <Icon className="h-4 w-4 text-amber-300/90" />
                             <span className="text-center">
-                              <span className="block text-base sm:text-lg text-white">
-                                {benefit.label}
+                              <span className={`block text-base sm:text-lg text-white ${isUrdu ? "font-urdu" : ""}`}>
+                                {isUrdu ? benefit.urdu : benefit.label}
                               </span>
-                              <span className="block font-urdu text-sm sm:text-base text-amber-100/80">
-                                {benefit.urdu}
+                              <span className={`block text-sm sm:text-base text-amber-100/80 ${isUrdu ? "" : "font-urdu"}`}>
+                                {isUrdu ? benefit.label : benefit.urdu}
                               </span>
                             </span>
                           </span>

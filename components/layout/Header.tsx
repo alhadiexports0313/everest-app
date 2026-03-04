@@ -6,17 +6,19 @@ import Image from "next/image";
 import { Menu, X, ShoppingBag, Search, Globe2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { t, locale } = useLanguage();
 
   const navItems = [
-    { label: "Products", href: "/products" },
-    { label: "Authenticity & Quality", href: "/authenticity-quality" },
-    { label: "Knowledge Hub", href: "/knowledge-hub" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: t("header.nav.products"), href: "/products" },
+    { label: t("header.nav.authenticity"), href: "/authenticity-quality" },
+    { label: t("header.nav.knowledge"), href: "/knowledge-hub" },
+    { label: t("header.nav.about"), href: "/about" },
+    { label: t("header.nav.contact"), href: "/contact" },
   ];
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function Header() {
             <div className="relative w-11 h-11 rounded-xl overflow-hidden shadow-md ring-1 ring-black/5">
               <Image
                 src="/images/brand/logo.jpeg"
-                alt="Everest Organic Shilajet logo"
+                alt="Everest Organic Shilajit logo"
                 fill
                 className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.02]"
               />
@@ -59,14 +61,14 @@ export default function Header() {
                   isScrolled ? "text-white" : "text-charcoal-900"
                 }`}
               >
-                Everest Organic
+                {t("header.brand.name")}
               </div>
               <div
                 className={`text-[11px] uppercase tracking-[0.18em] transition-colors duration-300 ${
                   isScrolled ? "text-stone-300" : "text-stone-500"
                 }`}
               >
-                Himalayan Shilajet
+                {t("header.brand.tagline")}
               </div>
             </div>
           </Link>
@@ -99,29 +101,24 @@ export default function Header() {
             {/* Language */}
             <div
               className={`hidden sm:flex items-center gap-2 transition-colors duration-300 ${
-                isScrolled ? "text-white/80" : "text-stone-500"
+                isScrolled ? "text-white/80" : "text-stone-600"
               }`}
             >
               <Globe2 className="w-4 h-4" />
-              <LanguageSwitcher
-                languages={[
-                  { code: "en", label: "EN" },
-                  { code: "ur", label: "اردو" },
-                ]}
-                current="en"
-              />
+              <LanguageSwitcher tone={isScrolled ? "dark" : "light"} />
             </div>
 
             {/* Search */}
-            <button
+            {/* <button
               className={`p-2.5 rounded-lg transition-all duration-300 ${
                 isScrolled
                   ? "text-white hover:text-amber-300 hover:bg-white/10"
                   : "text-charcoal-600 hover:text-primary-700 hover:bg-stone-100/70"
               }`}
+              aria-label={t("header.searchLabel")}
             >
               <Search className="w-5 h-5" />
-            </button>
+            </button> */}
 
             {/* Cart */}
             <button
@@ -130,6 +127,7 @@ export default function Header() {
                   ? "text-white hover:text-amber-300 hover:bg-white/10"
                   : "text-charcoal-600 hover:text-primary-700 hover:bg-stone-100/70"
               }`}
+              aria-label={t("header.cartLabel")}
             >
               <ShoppingBag className="w-5 h-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-400 rounded-full ring-2 ring-white" />
@@ -144,7 +142,7 @@ export default function Header() {
                   : "bg-primary-800 text-white hover:bg-primary-700"
               }`}
             >
-              Order Now
+              {t("header.orderNow")}
             </Link>
 
             {/* Mobile Button */}
@@ -155,6 +153,7 @@ export default function Header() {
                   : "text-charcoal-700 hover:bg-stone-100"
               }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={t("header.menuLabel")}
             >
               {isMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -192,6 +191,12 @@ export default function Header() {
                     {item.label}
                   </Link>
                 ))}
+                <div className="flex items-center gap-3">
+                  <span className="text-[12px] uppercase tracking-[0.2em] text-stone-400">
+                    {t("header.languageLabel")}
+                  </span>
+                  <LanguageSwitcher tone={isScrolled ? "dark" : "light"} />
+                </div>
               </div>
             </motion.div>
           )}

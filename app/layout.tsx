@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/ui/WhatsAppFloat";
+import LanguageProvider from "@/components/i18n/LanguageProvider";
+import { getLocale, tServer } from "@/lib/i18n-server";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,45 +20,57 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-export const metadata: Metadata = {
-  title: "Everest Organic Shilajet | Premium Himalayan Wellness",
-  description:
-    "Authentic, pure Shilajet from the Himalayas of Gilgit-Baltistan. Premium wellness supplement backed by science. Export quality, lab-tested, and trusted worldwide.",
-  keywords: [
-    "Shilajet",
-    "Himalayan Shilajet",
-    "Organic Shilajet",
-    "Gilgit-Baltistan",
-    "Wellness Supplement",
-    "Natural Health",
-    "Premium Shilajet",
-  ],
-  authors: [{ name: "Fazal", url: "https://everestorganicshilajet.com" }],
-  openGraph: {
-    title: "Everest Organic Shilajet | Premium Himalayan Wellness",
-    description:
-      "Authentic, pure Shilajet from the Himalayas. Premium wellness supplement backed by science.",
-    type: "website",
-    locale: "en_US",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Everest Organic Shilajet",
-    description: "Premium Himalayan Wellness Supplement",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = await tServer(locale);
+  const ogLocale = locale === "ur" ? "ur_PK" : "en_US";
+  return {
+    title: t("meta.title"),
+    description: t("meta.description"),
+    keywords: [
+      "Shilajet",
+      "Everest Organic Shilajit",
+      "Organic Shilajet",
+      "Gilgit-Baltistan",
+      "Wellness Supplement",
+      "Natural Health",
+      "Premium Shilajet",
+    ],
+    authors: [{ name: "Fazal", url: "https://everestorganicshilajet.com" }],
+    openGraph: {
+      title: t("meta.title"),
+      description: t("meta.ogDescription"),
+      type: "website",
+      locale: ogLocale,
+    },
+    alternates: {
+      languages: {
+        en: "/",
+        ur: "/?lang=ur",
+      },
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("meta.twitterTitle"),
+      description: t("meta.twitterDescription"),
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const dir = locale === "ur" ? "rtl" : "ltr";
+  const fontClass = locale === "ur" ? "font-urdu" : "font-sans";
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang={locale} dir={dir} className="scroll-smooth">
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap"
@@ -64,12 +78,14 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${playfair.variable} font-sans antialiased bg-stone-50 text-charcoal-900`}
+        className={`${inter.variable} ${playfair.variable} ${fontClass} antialiased bg-stone-50 text-charcoal-900`}
       >
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <WhatsAppFloat phoneNumber="923454490326" />
-        <Footer />
+        <LanguageProvider initialLocale={locale}>
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <WhatsAppFloat phoneNumber="923454490326" />
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

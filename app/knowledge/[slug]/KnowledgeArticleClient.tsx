@@ -3,26 +3,35 @@
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 type Section = {
   title: string;
+  urduTitle?: string;
   body?: string;
   urdu?: string;
   bullets?: { label: string; text: string }[];
+  urduBullets?: { label: string; text: string }[];
   list?: string[];
+  urduList?: string[];
   table?: { label: string; value: string }[];
+  urduTable?: { label: string; value: string }[];
 };
 
 type Article = {
   title: string;
   urduTitle: string;
   readTime: string;
+  readTimeUrdu?: string;
   description: string;
+  urduDescription?: string;
   sections: Section[];
 };
 
 export default function KnowledgeArticleClient({ article }: { article: Article }) {
   const [progress, setProgress] = useState(0);
+  const { locale, t } = useLanguage();
+  const isUrdu = locale === "ur";
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -42,6 +51,9 @@ export default function KnowledgeArticleClient({ article }: { article: Article }
   }, []);
 
   const sections = useMemo(() => article.sections ?? [], [article.sections]);
+  const readTime = isUrdu ? article.readTimeUrdu ?? article.readTime : article.readTime;
+  const title = isUrdu ? article.urduTitle : article.title;
+  const description = isUrdu ? article.urduDescription ?? article.description : article.description;
 
   return (
     <div className="min-h-screen bg-white text-charcoal-900">
@@ -62,31 +74,28 @@ export default function KnowledgeArticleClient({ article }: { article: Article }
           <div className="max-w-4xl mx-auto">
             <nav className="flex items-center gap-2 text-xs text-stone-500 uppercase tracking-[0.28em]">
               <Link href="/" className="hover:text-[#C6A052] transition-colors">
-                Home
+                {t("knowledge.breadcrumb.home")}
               </Link>
               <span>/</span>
               <Link
                 href="/knowledge-hub"
                 className="hover:text-[#C6A052] transition-colors"
               >
-                Knowledge Hub
+                {t("knowledge.breadcrumb.hub")}
               </Link>
               <span>/</span>
-              <span className="text-stone-400">{article.readTime}</span>
+              <span className="text-stone-400">{readTime}</span>
             </nav>
 
             <div className="mt-6 rounded-3xl border border-stone-200/70 bg-white p-8 sm:p-10 shadow-[0_25px_70px_rgba(15,23,42,0.08)]">
               <div className="inline-flex items-center rounded-full border border-[#C6A052]/30 bg-[#C6A052]/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[#8C6C2B]">
-                {article.readTime}
+                {readTime}
               </div>
               <h1 className="font-display text-3xl sm:text-5xl font-semibold mt-6 leading-tight">
-                {article.title}
+                {title}
               </h1>
-              <p className="font-urdu text-lg sm:text-2xl text-stone-600 mt-3">
-                {article.urduTitle}
-              </p>
               <p className="text-base sm:text-lg text-stone-700 leading-relaxed mt-6">
-                {article.description}
+                {description}
               </p>
               <div className="mt-8 h-px w-full bg-gradient-to-r from-transparent via-[#C6A052]/60 to-transparent" />
             </div>
@@ -103,17 +112,21 @@ export default function KnowledgeArticleClient({ article }: { article: Article }
                 >
                   <div className="flex items-center justify-between gap-4">
                     <h2 className="font-display text-2xl sm:text-3xl font-semibold">
-                      {section.title}
+                      {isUrdu ? section.urduTitle ?? section.title : section.title}
                     </h2>
                     <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#C6A052]/70 to-transparent" />
                   </div>
-                  {section.body && (
-                    <p className="mt-5 text-stone-700 leading-relaxed">{section.body}</p>
-                  )}
+                  {isUrdu
+                    ? section.urdu && (
+                        <p className="mt-5 text-stone-700 leading-relaxed">{section.urdu}</p>
+                      )
+                    : section.body && (
+                        <p className="mt-5 text-stone-700 leading-relaxed">{section.body}</p>
+                      )}
 
-                  {section.table && (
+                  {((isUrdu ? section.urduTable : section.table) ?? null) && (
                     <div className="mt-6 grid gap-3">
-                      {section.table.map((row) => (
+                      {(isUrdu ? section.urduTable : section.table)?.map((row) => (
                         <div
                           key={row.label}
                           className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-stone-200/70 bg-stone-50 px-5 py-4 text-sm"
@@ -127,9 +140,9 @@ export default function KnowledgeArticleClient({ article }: { article: Article }
                     </div>
                   )}
 
-                  {section.bullets && (
+                  {((isUrdu ? section.urduBullets : section.bullets) ?? null) && (
                     <ul className="mt-6 space-y-3 text-stone-700">
-                      {section.bullets.map((bullet) => (
+                      {(isUrdu ? section.urduBullets : section.bullets)?.map((bullet) => (
                         <li
                           key={bullet.label}
                           className="rounded-2xl border border-stone-200/70 bg-stone-50 px-5 py-4 text-sm leading-relaxed"
@@ -143,9 +156,9 @@ export default function KnowledgeArticleClient({ article }: { article: Article }
                     </ul>
                   )}
 
-                  {section.list && (
+                  {((isUrdu ? section.urduList : section.list) ?? null) && (
                     <ul className="mt-6 grid gap-3 text-stone-700">
-                      {section.list.map((item) => (
+                      {(isUrdu ? section.urduList : section.list)?.map((item) => (
                         <li
                           key={item}
                           className="rounded-2xl border border-stone-200/70 bg-stone-50 px-5 py-4 text-sm"
@@ -154,12 +167,6 @@ export default function KnowledgeArticleClient({ article }: { article: Article }
                         </li>
                       ))}
                     </ul>
-                  )}
-
-                  {section.urdu && (
-                    <p className="mt-6 font-urdu text-base text-stone-600 leading-relaxed">
-                      {section.urdu}
-                    </p>
                   )}
                 </motion.section>
               ))}
@@ -170,18 +177,18 @@ export default function KnowledgeArticleClient({ article }: { article: Article }
                 href="/knowledge-hub"
                 className="inline-flex items-center justify-center rounded-full border border-stone-200 bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-stone-700 shadow-soft transition-all duration-500 hover:border-[#C6A052]/60 hover:text-[#8C6C2B]"
               >
-                Back to Knowledge Hub
+                {t("knowledge.back")}
               </Link>
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={article.readTime}
+                  key={readTime}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                   className="text-xs uppercase tracking-[0.28em] text-stone-500"
                 >
-                  {article.readTime}
+                  {readTime}
                 </motion.div>
               </AnimatePresence>
             </div>

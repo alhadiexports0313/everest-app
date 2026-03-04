@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Mountain, MapPin, Users, Heart } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const originImages = [
   "product_9.jpg",
@@ -19,6 +20,8 @@ const originImagePaths = originImages.map(
 
 export default function OriginStory() {
   const [originImage, setOriginImage] = useState(originImagePaths[0]);
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
 
   useEffect(() => {
     const pick = originImagePaths[Math.floor(Math.random() * originImagePaths.length)];
@@ -43,73 +46,98 @@ export default function OriginStory() {
             viewport={{ once: true }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            <div className="inline-flex items-center space-x-2 glass-card px-5 py-2.5 rounded-full border border-stone-200/50 mb-8 shadow-soft">
+            <div
+              className={`inline-flex items-center glass-card px-5 py-2.5 rounded-full border border-stone-200/50 mb-8 shadow-soft ${
+                isUrdu ? "flex-row-reverse space-x-reverse space-x-2" : "space-x-2"
+              }`}
+            >
               <MapPin className="w-4 h-4 text-primary-700" />
-              <span className="text-sm font-medium text-primary-800">
-                Gilgit-Baltistan, Pakistan
+              <span className={`text-sm font-medium text-primary-800 ${isUrdu ? "font-urdu" : ""}`}>
+                {isUrdu ? "گلگت بلتستان، پاکستان" : "Gilgit-Baltistan, Pakistan"}
               </span>
             </div>
 
-            <h2 className="font-display text-display-3 font-bold text-charcoal-900 mb-8 tracking-tight">
-              From the Heart of the Himalayas
+            <h2 className={`font-display text-display-3 font-bold text-charcoal-900 mb-8 tracking-tight ${isUrdu ? "font-urdu" : ""}`}>
+              {isUrdu ? "ہمالیہ کے دل سے" : "From the Heart of the Himalayas"}
             </h2>
 
-            <div className="space-y-6 text-stone-700 leading-relaxed">
+            <div className={`space-y-6 text-stone-700 leading-relaxed ${isUrdu ? "font-urdu text-right" : ""}`}>
               <p className="text-lg font-light">
-                Founded by Fazal, Everest Organic Shilajet represents a deep connection
-                to the pristine mountains of Gilgit-Baltistan, where Shilajet has been
-                harvested for centuries.
+                {isUrdu
+                  ? "فضل کی جانب سے قائم کردہ ایورسٹ آرگینک سلاجیت، گلگت بلتستان کے پاکیزہ پہاڑوں سے گہرا تعلق رکھتی ہے جہاں صدیوں سے سلاجیت حاصل کی جاتی رہی ہے۔"
+                  : "Founded by Fazal, Everest Organic Shilajit represents a deep connection to the pristine mountains of Gilgit-Baltistan, where Shilajet has been harvested for centuries."}
               </p>
 
               <p className="font-light">
-                Our journey begins at altitudes above 3,000 meters, where the purest
-                Shilajet naturally exudes from Himalayan rock faces. We work directly
-                with local harvesters who have inherited this ancient knowledge,
-                ensuring ethical sourcing and fair trade practices.
+                {isUrdu
+                  ? "ہمارا سفر تین ہزار میٹر سے بلند مقامات سے شروع ہوتا ہے، جہاں خالص ترین سلاجیت قدرتی طور پر چٹانوں سے نمودار ہوتی ہے۔ ہم مقامی حصول کنندگان کے ساتھ براہِ راست کام کرتے ہیں تاکہ اخلاقی حصول اور منصفانہ تجارت یقینی رہے۔"
+                  : "Our journey begins at altitudes above 3,000 meters, where the purest Shilajet naturally exudes from Himalayan rock faces. We work directly with local harvesters who have inherited this ancient knowledge, ensuring ethical sourcing and fair trade practices."}
               </p>
 
               <p className="font-light">
-                Every batch is carefully collected, tested, and processed to preserve its
-                natural potency and bioactive compounds. We're committed to bringing
-                you the most authentic, premium-quality Shilajet while supporting the
-                communities that make it possible.
+                {isUrdu
+                  ? "ہر بیچ کو احتیاط سے جمع، جانچا اور پروسیس کیا جاتا ہے تاکہ قدرتی طاقت اور بایوایکٹو اجزاء محفوظ رہیں۔ ہم خالص ترین پریمیم سلاجیت فراہم کرتے ہوئے اُن کمیونٹیز کی بھی معاونت کرتے ہیں جو اسے ممکن بناتی ہیں۔"
+                  : "Every batch is carefully collected, tested, and processed to preserve its natural potency and bioactive compounds. We're committed to bringing you the most authentic, premium-quality Shilajet while supporting the communities that make it possible."}
               </p>
             </div>
 
-            {/* Values */}
             <div className="grid grid-cols-2 gap-6 mt-10">
-              <div className="flex items-start space-x-3">
+              <div
+                className={`flex items-start ${
+                  isUrdu ? "flex-row-reverse space-x-reverse space-x-3" : "space-x-3"
+                }`}
+              >
                 <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center shadow-soft">
                   <Mountain className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                  <h4 className="font-semibold text-charcoal-900 mb-1.5">Mountain Sourced</h4>
+                <div className={isUrdu ? "text-right" : "text-left"}>
+                  <h4 className="font-semibold text-charcoal-900 mb-1.5">
+                    {isUrdu ? "پہاڑی ماخذ" : "Mountain Sourced"}
+                  </h4>
                   <p className="text-sm text-stone-600 font-light">
-                    Directly from high-altitude Himalayan sources
+                    {isUrdu
+                      ? "بلند ہمالیائی ماخذ سے براہِ راست"
+                      : "Directly from high-altitude Himalayan sources"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start space-x-3">
+              <div
+                className={`flex items-start ${
+                  isUrdu ? "flex-row-reverse space-x-reverse space-x-3" : "space-x-3"
+                }`}
+              >
                 <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center shadow-soft">
                   <Users className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                  <h4 className="font-semibold text-charcoal-900 mb-1.5">Ethical Trade</h4>
+                <div className={isUrdu ? "text-right" : "text-left"}>
+                  <h4 className="font-semibold text-charcoal-900 mb-1.5">
+                    {isUrdu ? "اخلاقی تجارت" : "Ethical Trade"}
+                  </h4>
                   <p className="text-sm text-stone-600 font-light">
-                    Supporting local communities and fair practices
+                    {isUrdu
+                      ? "مقامی کمیونٹیز کی حمایت اور منصفانہ طریقۂ کار"
+                      : "Supporting local communities and fair practices"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start space-x-3">
+              <div
+                className={`flex items-start ${
+                  isUrdu ? "flex-row-reverse space-x-reverse space-x-3" : "space-x-3"
+                }`}
+              >
                 <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center shadow-soft">
                   <Heart className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                  <h4 className="font-semibold text-charcoal-900 mb-1.5">Pure & Natural</h4>
+                <div className={isUrdu ? "text-right" : "text-left"}>
+                  <h4 className="font-semibold text-charcoal-900 mb-1.5">
+                    {isUrdu ? "خالص اور قدرتی" : "Pure & Natural"}
+                  </h4>
                   <p className="text-sm text-stone-600 font-light">
-                    No additives, fillers, or processing chemicals
+                    {isUrdu
+                      ? "کوئی ایڈیٹیوز، فلرز یا پروسیسنگ کیمیکلز نہیں"
+                      : "No additives, fillers, or processing chemicals"}
                   </p>
                 </div>
               </div>
@@ -133,11 +161,15 @@ export default function OriginStory() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/10 bg-black/40 px-6 py-4 backdrop-blur-md">
-                <div className="text-white text-2xl font-display font-bold mb-1 tracking-tight">
-                  Gilgit-Baltistan
+                <div
+                  className={`text-white text-2xl font-display font-bold mb-1 tracking-tight ${
+                    isUrdu ? "font-urdu" : ""
+                  }`}
+                >
+                  {isUrdu ? "گلگت بلتستان" : "Gilgit-Baltistan"}
                 </div>
-                <div className="text-stone-200 text-sm font-light">
-                  The Source of Authentic Shilajet
+                <div className={`text-stone-200 text-sm font-light ${isUrdu ? "font-urdu" : ""}`}>
+                  {isUrdu ? "مستند سلاجیت کا اصل ماخذ" : "The Source of Authentic Shilajet"}
                 </div>
               </div>
             </div>

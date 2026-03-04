@@ -18,6 +18,9 @@ export interface Testimonial {
   location: string;
   rating: number;
   text: string;
+  urduName?: string;
+  urduLocation?: string;
+  urduText?: string;
   image: string;
 }
 

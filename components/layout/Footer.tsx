@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Mountain, Mail, MapPin, Instagram, Facebook, MessageCircle } from "lucide-react";
+import { tServer } from "@/lib/i18n-server";
 
-export default function Footer() {
+export default async function Footer() {
   const currentYear = new Date().getFullYear();
+  const t = await tServer();
 
   return (
     <footer className="bg-gradient-forest text-white">
@@ -12,11 +14,12 @@ export default function Footer() {
           <div className="space-y-5">
             <div className="flex items-center space-x-2">
               <Mountain className="w-6 h-6 text-accent-400" />
-              <span className="font-display text-xl font-bold tracking-tight">Everest Organic</span>
+              <span className="font-display text-xl font-bold tracking-tight">
+                {t("footer.brandName")}
+              </span>
             </div>
             <p className="text-stone-300 text-sm leading-relaxed font-light">
-              Premium Himalayan Shilajet from Gilgit-Baltistan, crafted for purity and
-              daily wellness.
+              {t("footer.brandDescription")}
             </p>
             <div className="flex space-x-4">
               <a
@@ -38,26 +41,26 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold mb-5 text-stone-100">Quick Links</h3>
+            <h3 className="font-semibold mb-5 text-stone-100">{t("footer.quickLinksTitle")}</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link href="/products" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  Products
+                  {t("footer.quickLinks.products")}
                 </Link>
               </li>
               <li>
                 <Link href="/authenticity-quality" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  Authenticity & Quality
+                  {t("footer.quickLinks.authenticity")}
                 </Link>
               </li>
               <li>
                 <Link href="/knowledge-hub" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  Knowledge Hub
+                  {t("footer.quickLinks.knowledge")}
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  About Us
+                  {t("footer.quickLinks.about")}
                 </Link>
               </li>
             </ul>
@@ -65,26 +68,26 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="font-semibold mb-5 text-stone-100">Support</h3>
+            <h3 className="font-semibold mb-5 text-stone-100">{t("footer.supportTitle")}</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link href="/contact" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  Contact Us
+                  {t("footer.support.contact")}
                 </Link>
               </li>
               <li>
                 <Link href="#" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  Shipping Info
+                  {t("footer.support.shipping")}
                 </Link>
               </li>
               <li>
                 <Link href="#" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  Returns
+                  {t("footer.support.returns")}
                 </Link>
               </li>
               <li>
                 <Link href="#" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  FAQ
+                  {t("footer.support.faq")}
                 </Link>
               </li>
             </ul>
@@ -92,11 +95,11 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="font-semibold mb-5 text-stone-100">Contact</h3>
+            <h3 className="font-semibold mb-5 text-stone-100">{t("footer.contactTitle")}</h3>
             <ul className="space-y-3 text-sm text-stone-300">
               <li className="flex items-start space-x-2">
                 <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <span>Gilgit-Baltistan, Pakistan</span>
+                <span>{t("footer.location")}</span>
               </li>
               <li className="flex items-start space-x-2">
                 <Mail className="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -104,7 +107,7 @@ export default function Footer() {
                   href="mailto:everestorganicshilajet@gmail.com"
                   className="hover:text-white transition-colors duration-300"
                 >
-                  everestorganicshilajet@gmail.com
+                  {t("footer.email")}
                 </a>
               </li>
               <li className="flex items-start space-x-2">
@@ -115,7 +118,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  WhatsApp: 0345 449 0326
+                  {t("footer.whatsapp")}
                 </a>
               </li>
             </ul>
@@ -125,14 +128,14 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-primary-800/50 pt-8 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
           <p className="text-stone-400 text-sm font-light">
-            © {currentYear} Everest Organic Shilajet. All rights reserved.
+            © {currentYear} {t("footer.rights")}
           </p>
           <div className="flex space-x-6 text-sm">
             <Link href="#" className="text-stone-400 hover:text-stone-300 transition-colors duration-300">
-              Privacy Policy
+              {t("footer.privacy")}
             </Link>
             <Link href="#" className="text-stone-400 hover:text-stone-300 transition-colors duration-300">
-              Terms of Service
+              {t("footer.terms")}
             </Link>
           </div>
         </div>

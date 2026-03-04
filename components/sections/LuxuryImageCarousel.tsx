@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion, useAnimationFrame, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const ITEM_WIDTH = 210;
 const ITEM_HEIGHT = 290;
@@ -107,6 +108,8 @@ export default function LuxuryImageCarousel() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const x = useMotionValue(0);
   const [containerWidth, setContainerWidth] = useState(0);
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
   const pauseUntilRef = useRef(0);
   const burstUntilRef = useRef(0);
   const lastPausedIndexRef = useRef<number | null>(null);
@@ -114,6 +117,10 @@ export default function LuxuryImageCarousel() {
   const step = ITEM_WIDTH + ITEM_GAP;
   const loopWidth = useMemo(() => productImages.length * step, []);
   const items = useMemo(() => [...productImages, ...productImages], []);
+
+  useEffect(() => {
+    x.set(0);
+  }, [isUrdu, x]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -132,7 +139,8 @@ export default function LuxuryImageCarousel() {
     if (!containerWidth) return;
     if (time < pauseUntilRef.current) return;
 
-    const offset = ((-x.get()) % loopWidth + loopWidth) % loopWidth;
+    const offsetBase = (isUrdu ? x.get() : -x.get());
+    const offset = ((offsetBase % loopWidth) + loopWidth) % loopWidth;
     const center = containerWidth / 2;
     let closestIndex = 0;
     let closestDistance = Number.POSITIVE_INFINITY;
@@ -156,8 +164,10 @@ export default function LuxuryImageCarousel() {
 
     const speed = time < burstUntilRef.current ? BASE_SPEED_PX * 2.25 : BASE_SPEED_PX;
     const move = (speed * delta) / 1000;
-    let next = x.get() - move;
-    if (next <= -loopWidth) next += loopWidth;
+    const direction = isUrdu ? 1 : -1;
+    let next = x.get() + direction * move;
+    if (direction === -1 && next <= -loopWidth) next += loopWidth;
+    if (direction === 1 && next >= 0) next -= loopWidth;
     x.set(next);
   });
 
@@ -169,15 +179,22 @@ export default function LuxuryImageCarousel() {
           <div className="absolute inset-0 rounded-[32px] bg-gradient-to-br from-amber-200/10 via-transparent to-transparent" />
           <div className="relative">
             <div className="mx-auto mb-10 max-w-3xl text-center">
-              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
-                Premium Flow Gallery
+              <h2 className={`font-display text-3xl sm:text-4xl font-semibold text-white ${isUrdu ? "font-urdu" : ""}`}>
+                {isUrdu ? "پریمیم فلو گیلری" : "Premium Flow Gallery"}
               </h2>
-              <p className="mt-3 text-sm sm:text-base text-white/70">
-                Modern, minimal, cinematic motion with luxury depth.
+              <p className={`mt-3 text-sm sm:text-base text-white/70 ${isUrdu ? "font-urdu" : ""}`}>
+                {isUrdu
+                  ? "جدید، کم سے کم اور سنیماٹک موشن کے ساتھ پریمیم جھلک۔"
+                  : "Modern, minimal, cinematic motion with luxury depth."}
               </p>
             </div>
 
-            <div ref={containerRef} className="relative overflow-hidden" style={{ perspective: 1200 }}>
+            <div
+              ref={containerRef}
+              className="relative overflow-hidden"
+              style={{ perspective: 1200 }}
+              dir={isUrdu ? "rtl" : "ltr"}
+            >
               <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[320px] -translate-x-1/2 bg-gradient-to-r from-transparent via-amber-200/20 to-transparent blur-2xl" />
               <motion.div style={{ x, width: loopWidth * 2 }} className="flex items-center gap-7">
                 {items.map((src, index) => (

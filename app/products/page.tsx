@@ -14,6 +14,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import CTA from "@/components/sections/CTA";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const sizes = [
   { label: "10g", price: 1500 },
@@ -27,47 +28,83 @@ const galleryImages = [
 ];
 
 const authenticityPoints = [
-  "Verified Himalayan origin from Gilgit-Baltistan",
-  "Lab-tested purity and heavy metal screening",
-  "Fulvic & trace minerals preserved in resin form",
-  "No additives, fillers, or synthetic processing",
+  {
+    text: "Verified Himalayan origin from Gilgit-Baltistan",
+    urdu: "گلگت بلتستان سے تصدیق شدہ ہمالیائی ماخذ",
+  },
+  {
+    text: "Lab-tested purity and heavy metal screening",
+    urdu: "لیب ٹیسٹڈ خلوص اور ہیوی میٹل اسکریننگ",
+  },
+  {
+    text: "Fulvic & trace minerals preserved in resin form",
+    urdu: "رال کی صورت میں فولویِک اور ٹریس منرلز محفوظ",
+  },
+  {
+    text: "No additives, fillers, or synthetic processing",
+    urdu: "کوئی ایڈیٹیوز، فلرز یا مصنوعی پراسیسنگ نہیں",
+  },
 ];
 
 const deliveryPoints = [
-  "Carefully sealed in airtight, eco-friendly packaging",
-  "Shipped within 24–48 hours after confirmation",
-  "Trackable delivery nationwide and worldwide",
-  "Support via WhatsApp for order updates",
+  {
+    text: "Carefully sealed in airtight, eco-friendly packaging",
+    urdu: "محفوظ ائیر ٹائٹ اور ماحول دوست پیکجنگ میں بند",
+  },
+  {
+    text: "Shipped within 24–48 hours after confirmation",
+    urdu: "تصدیق کے بعد 24 تا 48 گھنٹوں میں ترسیل",
+  },
+  {
+    text: "Trackable delivery nationwide and worldwide",
+    urdu: "پاکستان بھر اور دنیا بھر میں قابلِ ٹریک ترسیل",
+  },
+  {
+    text: "Support via WhatsApp for order updates",
+    urdu: "آرڈر اپڈیٹس کے لیے واٹس ایپ سپورٹ",
+  },
 ];
 
 const futureProducts = [
   {
     title: "Shilajet Capsules",
     description: "A convenient daily routine format with measured potency.",
+    urduTitle: "سلاجیت کیپسول",
+    urduDescription: "ماپے ہوئے اثر کے ساتھ روزمرہ کے لیے آسان انتخاب۔",
   },
   {
     title: "Shilajet Powder",
     description: "Versatile powder for custom blends and wellness rituals.",
+    urduTitle: "سلاجیت پاؤڈر",
+    urduDescription: "کسٹم بلینڈز اور ویلنَس معمولات کے لیے موزوں پاؤڈر۔",
   },
   {
     title: "Herbal Infusions",
     description: "Curated Himalayan blends crafted for future launches.",
+    urduTitle: "ہربل انفیوژنز",
+    urduDescription: "منتخب ہمالیائی بلینڈز جو آئندہ لانچ کے لیے تیار ہیں۔",
   },
 ];
 
 export default function ProductsPage() {
   const [selectedSize, setSelectedSize] = useState(sizes[1]);
   const [activeImage, setActiveImage] = useState(galleryImages[0]);
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
 
   const whatsappLink = useMemo(() => {
-    const message = `Order request: Pure Himalayan Shilajet (${selectedSize.label})`;
+    const message = isUrdu
+      ? `آرڈر کی درخواست: ایورسٹ آرگینک سلاجیت (${selectedSize.label})`
+      : `Order request: Everest Organic Shilajit (${selectedSize.label})`;
     return `https://wa.me/923454490326?text=${encodeURIComponent(message)}`;
-  }, [selectedSize.label]);
+  }, [isUrdu, selectedSize.label]);
 
   const emailLink = useMemo(() => {
-    const subject = `Order: Pure Himalayan Shilajet (${selectedSize.label})`;
+    const subject = isUrdu
+      ? `آرڈر: ایورسٹ آرگینک سلاجیت (${selectedSize.label})`
+      : `Order: Everest Organic Shilajit (${selectedSize.label})`;
     return `mailto:everestorganicshilajet@gmail.com?subject=${encodeURIComponent(subject)}`;
-  }, [selectedSize.label]);
+  }, [isUrdu, selectedSize.label]);
 
   return (
     <>
@@ -75,10 +112,12 @@ export default function ProductsPage() {
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="font-display text-display-2 font-bold text-charcoal-900 mb-6 tracking-tight">
-              Products
+              {isUrdu ? "مصنوعات" : "Products"}
             </h1>
             <p className="text-lg text-stone-700 leading-relaxed font-light">
-              Premium storytelling of pure Himalayan Shilajet, crafted for modern wellness.
+              {isUrdu
+                ? "ایورسٹ آرگینک سلاجیت کی پریمیم کہانی، جدید ویلنَس کے لیے تیار کردہ۔"
+                : "Premium storytelling of Everest Organic Shilajit, crafted for modern wellness."}
             </p>
           </div>
         </div>
@@ -95,14 +134,17 @@ export default function ProductsPage() {
                 transition={{ duration: 0.7, ease: "easeOut" }}
               >
                 <div className="inline-flex items-center gap-2 rounded-full border border-stone-200/60 bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
-                  Pure Himalayan Shilajet
+                  {isUrdu ? "ایورسٹ آرگینک سلاجیت" : "Everest Organic Shilajit"}
                 </div>
                 <h2 className="font-display text-display-3 font-bold text-charcoal-900 mt-5 tracking-tight">
-                  Crafted in the Himalayas, refined for daily ritual
+                  {isUrdu
+                    ? "ہمالیہ میں تیار، روزمرہ کے معمول کے لیے نکھاری گئی"
+                    : "Crafted in the Himalayas, refined for daily ritual"}
                 </h2>
                 <p className="text-lg text-stone-700 leading-relaxed font-light mt-4">
-                  Harvested from high-altitude Himalayan rock formations and refined to
-                  preserve potency, every jar delivers a premium wellness experience.
+                  {isUrdu
+                    ? "بلند ہمالیائی چٹانی ساختوں سے حاصل اور خالص کیا گیا، ہر جار پریمیم ویلنَس کا معیار فراہم کرتا ہے۔"
+                    : "Harvested from high-altitude Himalayan rock formations and refined to preserve potency, every jar delivers a premium wellness experience."}
                 </p>
               </motion.div>
 
@@ -111,7 +153,7 @@ export default function ProductsPage() {
                   <div className="relative aspect-square">
                     <Image
                       src={activeImage}
-                      alt="Pure Himalayan Shilajet resin texture"
+                      alt="Everest Organic Shilajit resin texture"
                       fill
                       className="object-cover lux-image"
                       priority
@@ -142,35 +184,57 @@ export default function ProductsPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="rounded-2xl border border-stone-200/60 bg-white p-6 shadow-soft">
-                  <div className="flex items-center gap-3 mb-4">
+                <div
+                  className={`rounded-2xl border border-stone-200/60 bg-white p-6 shadow-soft ${
+                    isUrdu ? "text-right" : "text-left"
+                  }`}
+                >
+                  <div
+                    className={`flex items-center gap-3 mb-4 ${
+                      isUrdu ? "flex-row-reverse justify-end" : ""
+                    }`}
+                  >
                     <ShieldCheck className="w-5 h-5 text-primary-700" />
                     <h3 className="font-display text-lg font-semibold text-charcoal-900">
-                      Authenticity Points
+                      {isUrdu ? "اصلیت کے پیمانے" : "Authenticity Points"}
                     </h3>
                   </div>
                   <ul className="space-y-2 text-sm text-stone-700">
                     {authenticityPoints.map((point) => (
-                      <li key={point} className="flex items-start gap-2">
+                      <li
+                        key={point.text}
+                        className={`flex items-start gap-2 ${isUrdu ? "flex-row-reverse" : ""}`}
+                      >
                         <Check className="w-4 h-4 text-primary-700 mt-0.5" />
-                        {point}
+                        {isUrdu ? point.urdu : point.text}
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="rounded-2xl border border-stone-200/60 bg-white p-6 shadow-soft">
-                  <div className="flex items-center gap-3 mb-4">
+                <div
+                  className={`rounded-2xl border border-stone-200/60 bg-white p-6 shadow-soft ${
+                    isUrdu ? "text-right" : "text-left"
+                  }`}
+                >
+                  <div
+                    className={`flex items-center gap-3 mb-4 ${
+                      isUrdu ? "flex-row-reverse justify-end" : ""
+                    }`}
+                  >
                     <Truck className="w-5 h-5 text-primary-700" />
                     <h3 className="font-display text-lg font-semibold text-charcoal-900">
-                      Delivery Info
+                      {isUrdu ? "ترسیل کی معلومات" : "Delivery Info"}
                     </h3>
                   </div>
                   <ul className="space-y-2 text-sm text-stone-700">
                     {deliveryPoints.map((point) => (
-                      <li key={point} className="flex items-start gap-2">
+                      <li
+                        key={point.text}
+                        className={`flex items-start gap-2 ${isUrdu ? "flex-row-reverse" : ""}`}
+                      >
                         <Check className="w-4 h-4 text-primary-700 mt-0.5" />
-                        {point}
+                        {isUrdu ? point.urdu : point.text}
                       </li>
                     ))}
                   </ul>
@@ -179,13 +243,21 @@ export default function ProductsPage() {
             </div>
 
             <div className="lg:sticky lg:top-24 space-y-6">
-              <div className="rounded-3xl border border-stone-200/60 bg-white p-7 shadow-premium">
-                <div className="flex items-center gap-2 text-sm text-primary-700 font-semibold">
+              <div
+                className={`rounded-3xl border border-stone-200/60 bg-white p-7 shadow-premium ${
+                  isUrdu ? "text-right" : "text-left"
+                }`}
+              >
+                <div
+                  className={`flex items-center gap-2 text-sm text-primary-700 font-semibold ${
+                    isUrdu ? "flex-row-reverse justify-end" : ""
+                  }`}
+                >
                   <Sparkles className="w-4 h-4" />
-                  Premium Resin Jar
+                  {isUrdu ? "پریمیم رال جار" : "Premium Resin Jar"}
                 </div>
                 <div className="mt-5">
-                  <div className="text-sm text-stone-500">Price</div>
+                  <div className="text-sm text-stone-500">{isUrdu ? "قیمت" : "Price"}</div>
                   <div className="text-3xl font-display font-bold text-charcoal-900">
                     PKR {selectedSize.price.toLocaleString()}
                   </div>
@@ -193,7 +265,7 @@ export default function ProductsPage() {
 
                 <div className="mt-6">
                   <div className="text-sm font-semibold text-charcoal-900 mb-3">
-                    Size Selection
+                    {isUrdu ? "سائز کا انتخاب" : "Size Selection"}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {sizes.map((size) => (
@@ -214,13 +286,19 @@ export default function ProductsPage() {
                 </div>
 
                 <div className="mt-6 space-y-3 text-sm text-stone-700">
-                  <div className="flex items-center gap-2">
+                  <div
+                    className={`flex items-center gap-2 ${isUrdu ? "flex-row-reverse" : ""}`}
+                  >
                     <TestTube className="w-4 h-4 text-primary-700" />
-                    Lab-tested purity & safety
+                    {isUrdu ? "لیب ٹیسٹ شدہ خلوص اور حفاظت" : "Lab-tested purity & safety"}
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div
+                    className={`flex items-center gap-2 ${isUrdu ? "flex-row-reverse" : ""}`}
+                  >
                     <Leaf className="w-4 h-4 text-primary-700" />
-                    Eco-friendly airtight packaging
+                    {isUrdu
+                      ? "ماحول دوست ائیر ٹائٹ پیکجنگ"
+                      : "Eco-friendly airtight packaging"}
                   </div>
                 </div>
 
@@ -232,14 +310,14 @@ export default function ProductsPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-premium lux-button"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    Order on WhatsApp
+                    {isUrdu ? "واٹس ایپ پر آرڈر کریں" : "Order on WhatsApp"}
                   </a>
                   <a
                     href={emailLink}
                     className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button hover:border-primary-300"
                   >
                     <Mail className="w-4 h-4" />
-                    Order via Email
+                    {isUrdu ? "ای میل کے ذریعے آرڈر کریں" : "Order via Email"}
                   </a>
                 </div>
               </div>
@@ -249,26 +327,34 @@ export default function ProductsPage() {
           <div className="mt-16">
             <div className="text-center max-w-3xl mx-auto">
               <h3 className="font-display text-2xl font-bold text-charcoal-900 mb-4">
-                Future Products Teaser
+                {isUrdu ? "آئندہ مصنوعات کی جھلک" : "Future Products Teaser"}
               </h3>
               <p className="text-stone-700 leading-relaxed font-light">
-                A premium lineup is in development to complement the flagship resin.
+                {isUrdu
+                  ? "پرچم بردار رال کے ساتھ ہم آہنگ پریمیم لائن اَپ تیار کیا جا رہا ہے۔"
+                  : "A premium lineup is in development to complement the flagship resin."}
               </p>
             </div>
             <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
               {futureProducts.map((product) => (
                 <div
                   key={product.title}
-                  className="rounded-2xl border border-stone-200/60 bg-white p-6 shadow-soft"
+                  className={`rounded-2xl border border-stone-200/60 bg-white p-6 shadow-soft ${
+                    isUrdu ? "text-right" : "text-left"
+                  }`}
                 >
-                  <div className="text-xs uppercase tracking-[0.24em] text-primary-700 font-semibold">
-                    Coming Soon
+                  <div
+                    className={`text-xs text-primary-700 font-semibold ${
+                      isUrdu ? "tracking-normal" : "uppercase tracking-[0.24em]"
+                    }`}
+                  >
+                    {isUrdu ? "جلد آرہا ہے" : "Coming Soon"}
                   </div>
                   <h4 className="font-display text-xl font-bold text-charcoal-900 mt-4">
-                    {product.title}
+                    {isUrdu ? product.urduTitle : product.title}
                   </h4>
                   <p className="text-sm text-stone-700 leading-relaxed mt-3">
-                    {product.description}
+                    {isUrdu ? product.urduDescription : product.description}
                   </p>
                 </div>
               ))}
@@ -280,7 +366,7 @@ export default function ProductsPage() {
       <div className="lg:hidden fixed bottom-5 left-4 right-4 z-40">
         <div className="mx-auto flex max-w-[520px] flex-col gap-2 rounded-2xl border border-stone-200/60 bg-white/95 p-3 shadow-premium backdrop-blur">
           <div className="flex items-center justify-between px-2 text-sm text-stone-600">
-            <span>{selectedSize.label} Jar</span>
+            <span>{isUrdu ? `${selectedSize.label} جار` : `${selectedSize.label} Jar`}</span>
             <span className="font-semibold text-charcoal-900">
               PKR {selectedSize.price.toLocaleString()}
             </span>
@@ -292,14 +378,14 @@ export default function ProductsPage() {
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-premium"
           >
             <MessageCircle className="w-4 h-4" />
-            Order on WhatsApp
+            {isUrdu ? "واٹس ایپ پر آرڈر کریں" : "Order on WhatsApp"}
           </a>
           <a
             href={emailLink}
             className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-700 shadow-soft"
           >
             <Mail className="w-4 h-4" />
-            Order via Email
+            {isUrdu ? "ای میل کے ذریعے آرڈر کریں" : "Order via Email"}
           </a>
         </div>
       </div>

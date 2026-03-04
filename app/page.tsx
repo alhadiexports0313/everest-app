@@ -12,6 +12,7 @@ import LuxuryImageCarousel from "@/components/sections/LuxuryImageCarousel";
 import OriginStory from "@/components/sections/OriginStory";
 import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
+import { getLocale, getServerMessage } from "@/lib/i18n-server";
 
 const iconClassName = "h-6 w-6 text-amber-300 animate-shimmer";
 
@@ -63,50 +64,30 @@ const StarIcon = () => (
   </svg>
 );
 
-const tickerItems = [
-  { text: "Lab Tested & Verified for Ultimate Purity" },
-  { text: "Directly from Gilgit-Baltistan Mountains" },
-  { text: "مستند گلگت بلتستان سے حاصل شدہ", lang: "ur" },
-  { text: "صحت مند اور خالص جڑی بوٹی", lang: "ur" },
-  { text: "Rich in Fulvic & Trace Minerals" },
-  { text: "Sustainably & Ethically Sourced" },
-  { text: "صل ہمالیائی شلجت", lang: "ur" },
-  { text: "خالصتاً قدرتی اور نامیاتی", lang: "ur" },
-  { text: "Eco-Friendly Packaging for Conscious Living" },
-  { text: "Trusted Quality, Nature’s Best" },
-  { text: "ماحولیاتی لحاظ سے محفوظ پیکنگ", lang: "ur" },
-  { text: "اخلاقی طور پر حاصل شدہ معیار", lang: "ur" },
-  { text: "100% Pure Himalayan Shilajit" },
-  { text: "Lab Tested for Authenticity" },
-];
-
 const iconMapping: Record<string, () => JSX.Element> = {
-  "Lab Tested & Verified for Ultimate Purity": ShieldCheckIcon,
-  "Directly from Gilgit-Baltistan Mountains": MapPinIcon,
-  "مستند گلگت بلتستان سے حاصل شدہ": MapPinIcon,
-  "صحت مند اور خالص جڑی بوٹی": LeafIcon,
-  "Rich in Fulvic & Trace Minerals": SparklesIcon,
-  "Sustainably & Ethically Sourced": LeafIcon,
-  "صل ہمالیائی شلجت": SparklesIcon,
-  "خالصتاً قدرتی اور نامیاتی": LeafIcon,
-  "Eco-Friendly Packaging for Conscious Living": ArrowPathIcon,
-  "Trusted Quality, Nature’s Best": StarIcon,
-  "ماحولیاتی لحاظ سے محفوظ پیکنگ": ArrowPathIcon,
-  "اخلاقی طور پر حاصل شدہ معیار": StarIcon,
-  "100% Pure Himalayan Shilajit": SparklesIcon,
-  "Lab Tested for Authenticity": BeakerIcon,
+  shield: ShieldCheckIcon,
+  map: MapPinIcon,
+  leaf: LeafIcon,
+  sparkle: SparklesIcon,
+  recycle: ArrowPathIcon,
+  star: StarIcon,
+  beaker: BeakerIcon,
 };
 
-
-export default function Home() {
+export default async function Home() {
+  const locale = await getLocale();
+  const tickerItems =
+    (await getServerMessage<{ text: string; icon: string }[]>(
+      "home.ticker.items",
+      locale
+    )) ?? [];
   return (
     <>
       <Hero />
       <TickerStrip
         items={tickerItems.map((item) => {
-          const Icon = iconMapping[item.text] ?? BeakerIcon;
-          const isUrdu = item.lang === "ur";
-
+          const Icon = iconMapping[item.icon] ?? BeakerIcon;
+          const isUrdu = locale === "ur";
           return (
             <span
               key={item.text}

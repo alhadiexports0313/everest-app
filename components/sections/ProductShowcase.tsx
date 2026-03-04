@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ShoppingCart, Star, Check } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 const sizes = [
   { label: "10g", price: 1500 },
@@ -23,7 +24,9 @@ const products = [
   {
     id: 1,
     name: "Premium Shilajit Resin",
+    nameUrdu: "پریمیم سلاجیت رال",
     description: "Pure, unprocessed resin sourced from high-altitude Himalayan mountains",
+    descriptionUrdu: "بلند ہمالیائی پہاڑوں سے حاصل کردہ خالص اور غیر پروسیس شدہ رال۔",
     rating: 4.9,
     reviews: 1247,
     image: "/api/placeholder/400/400",
@@ -31,34 +34,55 @@ const products = [
       "100% Pure Resin",
       "Lab Tested",
     ],
+    featuresUrdu: [
+      "100% خالص رال",
+      "لیب ٹیسٹڈ",
+    ],
     badge: "Best Seller",
+    badgeUrdu: "سب سے زیادہ فروخت",
     type: "resin",
   },
   {
     id: 2,
     name: "Shilajit Capsules",
+    nameUrdu: "سلاجیت کیپسول",
     description: "Convenient, standardized capsules for daily wellness support",
+    descriptionUrdu: "روزمرہ ویلنَس کے لیے آسان اور معیاری کیپسول۔",
     image: "/api/placeholder/400/400",
     features: [
       "60 Capsules",
       "Easy to Take",
       "Standardized Extract",
     ],
+    featuresUrdu: [
+      "60 کیپسول",
+      "آسان استعمال",
+      "معیاری ایکسٹریکٹ",
+    ],
     badge: "Coming Soon",
+    badgeUrdu: "جلد دستیاب",
     comingSoon: true,
     type: "capsules",
   },
   {
     id: 3,
     name: "Shilajit Powder",
+    nameUrdu: "سلاجیت پاؤڈر",
     description: "Fine powder form for maximum versatility and absorption",
+    descriptionUrdu: "زیادہ جذب اور مختلف استعمال کے لیے باریک پاؤڈر۔",
     image: "/api/placeholder/400/400",
     features: [
       "100g Powder",
       "Versatile Use",
       "High Purity",
     ],
+    featuresUrdu: [
+      "100 گرام پاؤڈر",
+      "مختلف استعمال",
+      "اعلیٰ خلوص",
+    ],
     badge: "Coming Soon",
+    badgeUrdu: "جلد دستیاب",
     comingSoon: true,
     type: "powder",
   },
@@ -78,6 +102,8 @@ const productImages = productImageNames.map(
 );
 
 export default function ProductShowcase() {
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
   const [selectedSize, setSelectedSize] = useState(sizes[1]);
   const [currency, setCurrency] = useState<(typeof currencies)[number]["code"]>(
     "PKR"
@@ -149,12 +175,13 @@ export default function ProductShowcase() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center max-w-3xl mx-auto mb-20"
         >
-          <h2 className="font-display text-display-3 font-bold text-charcoal-900 mb-6 tracking-tight">
-            Our Premium Collection
+          <h2 className={`font-display text-display-3 font-bold text-charcoal-900 mb-6 tracking-tight ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu ? "ہماری پریمیم کلیکشن" : "Our Premium Collection"}
           </h2>
-          <p className="text-lg text-stone-700 leading-relaxed font-light">
-            Each product is carefully sourced, tested, and packaged to meet the highest
-            international standards.
+          <p className={`text-lg text-stone-700 leading-relaxed font-light ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu
+              ? "ہر پروڈکٹ کو احتیاط سے حاصل، ٹیسٹ اور پیک کیا جاتا ہے تاکہ اعلیٰ بین الاقوامی معیار برقرار رہے۔"
+              : "Each product is carefully sourced, tested, and packaged to meet the highest international standards."}
           </p>
         </motion.div>
 
@@ -187,26 +214,34 @@ export default function ProductShowcase() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                 {product.badge && (
-                  <div className="absolute top-4 right-4 rounded-full bg-gradient-to-r from-[#C6A052] via-[#D9B56A] to-[#B7893C] px-4 py-1.5 text-xs font-semibold text-white shadow-soft">
-                    {product.badge}
+                  <div
+                    className={`absolute top-4 rounded-full bg-gradient-to-r from-[#C6A052] via-[#D9B56A] to-[#B7893C] px-4 py-1.5 text-xs font-semibold text-white shadow-soft ${
+                      isUrdu ? "left-4 right-auto font-urdu" : "right-4"
+                    }`}
+                  >
+                    {isUrdu ? product.badgeUrdu : product.badge}
                   </div>
                 )}
                 {isComingSoon && (
-                  <div className="absolute top-4 left-4 rounded-full bg-[#C6A052] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-white shadow-[0_12px_30px_rgba(198,160,82,0.35)]">
-                    Coming Soon
+                  <div
+                    className={`absolute top-4 rounded-full bg-[#C6A052] px-4 py-1.5 text-[11px] font-semibold text-white shadow-[0_12px_30px_rgba(198,160,82,0.35)] ${
+                      isUrdu ? "right-4 left-auto tracking-normal font-urdu" : "left-4 uppercase tracking-[0.24em]"
+                    }`}
+                  >
+                    {isUrdu ? "جلد دستیاب" : "Coming Soon"}
                   </div>
                 )}
               </div>
 
-              <div className={`relative p-7 ${isComingSoon ? "opacity-70" : ""}`}>
-                <h3 className="font-display text-2xl font-bold text-charcoal-900 mb-3 tracking-tight">
-                  {product.name}
+              <div className={`relative p-7 ${isComingSoon ? "opacity-70" : ""} ${isUrdu ? "text-right" : "text-left"}`}>
+                <h3 className={`font-display text-2xl font-bold text-charcoal-900 mb-3 tracking-tight ${isUrdu ? "font-urdu" : ""}`}>
+                  {isUrdu ? product.nameUrdu : product.name}
                 </h3>
-                <p className="text-stone-600 mb-5 text-sm leading-relaxed font-light">
-                  {product.description}
+                <p className={`text-stone-600 mb-5 text-sm leading-relaxed font-light ${isUrdu ? "font-urdu" : ""}`}>
+                  {isUrdu ? product.descriptionUrdu : product.description}
                 </p>
                 {isResin && (
-                  <div className="absolute right-7 top-7">
+                  <div className={`absolute top-7 ${isUrdu ? "left-7 right-auto" : "right-7"}`}>
                     <div className="relative">
                       <select
                         value={currency}
@@ -228,17 +263,22 @@ export default function ProductShowcase() {
                   </div>
                 )}
 
-                <ul className="space-y-2.5 mb-6">
-                  {product.features.map((feature) => (
-                    <li key={feature} className="flex items-center text-sm text-stone-700">
-                      <Check className="w-4 h-4 text-[#C6A052] mr-2.5 flex-shrink-0" />
+                <ul className={`space-y-2.5 mb-6 ${isUrdu ? "font-urdu" : ""}`}>
+                  {(isUrdu ? product.featuresUrdu : product.features).map((feature) => (
+                    <li
+                      key={feature}
+                      className={`flex items-center text-sm text-stone-700 ${
+                        isUrdu ? "flex-row-reverse gap-2" : ""
+                      }`}
+                    >
+                      <Check className={`w-4 h-4 text-[#C6A052] flex-shrink-0 ${isUrdu ? "" : "mr-2.5"}`} />
                       {feature}
                     </li>
                   ))}
                 </ul>
 
                 {!isComingSoon && (
-                  <div className="flex items-center space-x-2 mb-5">
+                  <div className={`flex items-center mb-5 ${isUrdu ? "flex-row-reverse space-x-reverse space-x-2" : "space-x-2"}`}>
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
                         <Star
@@ -251,18 +291,24 @@ export default function ProductShowcase() {
                         />
                       ))}
                     </div>
-                    <span className="text-sm text-stone-600">
-                      {product.rating} ({product.reviews?.toLocaleString()} reviews)
+                    <span className={`text-sm text-stone-600 ${isUrdu ? "font-urdu" : ""}`}>
+                      {isUrdu
+                        ? `${product.rating} (${product.reviews?.toLocaleString()} جائزے)`
+                        : `${product.rating} (${product.reviews?.toLocaleString()} reviews)`}
                     </span>
                   </div>
                 )}
 
                 {isResin && (
                   <div className="rounded-2xl border border-stone-200/70 bg-stone-50/70 p-4 mb-6">
-                    <div className="text-xs uppercase tracking-[0.28em] text-stone-500 font-semibold">
-                      Select Size
+                    <div
+                      className={`text-xs text-stone-500 font-semibold ${
+                        isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-[0.28em]"
+                      }`}
+                    >
+                      {isUrdu ? "سائز منتخب کریں" : "Select Size"}
                     </div>
-                    <div className="mt-3 flex flex-wrap gap-2">
+                    <div className={`mt-3 flex flex-wrap gap-2 ${isUrdu ? "justify-end" : "justify-start"}`}>
                       {sizes.map((size) => {
                         const active = size.label === selectedSize.label;
                         return (
@@ -286,7 +332,7 @@ export default function ProductShowcase() {
                 )}
 
                 {isResin && (
-                  <div className="flex items-center justify-between pt-5 border-t border-stone-200">
+                  <div className={`flex items-center justify-between pt-5 border-t border-stone-200 ${isUrdu ? "flex-row-reverse" : ""}`}>
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={`${currency}-${selectedSize.label}-${priceLabel}`}
@@ -299,24 +345,30 @@ export default function ProductShowcase() {
                         {priceLabel}
                       </motion.div>
                     </AnimatePresence>
-                    <button className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.24em] text-white lux-gold-button shadow-[0_15px_35px_rgba(198,160,82,0.35)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5">
+                    <button
+                      className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-semibold text-white lux-gold-button shadow-[0_15px_35px_rgba(198,160,82,0.35)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 ${
+                        isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-[0.24em]"
+                      }`}
+                    >
                       <ShoppingCart className="w-4 h-4" />
-                      Add to Cart
+                      {isUrdu ? "کارٹ میں شامل کریں" : "Add to Cart"}
                     </button>
                   </div>
                 )}
 
                 {isComingSoon && (
-                  <div className="flex items-center justify-between pt-5 border-t border-stone-200">
-                    <span className="text-sm font-semibold text-stone-500">
-                      Launching Soon
+                  <div className={`flex items-center justify-between pt-5 border-t border-stone-200 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                    <span className={`text-sm font-semibold text-stone-500 ${isUrdu ? "font-urdu" : ""}`}>
+                      {isUrdu ? "جلد لانچ ہو رہا ہے" : "Launching Soon"}
                     </span>
                     <button
                       disabled
-                      className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-stone-100 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.24em] text-stone-400"
+                      className={`inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-stone-100 px-5 py-2.5 text-xs font-semibold text-stone-400 ${
+                        isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-[0.24em]"
+                      }`}
                     >
                       <ShoppingCart className="w-4 h-4" />
-                      Add to Cart
+                      {isUrdu ? "کارٹ میں شامل کریں" : "Add to Cart"}
                     </button>
                   </div>
                 )}
@@ -339,10 +391,12 @@ export default function ProductShowcase() {
         >
           <Link
             href="/products"
-            className="inline-flex items-center text-primary-700 font-semibold hover:text-primary-800 transition-colors duration-300"
+            className={`inline-flex items-center text-primary-700 font-semibold hover:text-primary-800 transition-colors duration-300 ${
+              isUrdu ? "font-urdu" : ""
+            }`}
           >
-            View All Products
-            <span className="ml-2">→</span>
+            {isUrdu ? "تمام مصنوعات دیکھیں" : "View All Products"}
+            <span className={isUrdu ? "mr-2" : "ml-2"}>{isUrdu ? "←" : "→"}</span>
           </Link>
         </motion.div>
       </div>
