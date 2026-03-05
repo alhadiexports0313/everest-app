@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useRef } from "react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 interface TickerStripProps {
   items: ReactNode[];
@@ -25,6 +26,8 @@ export default function TickerStrip({
   speed = 10, // ⚡ lower value = faster
 }: TickerStripProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { locale } = useLanguage();
+  const isUrdu = locale === "ur";
 
   useEffect(() => {
     const container = containerRef.current;
@@ -43,9 +46,14 @@ export default function TickerStrip({
   const content = [...items, ...items];
                                  // 
   return (
-    <div className="overflow-hidden bg-black backdrop-blur-xl border-b border-white/10">
+    <div
+      className="overflow-hidden bg-black backdrop-blur-xl border-b border-white/10 "
+      
+      dir={isUrdu ? "ltr" : "ltr"} 
+    >
       <div
         ref={containerRef}
+        dir="ltr"
         className="flex w-max animate-[ticker_var(--ticker-duration)_linear_infinite]"
       >
         {content.map((item, index) => (
