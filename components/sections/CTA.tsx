@@ -48,7 +48,7 @@ export default function CTA() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="#products"
+              href="/products"
               className="group inline-flex items-center justify-center px-10 py-3.5 bg-white text-primary-700 font-semibold rounded-lg shadow-premium lux-button"
             >
               <span className={isUrdu ? "font-urdu" : ""}>{isUrdu ? "ابھی خریدیں" : "Shop Now"}</span>
@@ -59,7 +59,7 @@ export default function CTA() {
               />
             </Link>
             <Link
-              href="#contact"
+              href="/contact"
               className="inline-flex items-center justify-center px-10 py-3 bg-white/10 backdrop-blur-md text-white font-semibold rounded-lg border-2 border-white/30 hover:bg-white/15 shadow-soft lux-button"
             >
               <span className={isUrdu ? "font-urdu" : ""}>{isUrdu ? "ہم سے رابطہ کریں" : "Contact Us"}</span>

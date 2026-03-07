@@ -124,7 +124,7 @@ export default function Hero() {
             className="flex flex-col items-center gap-6 sm:flex-row"
           >
             <Link
-              href="#shop"
+              href="/products"
               className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-amber-500 px-10 py-4 font-bold text-black shadow-premium lux-button active:scale-95"
             >
               {t("home.hero.ctaPrimary")}
@@ -132,7 +132,7 @@ export default function Hero() {
             </Link>
 
             <Link
-              href="#learn"
+              href="/authenticity-quality"
               className="rounded-full border border-white/20 bg-white/5 px-10 py-4 font-medium backdrop-blur-lg transition-colors hover:bg-white/10"
             >
               {t("home.hero.ctaSecondary")}
