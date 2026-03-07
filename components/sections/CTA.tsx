@@ -36,7 +36,7 @@ export default function CTA() {
             </span>
           </div>
 
-          <h2 className={`font-display text-display-2 sm:text-display-1 font-bold mb-8 tracking-tight ${isUrdu ? "font-urdu" : ""}`}>
+          <h2 className={`font-display text-display-2 sm:text-display-1 font-bold mb-12 tracking-tight ${isUrdu ? "font-urdu" : ""}`}>
             {isUrdu ? "ایورسٹ آرگینک سلاجیت کی طاقت کا تجربہ کریں" : "Experience the Power of Everest Organic Shilajit"}
           </h2>
 
@@ -49,7 +49,7 @@ export default function CTA() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="#products"
-              className="group inline-flex items-center justify-center px-10 py-4.5 bg-white text-primary-700 font-semibold rounded-lg shadow-premium lux-button"
+              className="group inline-flex items-center justify-center px-10 py-3.5 bg-white text-primary-700 font-semibold rounded-lg shadow-premium lux-button"
             >
               <span className={isUrdu ? "font-urdu" : ""}>{isUrdu ? "ابھی خریدیں" : "Shop Now"}</span>
               <ArrowRight
@@ -60,7 +60,7 @@ export default function CTA() {
             </Link>
             <Link
               href="#contact"
-              className="inline-flex items-center justify-center px-10 py-4.5 bg-white/10 backdrop-blur-md text-white font-semibold rounded-lg border-2 border-white/30 hover:bg-white/15 shadow-soft lux-button"
+              className="inline-flex items-center justify-center px-10 py-3 bg-white/10 backdrop-blur-md text-white font-semibold rounded-lg border-2 border-white/30 hover:bg-white/15 shadow-soft lux-button"
             >
               <span className={isUrdu ? "font-urdu" : ""}>{isUrdu ? "ہم سے رابطہ کریں" : "Contact Us"}</span>
             </Link>

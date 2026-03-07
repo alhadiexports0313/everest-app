@@ -193,7 +193,7 @@ export default function LuxuryImageCarousel() {
               ref={containerRef}
               className="relative overflow-hidden"
               style={{ perspective: 1200 }}
-              dir={isUrdu ? "rtl" : "ltr"}
+              dir={isUrdu ? "ltr" : "ltr"}
             >
               <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[320px] -translate-x-1/2 bg-gradient-to-r from-transparent via-amber-200/20 to-transparent blur-2xl" />
               <motion.div style={{ x, width: loopWidth * 2 }} className="flex items-center gap-7">

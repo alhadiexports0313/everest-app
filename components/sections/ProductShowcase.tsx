@@ -351,7 +351,7 @@ export default function ProductShowcase() {
                       }`}
                     >
                       <ShoppingCart className="w-4 h-4" />
-                      {isUrdu ? "کارٹ میں شامل کریں" : "Add to Cart"}
+                      {isUrdu ? "کارٹ میں شامل کریں" : "Shop Now"}
                     </button>
                   </div>
                 )}
