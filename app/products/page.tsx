@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -89,8 +89,56 @@ const futureProducts = [
 export default function ProductsPage() {
   const [selectedSize, setSelectedSize] = useState(sizes[1]);
   const [activeImage, setActiveImage] = useState(galleryImages[0]);
+  const [currency, setCurrency] = useState<"PKR" | "USD">("PKR");
+  const [usdRate, setUsdRate] = useState<number | null>(null);
+  const [quantity, setQuantity] = useState(1);
   const { locale } = useLanguage();
   const isUrdu = locale === "ur";
+
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const cachedRate =
+      typeof window !== "undefined" ? localStorage.getItem("pkrUsdRate") : null;
+    const cachedDate =
+      typeof window !== "undefined"
+        ? localStorage.getItem("pkrUsdRateDate")
+        : null;
+    if (cachedRate && cachedDate === today) {
+      const parsedRate = Number(cachedRate);
+      if (!Number.isNaN(parsedRate)) {
+        setUsdRate(parsedRate);
+        return;
+      }
+    }
+
+    let isActive = true;
+    const controller = new AbortController();
+
+    const loadRate = async () => {
+      try {
+        const response = await fetch("https://open.er-api.com/v6/latest/PKR", {
+          signal: controller.signal,
+        });
+        if (!response.ok) return;
+        const data = await response.json();
+        const rate = data?.rates?.USD;
+        if (isActive && typeof rate === "number") {
+          setUsdRate(rate);
+          localStorage.setItem("pkrUsdRate", String(rate));
+          localStorage.setItem("pkrUsdRateDate", today);
+        }
+      } catch {
+        if (!isActive) return;
+      }
+    };
+
+    loadRate();
+
+    return () => {
+      isActive = false;
+      controller.abort();
+    };
+  }, []);
 
   const whatsappLink = useMemo(() => {
     const message = isUrdu
@@ -105,6 +153,36 @@ export default function ProductsPage() {
       : `Order: Everest Organic Shilajit (${selectedSize.label})`;
     return `mailto:everestorganicshilajet@gmail.com?subject=${encodeURIComponent(subject)}`;
   }, [isUrdu, selectedSize.label]);
+
+  const priceLocale = isUrdu ? "ur-PK" : "en-PK";
+  const formatPkr = useMemo(
+    () => (value: number) =>
+      new Intl.NumberFormat(priceLocale, {
+        style: "currency",
+        currency: "PKR",
+        maximumFractionDigits: 0,
+      }).format(value),
+    [priceLocale]
+  );
+  const formatUsd = useMemo(() => {
+    if (!usdRate) return null;
+    return (value: number) =>
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value * usdRate);
+  }, [usdRate]);
+  const canShowUsd = Boolean(formatUsd);
+  const unitPricePkr = selectedSize.price;
+  const totalPricePkr = unitPricePkr * quantity;
+  const unitPriceUsd = formatUsd ? formatUsd(unitPricePkr) : null;
+  const totalPriceUsd = formatUsd ? formatUsd(totalPricePkr) : null;
+  const primaryPrice =
+    currency === "USD" && totalPriceUsd ? totalPriceUsd : formatPkr(totalPricePkr);
+  const secondaryPrice =
+    currency === "USD" ? formatPkr(totalPricePkr) : totalPriceUsd;
 
   return (
     <>
@@ -258,8 +336,56 @@ export default function ProductsPage() {
                 </div>
                 <div className="mt-5">
                   <div className="text-sm text-stone-500">{isUrdu ? "قیمت" : "Price"}</div>
+                  <div
+                    className={`inline-flex items-center rounded-full border border-stone-200 bg-white/80 p-1 text-[11px] font-semibold text-stone-500 mt-3 ${
+                      isUrdu ? "flex-row-reverse" : ""
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setCurrency("PKR")}
+                      aria-pressed={currency === "PKR"}
+                      className={`px-2.5 py-1 rounded-full transition-colors ${
+                        currency === "PKR"
+                          ? "bg-stone-900 text-white"
+                          : "text-stone-500"
+                      }`}
+                    >
+                      PKR
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => canShowUsd && setCurrency("USD")}
+                      aria-pressed={currency === "USD"}
+                      className={`px-2.5 py-1 rounded-full transition-colors ${
+                        currency === "USD"
+                          ? "bg-stone-900 text-white"
+                          : canShowUsd
+                          ? "text-stone-500"
+                          : "text-stone-300"
+                      }`}
+                    >
+                      USD
+                    </button>
+                  </div>
                   <div className="text-3xl font-display font-bold text-charcoal-900">
-                    PKR {selectedSize.price.toLocaleString()}
+                    {primaryPrice}
+                  </div>
+                  {secondaryPrice ? (
+                    <div className="text-xs text-stone-500 mt-1">
+                      {secondaryPrice}
+                    </div>
+                  ) : null}
+                  <div className="text-xs text-stone-500 mt-1">
+                    {isUrdu
+                      ? `${selectedSize.label} جار × ${quantity}`
+                      : `${selectedSize.label} jar × ${quantity}`}
+                  </div>
+                  <div className="text-xs text-stone-500 mt-1">
+                    {isUrdu
+                      ? "فی جار"
+                      : "Per jar"}{" "}
+                    {currency === "USD" && unitPriceUsd ? unitPriceUsd : formatPkr(unitPricePkr)}
                   </div>
                 </div>
 
@@ -279,9 +405,72 @@ export default function ProductsPage() {
                             : "bg-white text-stone-700 border border-stone-200 hover:border-primary-300"
                         }`}
                       >
-                        {size.label}
+                        <span className="block">{size.label}</span>
+                        <span
+                          className={`block text-[11px] ${
+                            selectedSize.label === size.label
+                              ? "text-white/85"
+                              : "text-stone-500"
+                          }`}
+                        >
+                          {currency === "USD" && canShowUsd && formatUsd
+                            ? formatUsd(size.price)
+                            : formatPkr(size.price)}
+                        </span>
                       </button>
                     ))}
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <div className="text-sm font-semibold text-charcoal-900 mb-3">
+                    {isUrdu ? "مقدار" : "Quantity"}
+                  </div>
+                  <div
+                    className={`inline-flex items-center rounded-full border border-stone-200 bg-white px-2 py-1 shadow-soft ${
+                      isUrdu ? "flex-row-reverse" : ""
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setQuantity((prev) => (prev > 1 ? prev - 1 : prev))
+                      }
+                      className="h-9 w-9 rounded-full text-stone-600 transition-colors hover:bg-stone-100"
+                      aria-label={isUrdu ? "مقدار کم کریں" : "Decrease quantity"}
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      min={1}
+                      step={1}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      value={quantity}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        if (nextValue === "501") {
+                          setQuantity(1);
+                          return;
+                        }
+                        const parsed = Number(nextValue);
+                        if (Number.isNaN(parsed)) return;
+                        setQuantity(parsed < 1 ? 1 : parsed);
+                      }}
+                      className="min-w-[64px] bg-transparent text-center text-base font-semibold text-charcoal-900 focus:outline-none"
+                      aria-label={isUrdu ? "مقدار درج کریں" : "Enter quantity"}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setQuantity((prev) => (prev < 500 ? prev + 1 : prev))
+                      }
+                      className="h-9 w-9 rounded-full text-stone-600 transition-colors hover:bg-stone-100"
+                      aria-label={isUrdu ? "مقدار بڑھائیں" : "Increase quantity"}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
 
@@ -368,7 +557,7 @@ export default function ProductsPage() {
           <div className="flex items-center justify-between px-2 text-sm text-stone-600">
             <span>{isUrdu ? `${selectedSize.label} جار` : `${selectedSize.label} Jar`}</span>
             <span className="font-semibold text-charcoal-900">
-              PKR {selectedSize.price.toLocaleString()}
+              {primaryPrice}
             </span>
           </div>
           <a
