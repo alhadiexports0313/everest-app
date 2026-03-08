@@ -44,6 +44,7 @@ export default function FeaturedProduct() {
   const isUrdu = locale === "ur";
   const [currency, setCurrency] = useState<"PKR" | "USD">("PKR");
   const [usdRate, setUsdRate] = useState<number | null>(null);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -125,8 +126,11 @@ export default function FeaturedProduct() {
       }).format(value * usdRate);
   }, [usdRate]);
   const canShowUsd = Boolean(formatUsd);
-  const pkrFormatted = formatPkr(selectedSize.price);
-  const usdFormatted = formatUsd ? formatUsd(selectedSize.price) : null;
+  const unitPricePkr = selectedSize.price;
+  const totalPricePkr = unitPricePkr * quantity;
+  const pkrFormatted = formatPkr(totalPricePkr);
+  const usdFormatted = formatUsd ? formatUsd(totalPricePkr) : null;
+  const unitPriceUsd = formatUsd ? formatUsd(unitPricePkr) : null;
   const primaryPrice =
     currency === "USD" && canShowUsd ? usdFormatted : pkrFormatted;
   const secondaryPrice = currency === "USD" ? pkrFormatted : usdFormatted;
@@ -253,7 +257,15 @@ export default function FeaturedProduct() {
                   </div>
                 ) : null}
                 <div className="text-xs text-stone-500 mt-1">
-                  {isUrdu ? `${selectedSize.label} جار` : `${selectedSize.label} jar`}
+                  {isUrdu
+                    ? `${selectedSize.label} جار × ${quantity}`
+                    : `${selectedSize.label} jar × ${quantity}`}
+                </div>
+                <div className="text-xs text-stone-500 mt-1">
+                  {isUrdu ? "فی جار" : "Per jar"}{" "}
+                  {currency === "USD" && unitPriceUsd
+                    ? unitPriceUsd
+                    : formatPkr(unitPricePkr)}
                 </div>
               </div>
             </div>
@@ -288,6 +300,64 @@ export default function FeaturedProduct() {
                     </span>
                   </button>
                 ))}
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <div
+                className={`text-sm font-semibold text-charcoal-900 mb-3 ${
+                  isUrdu ? "font-urdu" : ""
+                }`}
+              >
+                {isUrdu ? "مقدار" : "Quantity"}
+              </div>
+              <div
+                className={`inline-flex items-center rounded-full border border-stone-200 bg-white px-2 py-1 shadow-soft ${
+                  isUrdu ? "flex-row-reverse" : ""
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    setQuantity((prev) => (prev > 1 ? prev - 1 : prev))
+                  }
+                  className="h-9 w-9 rounded-full text-stone-600 transition-colors hover:bg-stone-100"
+                  aria-label={isUrdu ? "مقدار کم کریں" : "Decrease quantity"}
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  min={1}
+                  max={500}
+                  step={1}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={quantity}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    if (nextValue === "") {
+                      setQuantity(1);
+                      return;
+                    }
+                    const parsed = Number(nextValue);
+                    if (Number.isNaN(parsed)) return;
+                    const clamped = Math.min(500, Math.max(1, parsed));
+                    setQuantity(clamped);
+                  }}
+                  className="min-w-[64px] bg-transparent text-center text-base font-semibold text-charcoal-900 focus:outline-none"
+                  aria-label={isUrdu ? "مقدار درج کریں" : "Enter quantity"}
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setQuantity((prev) => (prev < 500 ? prev + 1 : prev))
+                  }
+                  className="h-9 w-9 rounded-full text-stone-600 transition-colors hover:bg-stone-100"
+                  aria-label={isUrdu ? "مقدار بڑھائیں" : "Increase quantity"}
+                >
+                  +
+                </button>
               </div>
             </div>
 

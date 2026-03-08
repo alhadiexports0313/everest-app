@@ -442,22 +442,40 @@ export default function ProductsPage() {
                       −
                     </button>
                     <input
-                      type="number"
-                      min={1}
-                      step={1}
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      value={quantity}
-                      onChange={(event) => {
-                        const nextValue = event.target.value;
-                        if (nextValue === "501") {
-                          setQuantity(1);
-                          return;
-                        }
-                        const parsed = Number(nextValue);
-                        if (Number.isNaN(parsed)) return;
-                        setQuantity(parsed < 1 ? 1 : parsed);
-                      }}
+                        type="number"
+                        min={1}
+                        max={500}
+                        step={1}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={quantity}
+                        onChange={(event) => {
+                          const nextValue = event.target.value;
+                          if (nextValue === "") {
+                            setQuantity(1);
+                            return;
+                          }
+                          const parsed = Number(nextValue);
+                          if (Number.isNaN(parsed)) return;
+                          const clamped = Math.min(500, Math.max(1, parsed));
+                          setQuantity(clamped);
+                        }}
+                      // type="number"
+                      // min={1}
+                      // step={1}
+                      // inputMode="numeric"
+                      // pattern="[0-9]*"
+                      // value={quantity}
+                      // onChange={(event) => {
+                      //   const nextValue = event.target.value;
+                      //   if (nextValue === "501") {
+                      //     setQuantity(1);
+                      //     return;
+                      //   }
+                      //   const parsed = Number(nextValue);
+                      //   if (Number.isNaN(parsed)) return;
+                      //   setQuantity(parsed < 1 ? 1 : parsed);
+                      // }}
                       className="min-w-[64px] bg-transparent text-center text-base font-semibold text-charcoal-900 focus:outline-none"
                       aria-label={isUrdu ? "مقدار درج کریں" : "Enter quantity"}
                     />
