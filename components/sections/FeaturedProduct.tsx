@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Mail, MessageCircle, ZoomIn } from "lucide-react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 
@@ -55,8 +55,16 @@ export default function FeaturedProduct() {
   const [customerNote, setCustomerNote] = useState("");
   const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
   const [noteDropdownOpen, setNoteDropdownOpen] = useState(false);
+  const noteDropdownRef = useRef<HTMLDivElement | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [checkoutAttempted, setCheckoutAttempted] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [whatsappModalOpen, setWhatsappModalOpen] = useState(false);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [lastAdded, setLastAdded] = useState<{
+    sizeLabel: string;
+    quantity: number;
+  } | null>(null);
   const [orderMeta, setOrderMeta] = useState<{
     id: string;
     createdAt: number;
@@ -111,6 +119,50 @@ export default function FeaturedProduct() {
     });
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem("everestCartItems");
+    if (!stored) return;
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        setCartItems(parsed);
+        const storedOrderCount = window.localStorage.getItem("everestCartOrders");
+        const parsedOrderCount = storedOrderCount
+          ? Number(storedOrderCount)
+          : Number.NaN;
+        const nextOrderCount = Number.isNaN(parsedOrderCount)
+          ? parsed.length
+          : parsedOrderCount;
+        window.localStorage.setItem(
+          "everestCartOrders",
+          String(Math.max(0, nextOrderCount))
+        );
+        window.dispatchEvent(
+          new CustomEvent("everest-cart-updated", {
+            detail: { count: Math.max(0, nextOrderCount) },
+          })
+        );
+      }
+    } catch {
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!noteDropdownOpen) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!noteDropdownRef.current) return;
+      if (!noteDropdownRef.current.contains(event.target as Node)) {
+        setNoteDropdownOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [noteDropdownOpen]);
+
   const priceLocale = isUrdu ? "ur-PK" : "en-PK";
   const formatPkr = useMemo(
     () =>
@@ -144,28 +196,53 @@ export default function FeaturedProduct() {
     currency === "USD" && canShowUsd ? usdFormatted : pkrFormatted;
   const secondaryPrice = currency === "USD" ? pkrFormatted : usdFormatted;
 
+  const persistCart = (items: CartItem[]) => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("everestCartItems", JSON.stringify(items));
+  };
+  const getStoredOrderCount = () => {
+    if (typeof window === "undefined") return 0;
+    const storedCount = window.localStorage.getItem("everestCartOrders");
+    if (!storedCount) return 0;
+    const parsedCount = Number(storedCount);
+    return Number.isNaN(parsedCount) ? 0 : parsedCount;
+  };
+  const setStoredOrderCount = (nextCount: number) => {
+    if (typeof window === "undefined") return;
+    const safeCount = Math.max(0, nextCount);
+    window.localStorage.setItem("everestCartOrders", String(safeCount));
+    window.dispatchEvent(
+      new CustomEvent("everest-cart-updated", { detail: { count: safeCount } })
+    );
+  };
+  useEffect(() => {
+    persistCart(cartItems);
+  }, [cartItems]);
   const addToCart = () => {
     setCartItems((prev) => {
       const existing = prev.find((item) => item.sizeLabel === selectedSize.label);
-      if (!existing) {
-        return [
-          ...prev,
-          { sizeLabel: selectedSize.label, quantity, unitPricePkr },
-        ];
-      }
-      return prev.map((item) =>
-        item.sizeLabel === selectedSize.label
-          ? {
-              ...item,
-              quantity: Math.min(500, item.quantity + quantity),
-              unitPricePkr,
-            }
-          : item
-      );
+      return existing
+        ? prev.map((item) =>
+            item.sizeLabel === selectedSize.label
+              ? {
+                  ...item,
+                  quantity: Math.min(500, item.quantity + quantity),
+                  unitPricePkr,
+                }
+              : item
+          )
+        : [...prev, { sizeLabel: selectedSize.label, quantity, unitPricePkr }];
     });
   };
   const removeFromCart = (sizeLabel: string) => {
     setCartItems((prev) => prev.filter((item) => item.sizeLabel !== sizeLabel));
+    setStoredOrderCount(getStoredOrderCount() - 1);
+  };
+  const handleAddToCart = () => {
+    addToCart();
+    setStoredOrderCount(getStoredOrderCount() + 1);
+    setLastAdded({ sizeLabel: selectedSize.label, quantity });
+    setAddModalOpen(true);
   };
   const effectiveCartItems =
     cartItems.length > 0
@@ -750,7 +827,7 @@ export default function FeaturedProduct() {
                   placeholder={isUrdu ? "آرڈر نوٹ" : "Order note (optional)"}
                   className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none sm:col-span-2"
                 />
-                <div className="relative sm:col-span-2">
+                <div ref={noteDropdownRef} className="relative sm:col-span-2">
                   <button
                     type="button"
                     onClick={() => setNoteDropdownOpen((prev) => !prev)}
@@ -771,7 +848,10 @@ export default function FeaturedProduct() {
                           <button
                             key={note}
                             type="button"
-                            onClick={() => toggleNote(note)}
+                            onClick={() => {
+                              toggleNote(note);
+                              setNoteDropdownOpen(false);
+                            }}
                             className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-semibold text-stone-700 transition-colors hover:bg-stone-50"
                           >
                             <span
@@ -803,7 +883,7 @@ export default function FeaturedProduct() {
                 </span>
                 <button
                   type="button"
-                  onClick={addToCart}
+                  onClick={handleAddToCart}
                   className="inline-flex items-center rounded-full border border-stone-200 bg-white px-4 py-2 text-xs font-semibold text-stone-700 shadow-soft transition-colors hover:border-primary-300"
                 >
                   {isUrdu ? "آرڈر میں شامل کریں" : "Add to Order"}
@@ -864,7 +944,14 @@ export default function FeaturedProduct() {
                   if (!isCheckoutValid) {
                     event.preventDefault();
                     setCheckoutAttempted(true);
+                    return;
                   }
+                  event.preventDefault();
+                  setWhatsappModalOpen(true);
+                  window.setTimeout(() => {
+                    window.open(whatsappLink, "_blank", "noopener,noreferrer");
+                    setWhatsappModalOpen(false);
+                  }, 700);
                 }}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-premium lux-button"
               >
@@ -873,6 +960,18 @@ export default function FeaturedProduct() {
               </a>
               <a
                 href={emailLink}
+                onClick={(event) => {
+                  if (!emailLink) {
+                    event.preventDefault();
+                    return;
+                  }
+                  event.preventDefault();
+                  setEmailModalOpen(true);
+                  window.setTimeout(() => {
+                    window.location.href = emailLink;
+                    setEmailModalOpen(false);
+                  }, 700);
+                }}
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button hover:border-primary-300"
               >
                 <Mail className="w-4 h-4" />
@@ -892,7 +991,14 @@ export default function FeaturedProduct() {
               if (!isCheckoutValid) {
                 event.preventDefault();
                 setCheckoutAttempted(true);
+                return;
               }
+              event.preventDefault();
+              setWhatsappModalOpen(true);
+              window.setTimeout(() => {
+                window.open(whatsappLink, "_blank", "noopener,noreferrer");
+                setWhatsappModalOpen(false);
+              }, 700);
             }}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-premium lux-button"
           >
@@ -901,6 +1007,18 @@ export default function FeaturedProduct() {
           </a>
           <a
             href={emailLink}
+            onClick={(event) => {
+              if (!emailLink) {
+                event.preventDefault();
+                return;
+              }
+              event.preventDefault();
+              setEmailModalOpen(true);
+              window.setTimeout(() => {
+                window.location.href = emailLink;
+                setEmailModalOpen(false);
+              }, 700);
+            }}
             className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button"
           >
             <Mail className="w-4 h-4" />
@@ -908,6 +1026,143 @@ export default function FeaturedProduct() {
           </a>
         </div>
       </div>
+      <AnimatePresence>
+        {addModalOpen ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          >
+            <button
+              type="button"
+              onClick={() => setAddModalOpen(false)}
+              className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ duration: 0.2 }}
+              className={`relative w-full max-w-md rounded-3xl border border-white/40 bg-white/90 p-6 text-center shadow-[0_20px_60px_rgba(15,23,42,0.25)] backdrop-blur-xl ${
+                isUrdu ? "font-urdu" : ""
+              }`}
+            >
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600">
+                <Check className="h-6 w-6" />
+              </div>
+              <div className="mt-4 text-lg font-semibold text-charcoal-900">
+                {isUrdu ? "آرڈر کامیابی سے شامل کر دیا گیا" : "Order Added Successfully"}
+              </div>
+              <div className="mt-2 text-sm text-stone-600">
+                {isUrdu
+                  ? "آپ کی پروڈکٹ کارٹ میں شامل ہو گئی ہے۔"
+                  : "Your product has been added to the cart."}
+              </div>
+              <div className="mt-4 rounded-2xl border border-stone-200/70 bg-white/70 px-4 py-3 text-sm text-stone-700">
+                <div className="font-semibold text-charcoal-900">
+                  {isUrdu ? "پروڈکٹ" : "Product"}:{" "}
+                  {isUrdu ? "پریمیم ریزن جار" : "Premium Resin Jar"}
+                </div>
+                <div className="mt-1">
+                  {isUrdu ? "سائز" : "Size"}: {lastAdded?.sizeLabel ?? selectedSize.label}
+                </div>
+                <div className="mt-1">
+                  {isUrdu ? "مقدار" : "Quantity"}: {lastAdded?.quantity ?? quantity}
+                </div>
+              </div>
+              <div className="mt-4 text-xs text-stone-500">
+                {isUrdu
+                  ? "آپ مزید خریداری جاری رکھ سکتے ہیں یا آرڈر مکمل کر سکتے ہیں۔"
+                  : "You can continue shopping or proceed to order."}
+              </div>
+              <button
+                type="button"
+                onClick={() => setAddModalOpen(false)}
+                className="mt-5 inline-flex items-center justify-center rounded-full bg-primary-700 px-5 py-2 text-xs font-semibold text-white shadow-premium"
+              >
+                {isUrdu ? "ٹھیک ہے" : "Got it"}
+              </button>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      <AnimatePresence>
+        {whatsappModalOpen ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          >
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ duration: 0.2 }}
+              className={`relative w-full max-w-md rounded-3xl border border-white/40 bg-white/90 p-6 text-center shadow-[0_20px_60px_rgba(15,23,42,0.25)] backdrop-blur-xl ${
+                isUrdu ? "font-urdu" : ""
+              }`}
+            >
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600">
+                <Check className="h-6 w-6" />
+              </div>
+              <div className="mt-4 text-lg font-semibold text-charcoal-900">
+                {isUrdu ? "آرڈر کی درخواست بھیج دی گئی" : "Order Request Sent"}
+              </div>
+              <div className="mt-2 text-sm text-stone-600">
+                {isUrdu
+                  ? "آپ کی آرڈر کی درخواست واٹس ایپ کے لیے تیار ہے۔"
+                  : "Your order request has been prepared for WhatsApp."}
+              </div>
+              <div className="mt-2 text-xs text-stone-500">
+                {isUrdu
+                  ? "آپ کو آرڈر کی تصدیق کے لیے واٹس ایپ پر ری ڈائریکٹ کیا جائے گا۔"
+                  : "You will be redirected to WhatsApp to confirm your order."}
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      <AnimatePresence>
+        {emailModalOpen ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          >
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ duration: 0.2 }}
+              className={`relative w-full max-w-md rounded-3xl border border-white/40 bg-white/90 p-6 text-center shadow-[0_20px_60px_rgba(15,23,42,0.25)] backdrop-blur-xl ${
+                isUrdu ? "font-urdu" : ""
+              }`}
+            >
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600">
+                <Check className="h-6 w-6" />
+              </div>
+              <div className="mt-4 text-lg font-semibold text-charcoal-900">
+                {isUrdu ? "ای میل آرڈر تیار ہے" : "Email Order Prepared"}
+              </div>
+              <div className="mt-2 text-sm text-stone-600">
+                {isUrdu
+                  ? "آپ کی آرڈر تفصیلات ای میل کے لیے تیار ہیں۔"
+                  : "Your order details are ready to send via email."}
+              </div>
+              <div className="mt-2 text-xs text-stone-500">
+                {isUrdu
+                  ? "آپ کا میل کلائنٹ آرڈر مکمل کرنے کے لیے کھل جائے گا۔"
+                  : "Your mail client will open to complete the order."}
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </section>
   );
 }

@@ -11,7 +11,8 @@ import { useLanguage } from "@/components/i18n/LanguageProvider";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { t, locale } = useLanguage();
+  const [cartCount, setCartCount] = useState(0);
+  const { t } = useLanguage();
 
   const navItems = [
     { label: t("header.nav.products"), href: "/products" },
@@ -28,6 +29,51 @@ export default function Header() {
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const loadCount = () => {
+      const storedOrderCount = window.localStorage.getItem("everestCartOrders");
+      if (storedOrderCount) {
+        const parsedOrderCount = Number(storedOrderCount);
+        setCartCount(Number.isNaN(parsedOrderCount) ? 0 : parsedOrderCount);
+        return;
+      }
+      const storedItems = window.localStorage.getItem("everestCartItems");
+      if (!storedItems) {
+        setCartCount(0);
+        return;
+      }
+      try {
+        const parsed = JSON.parse(storedItems);
+        if (Array.isArray(parsed)) {
+          setCartCount(parsed.length);
+        } else {
+          setCartCount(0);
+        }
+      } catch {
+        setCartCount(0);
+      }
+    };
+    const handleCartUpdate = (event: Event) => {
+      const detail = (event as CustomEvent).detail as { count?: number } | undefined;
+      if (detail?.count !== undefined) {
+        setCartCount(detail.count);
+        return;
+      }
+      loadCount();
+    };
+    loadCount();
+    window.addEventListener("everest-cart-updated", handleCartUpdate as EventListener);
+    window.addEventListener("storage", loadCount);
+    return () => {
+      window.removeEventListener(
+        "everest-cart-updated",
+        handleCartUpdate as EventListener
+      );
+      window.removeEventListener("storage", loadCount);
+    };
   }, []);
 
   return (
@@ -130,7 +176,15 @@ export default function Header() {
               aria-label={t("header.cartLabel")}
             >
               <ShoppingBag className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-400 rounded-full ring-2 ring-white" />
+              {cartCount > 0 ? (
+                <span
+                  className={`absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-amber-400 px-1 text-[10px] font-semibold text-black ring-2 ${
+                    isScrolled ? "ring-slate-900/30" : "ring-white"
+                  }`}
+                >
+                  {cartCount}
+                </span>
+              ) : null}
             </button>
 
             {/* CTA */}
