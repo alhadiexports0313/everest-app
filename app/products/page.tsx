@@ -102,6 +102,8 @@ export default function ProductsPage() {
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerCity, setCustomerCity] = useState("");
   const [customerNote, setCustomerNote] = useState("");
+  const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
+  const [noteDropdownOpen, setNoteDropdownOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [checkoutAttempted, setCheckoutAttempted] = useState(false);
   const [orderMeta, setOrderMeta] = useState<{
@@ -230,6 +232,55 @@ export default function ProductsPage() {
   const phoneMissing = customerPhone.trim().length === 0;
   const cityMissing = customerCity.trim().length === 0;
   const isCheckoutValid = !nameMissing && !phoneMissing && !cityMissing;
+  const noteLines = (value: string) =>
+    value
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+  const noteSuggestions = isUrdu
+    ? [
+        "براہ کرم پروڈکٹ کی دستیابی کی تصدیق کریں۔",
+        "مہربانی کر کے ادائیگی کے طریقہ کار کی تفصیل شیئر کریں۔",
+        "براہ کرم ڈیلیوری وقت بتائیں۔",
+        "اگر ممکن ہو تو جلد ڈیلیوری فراہم کریں۔",
+        "براہ کرم اصل پروڈکٹ کی تصدیق کریں۔",
+        "مہربانی کر کے شپنگ چارجز بتائیں۔",
+        "براہ کرم اسٹاک دستیابی کی تصدیق کریں۔",
+        "میں محفوظ پیکجنگ چاہتا ہوں۔",
+        "براہ کرم بھیجنے سے پہلے رابطہ کریں۔",
+        "مناسب سائز کے بارے میں رہنمائی کریں۔",
+      ]
+    : [
+        "Please confirm product availability.",
+        "Kindly share payment method details.",
+        "Please provide delivery time estimate.",
+        "I prefer fast delivery if possible.",
+        "Please confirm original product authenticity.",
+        "Kindly share shipping charges.",
+        "Please confirm stock availability.",
+        "I would like secure packaging.",
+        "Please contact me before dispatch.",
+        "Kindly guide me about best size option.",
+      ];
+  const syncSelectedNotes = (value: string) => {
+    const lines = noteLines(value);
+    const nextSelected = noteSuggestions.filter((note) => lines.includes(note));
+    setSelectedNotes(nextSelected);
+  };
+  const toggleNote = (note: string) => {
+    const lines = noteLines(customerNote);
+    if (lines.includes(note)) {
+      const nextLines = lines.filter((line) => line !== note);
+      const nextValue = nextLines.join("\n");
+      setCustomerNote(nextValue);
+      setSelectedNotes((prev) => prev.filter((item) => item !== note));
+      return;
+    }
+    const nextLines = [...lines, note];
+    const nextValue = nextLines.join("\n");
+    setCustomerNote(nextValue);
+    setSelectedNotes((prev) => [...prev, note]);
+  };
 
   const emailLink = useMemo(() => {
     if (!orderMeta) return "";
@@ -276,7 +327,8 @@ export default function ProductsPage() {
           `کسٹمر: ${nameValue}`,
           `فون نمبر: ${phoneValue}`,
           `شہر: ${cityValue}`,
-          noteValue ? `نوٹ: ${noteValue}` : null,
+          noteValue ? "آرڈر نوٹ:" : null,
+          noteValue || null,
           "",
           "━━━━━━━━━━━━━━━━━━━━",
           "پروڈکٹ تفصیلات",
@@ -303,7 +355,8 @@ export default function ProductsPage() {
           `Customer: ${nameValue}`,
           `Phone: ${phoneValue}`,
           `City: ${cityValue}`,
-          noteValue ? `Note: ${noteValue}` : null,
+          noteValue ? "Order Note:" : null,
+          noteValue || null,
           "",
           "━━━━━━━━━━━━━━━━━━━━",
           "PRODUCT DETAILS",
@@ -382,7 +435,8 @@ export default function ProductsPage() {
           `کسٹمر: ${nameValue}`,
           `فون: ${phoneValue}`,
           `شہر: ${cityValue}`,
-          noteValue ? `نوٹ: ${noteValue}` : null,
+          noteValue ? "آرڈر نوٹ:" : null,
+          noteValue || null,
           "",
           "━━━━━━━━━━━━━━━━━━━━",
           "",
@@ -409,7 +463,8 @@ export default function ProductsPage() {
           `Customer: ${nameValue}`,
           `Phone: ${phoneValue}`,
           `City: ${cityValue}`,
-          noteValue ? `Note: ${noteValue}` : null,
+          noteValue ? "Order Note:" : null,
+          noteValue || null,
           "",
           "━━━━━━━━━━━━━━━━━━━━",
           "",
@@ -824,10 +879,60 @@ export default function ProductsPage() {
                     <textarea
                       rows={2}
                       value={customerNote}
-                      onChange={(event) => setCustomerNote(event.target.value)}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        setCustomerNote(nextValue);
+                        syncSelectedNotes(nextValue);
+                      }}
                       placeholder={isUrdu ? "آرڈر نوٹ" : "Order note (optional)"}
                       className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none sm:col-span-2"
                     />
+                    <div className="relative sm:col-span-2">
+                      <button
+                        type="button"
+                        onClick={() => setNoteDropdownOpen((prev) => !prev)}
+                        className="flex w-full items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-stone-600 shadow-soft focus:border-primary-300 focus:outline-none"
+                      >
+                        <span>
+                          {isUrdu ? "فوری نوٹس منتخب کریں" : "Select quick notes"}
+                        </span>
+                        <span className="text-xs text-stone-400">
+                          {selectedNotes.length}
+                        </span>
+                      </button>
+                      {noteDropdownOpen ? (
+                        <div className="absolute z-20 mt-2 w-full rounded-2xl border border-stone-200 bg-white p-2 shadow-soft">
+                          {noteSuggestions.map((note) => {
+                            const isSelected = selectedNotes.includes(note);
+                            return (
+                              <button
+                                key={note}
+                                type="button"
+                                onClick={() => toggleNote(note)}
+                                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-semibold text-stone-700 transition-colors hover:bg-stone-50"
+                              >
+                                <span
+                                  className={`h-3.5 w-3.5 rounded border ${
+                                    isSelected
+                                      ? "border-primary-700 bg-primary-700"
+                                      : "border-stone-300 bg-white"
+                                  }`}
+                                />
+                                <span
+                                  className={
+                                    isSelected
+                                      ? "text-primary-700"
+                                      : "text-stone-700"
+                                  }
+                                >
+                                  {note}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500">
                     <span>
