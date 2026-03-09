@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
+  ChevronDown,
   ShieldCheck,
   TestTube,
   Leaf,
@@ -25,6 +26,79 @@ const sizes = [
 const galleryImages = [
   "/images/banners/resin-texture-macro-1.jpg",
   "/images/products/product_3.jpg",
+];
+
+const phoneCountries = [
+  { code: "+1", label: "USA / Canada", flag: "🇺🇸", placeholder: "202 555 0147", pattern: /^\d{10}$/ },
+  { code: "+44", label: "United Kingdom", flag: "🇬🇧", placeholder: "7400 123456", pattern: /^7\d{9}$/ },
+  { code: "+353", label: "Ireland", flag: "🇮🇪", placeholder: "85 123 4567", pattern: /^\d{9}$/ },
+  { code: "+33", label: "France", flag: "🇫🇷", placeholder: "6 12 34 56 78", pattern: /^\d{9}$/ },
+  { code: "+49", label: "Germany", flag: "🇩🇪", placeholder: "151 23456789", pattern: /^\d{10,11}$/ },
+  { code: "+39", label: "Italy", flag: "🇮🇹", placeholder: "312 345 6789", pattern: /^\d{9,10}$/ },
+  { code: "+34", label: "Spain", flag: "🇪🇸", placeholder: "612 34 56 78", pattern: /^\d{9}$/ },
+  { code: "+31", label: "Netherlands", flag: "🇳🇱", placeholder: "6 12345678", pattern: /^\d{9}$/ },
+  { code: "+32", label: "Belgium", flag: "🇧🇪", placeholder: "470 12 34 56", pattern: /^\d{9}$/ },
+  { code: "+41", label: "Switzerland", flag: "🇨🇭", placeholder: "79 123 45 67", pattern: /^\d{9}$/ },
+  { code: "+43", label: "Austria", flag: "🇦🇹", placeholder: "660 1234567", pattern: /^\d{10,11}$/ },
+  { code: "+46", label: "Sweden", flag: "🇸🇪", placeholder: "70 123 45 67", pattern: /^\d{9}$/ },
+  { code: "+47", label: "Norway", flag: "🇳🇴", placeholder: "412 34 567", pattern: /^\d{8}$/ },
+  { code: "+45", label: "Denmark", flag: "🇩🇰", placeholder: "20 12 34 56", pattern: /^\d{8}$/ },
+  { code: "+358", label: "Finland", flag: "🇫🇮", placeholder: "40 123 4567", pattern: /^\d{9,10}$/ },
+  { code: "+351", label: "Portugal", flag: "🇵🇹", placeholder: "912 345 678", pattern: /^\d{9}$/ },
+  { code: "+30", label: "Greece", flag: "🇬🇷", placeholder: "691 234 5678", pattern: /^\d{10}$/ },
+  { code: "+48", label: "Poland", flag: "🇵🇱", placeholder: "512 345 678", pattern: /^\d{9}$/ },
+  { code: "+420", label: "Czechia", flag: "🇨🇿", placeholder: "601 234 567", pattern: /^\d{9}$/ },
+  { code: "+36", label: "Hungary", flag: "🇭🇺", placeholder: "20 123 4567", pattern: /^\d{9}$/ },
+  { code: "+40", label: "Romania", flag: "🇷🇴", placeholder: "712 345 678", pattern: /^\d{9}$/ },
+  { code: "+380", label: "Ukraine", flag: "🇺🇦", placeholder: "50 123 4567", pattern: /^\d{9}$/ },
+  { code: "+7", label: "Russia", flag: "🇷🇺", placeholder: "912 345 67 89", pattern: /^\d{10}$/ },
+  { code: "+90", label: "Turkey", flag: "🇹🇷", placeholder: "501 234 56 78", pattern: /^\d{10}$/ },
+  { code: "+20", label: "Egypt", flag: "🇪🇬", placeholder: "100 123 4567", pattern: /^\d{10}$/ },
+  { code: "+27", label: "South Africa", flag: "🇿🇦", placeholder: "71 234 5678", pattern: /^\d{9}$/ },
+  { code: "+212", label: "Morocco", flag: "🇲🇦", placeholder: "612 345 678", pattern: /^\d{9}$/ },
+  { code: "+234", label: "Nigeria", flag: "🇳🇬", placeholder: "801 234 5678", pattern: /^\d{10}$/ },
+  { code: "+233", label: "Ghana", flag: "🇬🇭", placeholder: "24 123 4567", pattern: /^\d{9}$/ },
+  { code: "+254", label: "Kenya", flag: "🇰🇪", placeholder: "712 345678", pattern: /^\d{9}$/ },
+  { code: "+255", label: "Tanzania", flag: "🇹🇿", placeholder: "712 345 678", pattern: /^\d{9}$/ },
+  { code: "+251", label: "Ethiopia", flag: "🇪🇹", placeholder: "91 234 5678", pattern: /^\d{9}$/ },
+  { code: "+971", label: "United Arab Emirates", flag: "🇦🇪", placeholder: "50 123 4567", pattern: /^5\d{8}$/ },
+  { code: "+966", label: "Saudi Arabia", flag: "🇸🇦", placeholder: "50 123 4567", pattern: /^5\d{8}$/ },
+  { code: "+974", label: "Qatar", flag: "🇶🇦", placeholder: "3312 3456", pattern: /^\d{8}$/ },
+  { code: "+965", label: "Kuwait", flag: "🇰🇼", placeholder: "5001 2345", pattern: /^\d{8}$/ },
+  { code: "+973", label: "Bahrain", flag: "🇧🇭", placeholder: "3600 1234", pattern: /^\d{8}$/ },
+  { code: "+968", label: "Oman", flag: "🇴🇲", placeholder: "9212 3456", pattern: /^\d{8}$/ },
+  { code: "+962", label: "Jordan", flag: "🇯🇴", placeholder: "79 123 4567", pattern: /^\d{9}$/ },
+  { code: "+961", label: "Lebanon", flag: "🇱🇧", placeholder: "71 123 456", pattern: /^\d{8}$/ },
+  { code: "+972", label: "Israel", flag: "🇮🇱", placeholder: "50 123 4567", pattern: /^\d{9}$/ },
+  { code: "+964", label: "Iraq", flag: "🇮🇶", placeholder: "790 123 4567", pattern: /^\d{10}$/ },
+  { code: "+98", label: "Iran", flag: "🇮🇷", placeholder: "912 345 6789", pattern: /^\d{10}$/ },
+  { code: "+92", label: "Pakistan", flag: "🇵🇰", placeholder: "300 1234567", pattern: /^3\d{9}$/ },
+  { code: "+91", label: "India", flag: "🇮🇳", placeholder: "98765 43210", pattern: /^\d{10}$/ },
+  { code: "+880", label: "Bangladesh", flag: "🇧🇩", placeholder: "1712 345678", pattern: /^\d{10}$/ },
+  { code: "+94", label: "Sri Lanka", flag: "🇱🇰", placeholder: "71 234 5678", pattern: /^\d{9}$/ },
+  { code: "+977", label: "Nepal", flag: "🇳🇵", placeholder: "981 234 5678", pattern: /^\d{10}$/ },
+  { code: "+93", label: "Afghanistan", flag: "🇦🇫", placeholder: "701 234 567", pattern: /^\d{9}$/ },
+  { code: "+86", label: "China", flag: "🇨🇳", placeholder: "131 2345 6789", pattern: /^\d{11}$/ },
+  { code: "+81", label: "Japan", flag: "🇯🇵", placeholder: "90 1234 5678", pattern: /^\d{10}$/ },
+  { code: "+82", label: "South Korea", flag: "🇰🇷", placeholder: "10 1234 5678", pattern: /^\d{9,10}$/ },
+  { code: "+886", label: "Taiwan", flag: "🇹🇼", placeholder: "912 345 678", pattern: /^\d{9}$/ },
+  { code: "+852", label: "Hong Kong", flag: "🇭🇰", placeholder: "5123 4567", pattern: /^\d{8}$/ },
+  { code: "+853", label: "Macau", flag: "🇲🇴", placeholder: "6612 3456", pattern: /^\d{8}$/ },
+  { code: "+65", label: "Singapore", flag: "🇸🇬", placeholder: "8123 4567", pattern: /^\d{8}$/ },
+  { code: "+60", label: "Malaysia", flag: "🇲🇾", placeholder: "12 345 6789", pattern: /^\d{9,10}$/ },
+  { code: "+66", label: "Thailand", flag: "🇹🇭", placeholder: "81 234 5678", pattern: /^\d{9}$/ },
+  { code: "+84", label: "Vietnam", flag: "🇻🇳", placeholder: "912 345 678", pattern: /^\d{9,10}$/ },
+  { code: "+62", label: "Indonesia", flag: "🇮🇩", placeholder: "812 3456 7890", pattern: /^\d{9,11}$/ },
+  { code: "+63", label: "Philippines", flag: "🇵🇭", placeholder: "917 123 4567", pattern: /^\d{10}$/ },
+  { code: "+61", label: "Australia", flag: "🇦🇺", placeholder: "412 345 678", pattern: /^\d{9}$/ },
+  { code: "+64", label: "New Zealand", flag: "🇳🇿", placeholder: "21 123 4567", pattern: /^\d{9}$/ },
+  { code: "+55", label: "Brazil", flag: "🇧🇷", placeholder: "11 91234 5678", pattern: /^\d{10,11}$/ },
+  { code: "+54", label: "Argentina", flag: "🇦🇷", placeholder: "11 1234 5678", pattern: /^\d{10,11}$/ },
+  { code: "+52", label: "Mexico", flag: "🇲🇽", placeholder: "55 1234 5678", pattern: /^\d{10}$/ },
+  { code: "+57", label: "Colombia", flag: "🇨🇴", placeholder: "301 234 5678", pattern: /^\d{10}$/ },
+  { code: "+56", label: "Chile", flag: "🇨🇱", placeholder: "9 1234 5678", pattern: /^\d{9}$/ },
+  { code: "+51", label: "Peru", flag: "🇵🇪", placeholder: "912 345 678", pattern: /^\d{9}$/ },
+  { code: "+58", label: "Venezuela", flag: "🇻🇪", placeholder: "412 123 4567", pattern: /^\d{10}$/ },
 ];
 
 type CartItem = {
@@ -99,12 +173,20 @@ export default function ProductsPage() {
   const [usdRate, setUsdRate] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [customerName, setCustomerName] = useState("");
+  const [countryCode, setCountryCode] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
   const [customerCity, setCustomerCity] = useState("");
   const [customerNote, setCustomerNote] = useState("");
   const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
   const [noteDropdownOpen, setNoteDropdownOpen] = useState(false);
   const noteDropdownRef = useRef<HTMLDivElement | null>(null);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
+  const phoneInputRef = useRef<HTMLInputElement | null>(null);
+  const countryButtonRef = useRef<HTMLButtonElement | null>(null);
+  const cityInputRef = useRef<HTMLInputElement | null>(null);
+  const quantityInputRef = useRef<HTMLInputElement | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [checkoutAttempted, setCheckoutAttempted] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -313,9 +395,83 @@ export default function ProductsPage() {
   );
   const cartTotalUsd = formatUsd ? formatUsd(cartTotalPkr) : null;
   const nameMissing = customerName.trim().length === 0;
-  const phoneMissing = customerPhone.trim().length === 0;
+  const normalizedPhone = customerPhone.replace(/\D/g, "");
+  const selectedCountry = phoneCountries.find(
+    (country) => country.code === countryCode
+  );
+  const phoneMissing = normalizedPhone.length === 0;
+  const countryMissing = countryCode.length === 0;
+  const phoneInvalid =
+    !countryMissing &&
+    !phoneMissing &&
+    (!selectedCountry || !selectedCountry.pattern.test(normalizedPhone));
+  const phoneExample = selectedCountry
+    ? `${selectedCountry.code} ${selectedCountry.placeholder}`
+    : "+92 300 1234567";
+  const filteredCountries = useMemo(() => {
+    const query = countrySearch.trim().toLowerCase();
+    if (!query) return phoneCountries;
+    return phoneCountries.filter((country) =>
+      `${country.label} ${country.code}`.toLowerCase().includes(query)
+    );
+  }, [countrySearch]);
   const cityMissing = customerCity.trim().length === 0;
-  const isCheckoutValid = !nameMissing && !phoneMissing && !cityMissing;
+  const quantityInvalid =
+    Number.isNaN(quantity) || quantity < 1 || quantity > 500;
+  const formatLocalPhone = (code: string, digits: string) => {
+    if (code === "+92" && digits.length >= 10) {
+      return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+    }
+    if ((code === "+971" || code === "+966") && digits.length >= 9) {
+      return `${digits.slice(0, 2)} ${digits.slice(2)}`;
+    }
+    if (code === "+44" && digits.length >= 10) {
+      return `${digits.slice(0, 4)} ${digits.slice(4)}`;
+    }
+    if (code === "+1" && digits.length >= 10) {
+      return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+    }
+    return digits;
+  };
+  const formattedPhone =
+    countryMissing || phoneMissing
+      ? ""
+      : `${countryCode} ${formatLocalPhone(countryCode, normalizedPhone)}`;
+  const isCheckoutValid =
+    !nameMissing &&
+    !phoneMissing &&
+    !countryMissing &&
+    !phoneInvalid &&
+    !cityMissing &&
+    !quantityInvalid;
+  const scrollToField = (element: HTMLElement | null) => {
+    if (!element) return;
+    if ("focus" in element) {
+      (element as HTMLElement).focus({ preventScroll: true });
+    }
+    element.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+  const focusFirstInvalidField = () => {
+    if (nameMissing) {
+      scrollToField(nameInputRef.current);
+      return;
+    }
+    if (countryMissing) {
+      scrollToField(countryButtonRef.current);
+      return;
+    }
+    if (phoneMissing || phoneInvalid) {
+      scrollToField(phoneInputRef.current);
+      return;
+    }
+    if (cityMissing) {
+      scrollToField(cityInputRef.current);
+      return;
+    }
+    if (quantityInvalid) {
+      scrollToField(quantityInputRef.current);
+    }
+  };
   const noteLines = (value: string) =>
     value
       .split(/\r?\n/)
@@ -383,9 +539,9 @@ export default function ProductsPage() {
     const nameValue =
       customerName.trim() || (isUrdu ? "نام درج نہیں" : "Not provided");
     const phoneValue =
-      customerPhone.trim() || (isUrdu ? "فون درج نہیں" : "Not provided");
+      formattedPhone || (isUrdu ? "فون درج نہیں" : "Not provided");
     const cityValue =
-      customerCity.trim() || (isUrdu ? "شہر درج نہیں" : "Not provided");
+      customerCity.trim() || (isUrdu ? "پتہ درج نہیں" : "Not provided");
     const noteValue = customerNote.trim();
     const productName = isUrdu ? "پریمیم ریزن جار" : "Premium Resin Jar";
     const productLines = effectiveCartItems.flatMap((item, index) => {
@@ -410,7 +566,7 @@ export default function ProductsPage() {
           `وقت: ${orderTime}`,
           `کسٹمر: ${nameValue}`,
           `فون نمبر: ${phoneValue}`,
-          `شہر: ${cityValue}`,
+          `پتہ: ${cityValue}`,
           noteValue ? "آرڈر نوٹ:" : null,
           noteValue || null,
           "",
@@ -438,7 +594,7 @@ export default function ProductsPage() {
           `Time: ${orderTime}`,
           `Customer: ${nameValue}`,
           `Phone: ${phoneValue}`,
-          `City: ${cityValue}`,
+          `Address: ${cityValue}`,
           noteValue ? "Order Note:" : null,
           noteValue || null,
           "",
@@ -467,6 +623,7 @@ export default function ProductsPage() {
     orderMeta,
     customerName,
     customerPhone,
+    countryCode,
     customerCity,
     customerNote,
     effectiveCartItems,
@@ -492,9 +649,9 @@ export default function ProductsPage() {
     const nameValue =
       customerName.trim() || (isUrdu ? "نام درج نہیں" : "Not provided");
     const phoneValue =
-      customerPhone.trim() || (isUrdu ? "فون درج نہیں" : "Not provided");
+      formattedPhone || (isUrdu ? "فون درج نہیں" : "Not provided");
     const cityValue =
-      customerCity.trim() || (isUrdu ? "شہر درج نہیں" : "Not provided");
+      customerCity.trim() || (isUrdu ? "پتہ درج نہیں" : "Not provided");
     const noteValue = customerNote.trim();
     const productName = isUrdu ? "پریمیم ریزن جار" : "Premium Resin Jar";
     const productLines = effectiveCartItems.flatMap((item, index) => {
@@ -518,7 +675,7 @@ export default function ProductsPage() {
           `وقت: ${orderTime}`,
           `کسٹمر: ${nameValue}`,
           `فون: ${phoneValue}`,
-          `شہر: ${cityValue}`,
+          `پتہ: ${cityValue}`,
           noteValue ? "آرڈر نوٹ:" : null,
           noteValue || null,
           "",
@@ -546,7 +703,7 @@ export default function ProductsPage() {
           `Time: ${orderTime}`,
           `Customer: ${nameValue}`,
           `Phone: ${phoneValue}`,
-          `City: ${cityValue}`,
+          `Address: ${cityValue}`,
           noteValue ? "Order Note:" : null,
           noteValue || null,
           "",
@@ -572,6 +729,7 @@ export default function ProductsPage() {
     orderMeta,
     customerName,
     customerPhone,
+    countryCode,
     customerCity,
     customerNote,
     effectiveCartItems,
@@ -839,6 +997,7 @@ export default function ProductsPage() {
                       −
                     </button>
                     <input
+                    ref={quantityInputRef}
                         type="number"
                         min={1}
                         max={500}
@@ -887,6 +1046,11 @@ export default function ProductsPage() {
                       +
                     </button>
                   </div>
+                  {checkoutAttempted && quantityInvalid ? (
+                    <div className={`mt-2 text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
+                      {isUrdu ? "براہ کرم درست مقدار منتخب کریں" : "Please enter a valid quantity"}
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className="mt-6 space-y-3 text-sm text-stone-700">
@@ -917,6 +1081,7 @@ export default function ProductsPage() {
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     <div className="space-y-1">
                       <input
+                        ref={nameInputRef}
                         type="text"
                         required
                         value={customerName}
@@ -930,33 +1095,89 @@ export default function ProductsPage() {
                         </div>
                       ) : null}
                     </div>
-                    <div className="space-y-1">
-                      <input
-                        type="tel"
-                        required
-                        value={customerPhone}
-                        onChange={(event) => setCustomerPhone(event.target.value)}
-                        placeholder={isUrdu ? "فون نمبر" : "Phone number"}
-                        className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none"
-                      />
+                    <div className="space-y-1 sm:col-span-2">
+                      <div className={`flex flex-wrap items-center gap-2 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                        <button
+                          ref={countryButtonRef}
+                          type="button"
+                          onClick={() => {
+                            setCountrySearch("");
+                            setCountryDropdownOpen(true);
+                          }}
+                          className={`min-w-[190px] rounded-2xl border border-stone-200/80 bg-white/80 px-4 py-2.5 shadow-soft backdrop-blur transition-all duration-200 hover:border-primary-300 focus:border-primary-300 focus:outline-none ${
+                            isUrdu ? "text-right" : "text-left"
+                          }`}
+                        >
+                          <span className={`flex items-center justify-between gap-3 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                            <span className={`flex items-center gap-3 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                              <span className="text-lg">
+                                {selectedCountry?.flag ?? "🌍"}
+                              </span>
+                              <span className={`flex flex-col ${isUrdu ? "items-end" : "items-start"}`}>
+                                <span className="text-sm font-semibold text-charcoal-900">
+                                  {selectedCountry
+                                    ? selectedCountry.label
+                                    : isUrdu
+                                      ? "ملک منتخب کریں"
+                                      : "Select a country"}
+                                </span>
+                                <span className="text-[11px] text-stone-500">
+                                  {selectedCountry
+                                    ? selectedCountry.code
+                                    : isUrdu
+                                      ? "کوڈ"
+                                      : "Code"}
+                                </span>
+                              </span>
+                            </span>
+                            <ChevronDown className="h-4 w-4 text-stone-400" />
+                          </span>
+                        </button>
+                        <input
+                          ref={phoneInputRef}
+                          type="tel"
+                          inputMode="numeric"
+                          required
+                          value={customerPhone}
+                          onChange={(event) => setCustomerPhone(event.target.value)}
+                          placeholder={
+                            selectedCountry?.placeholder ||
+                            (isUrdu ? "فون نمبر" : "Phone number")
+                          }
+                          className="min-w-[220px] flex-1 rounded-2xl border border-stone-200/80 bg-white/80 px-4 py-2.5 text-sm text-charcoal-900 shadow-soft backdrop-blur transition-all duration-200 hover:border-primary-300 focus:border-primary-300 focus:outline-none"
+                        />
+                      </div>
+                      {checkoutAttempted && countryMissing ? (
+                        <div className={`text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
+                          {isUrdu ? "براہ کرم ملک کوڈ منتخب کریں" : "Please select a country code"}
+                        </div>
+                      ) : null}
                       {checkoutAttempted && phoneMissing ? (
                         <div className={`text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
                           {isUrdu ? "براہ کرم فون نمبر درج کریں" : "Please enter your phone number"}
                         </div>
                       ) : null}
+                      {checkoutAttempted && phoneInvalid ? (
+                        <div className={`text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
+                          {isUrdu
+                            ? `درست فارمیٹ استعمال کریں، مثال: ${phoneExample}`
+                            : `Use a valid format, e.g., ${phoneExample}`}
+                        </div>
+                      ) : null}
                     </div>
                     <div className="space-y-1">
                       <input
+                        ref={cityInputRef}
                         type="text"
                         required
                         value={customerCity}
                         onChange={(event) => setCustomerCity(event.target.value)}
-                        placeholder={isUrdu ? "شہر" : "City"}
+                        placeholder={isUrdu ? "شہر / پتہ" : "City / Address"}
                         className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none"
                       />
                       {checkoutAttempted && cityMissing ? (
                         <div className={`text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
-                          {isUrdu ? "براہ کرم اپنا شہر درج کریں" : "Please enter your city"}
+                          {isUrdu ? "براہ کرم اپنا پتہ درج کریں" : "Please enter your address"}
                         </div>
                       ) : null}
                     </div>
@@ -1090,6 +1311,7 @@ export default function ProductsPage() {
                       if (!isCheckoutValid) {
                         event.preventDefault();
                         setCheckoutAttempted(true);
+                        focusFirstInvalidField();
                         return;
                       }
                       event.preventDefault();
@@ -1107,6 +1329,12 @@ export default function ProductsPage() {
                   <a
                     href={emailLink}
                     onClick={(event) => {
+                      if (!isCheckoutValid) {
+                        event.preventDefault();
+                        setCheckoutAttempted(true);
+                        focusFirstInvalidField();
+                        return;
+                      }
                       if (!emailLink) {
                         event.preventDefault();
                         return;
@@ -1183,6 +1411,7 @@ export default function ProductsPage() {
               if (!isCheckoutValid) {
                 event.preventDefault();
                 setCheckoutAttempted(true);
+                focusFirstInvalidField();
                 return;
               }
               event.preventDefault();
@@ -1200,6 +1429,12 @@ export default function ProductsPage() {
           <a
             href={emailLink}
             onClick={(event) => {
+              if (!isCheckoutValid) {
+                event.preventDefault();
+                setCheckoutAttempted(true);
+                focusFirstInvalidField();
+                return;
+              }
               if (!emailLink) {
                 event.preventDefault();
                 return;
@@ -1218,6 +1453,83 @@ export default function ProductsPage() {
           </a>
         </div>
       </div>
+      <AnimatePresence>
+        {countryDropdownOpen ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          >
+            <button
+              type="button"
+              onClick={() => setCountryDropdownOpen(false)}
+              className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ duration: 0.2 }}
+              className={`relative w-full max-w-lg rounded-3xl border border-white/40 bg-white/95 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.25)] backdrop-blur-xl ${
+                isUrdu ? "font-urdu text-right" : "text-left"
+              }`}
+            >
+              <div className={`flex items-center justify-between ${isUrdu ? "flex-row-reverse" : ""}`}>
+                <div className="text-sm font-semibold text-charcoal-900">
+                  {isUrdu ? "ملک منتخب کریں" : "Select a country"}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCountryDropdownOpen(false)}
+                  className="rounded-full border border-stone-200/70 bg-white/90 px-3 py-1.5 text-[11px] font-semibold text-stone-500 transition-colors hover:text-stone-700"
+                >
+                  {isUrdu ? "بند کریں" : "Close"}
+                </button>
+              </div>
+              <input
+                type="text"
+                value={countrySearch}
+                onChange={(event) => setCountrySearch(event.target.value)}
+                placeholder={isUrdu ? "تلاش کریں..." : "Search..."}
+                className="mt-4 w-full rounded-2xl border border-stone-200/70 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none"
+              />
+              <div className="mt-4 max-h-[360px] overflow-y-auto rounded-2xl border border-stone-200/70 bg-white/90 shadow-inner">
+                {filteredCountries.length === 0 ? (
+                  <div className="px-4 py-6 text-sm text-stone-500">
+                    {isUrdu ? "کوئی نتیجہ نہیں" : "No results found"}
+                  </div>
+                ) : (
+                  filteredCountries.map((country) => (
+                    <button
+                      key={`${country.code}-${country.label}`}
+                      type="button"
+                      onClick={() => {
+                        setCountryCode(country.code);
+                        setCountryDropdownOpen(false);
+                        setCountrySearch("");
+                      }}
+                      className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-sm text-stone-700 transition-colors hover:bg-stone-50 ${
+                        isUrdu ? "flex-row-reverse text-right" : "text-left"
+                      }`}
+                    >
+                      <span className={`flex items-center gap-3 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                        <span className="text-lg">{country.flag}</span>
+                        <span className="text-sm font-semibold text-charcoal-900">
+                          {country.label}
+                        </span>
+                      </span>
+                      <span className="text-sm font-semibold text-stone-500">
+                        {country.code}
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
       <AnimatePresence>
         {addModalOpen ? (
           <motion.div
