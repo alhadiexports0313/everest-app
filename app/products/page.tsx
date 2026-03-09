@@ -104,6 +104,10 @@ export default function ProductsPage() {
   const [customerNote, setCustomerNote] = useState("");
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [checkoutAttempted, setCheckoutAttempted] = useState(false);
+  const [orderMeta, setOrderMeta] = useState<{
+    id: string;
+    createdAt: number;
+  } | null>(null);
   const { locale } = useLanguage();
   const isUrdu = locale === "ur";
 
@@ -152,12 +156,12 @@ export default function ProductsPage() {
     };
   }, []);
 
-  const emailLink = useMemo(() => {
-    const subject = isUrdu
-      ? `آرڈر: ایورسٹ آرگینک سلاجیت (${selectedSize.label})`
-      : `Order: Everest Organic Shilajit (${selectedSize.label})`;
-    return `mailto:everestorganicshilajet@gmail.com?subject=${encodeURIComponent(subject)}`;
-  }, [isUrdu, selectedSize.label]);
+  useEffect(() => {
+    setOrderMeta({
+      id: `EOS-${Math.floor(100000 + Math.random() * 900000)}`,
+      createdAt: Date.now(),
+    });
+  }, []);
 
   const priceLocale = isUrdu ? "ur-PK" : "en-PK";
   const formatPkr = useMemo(
@@ -190,10 +194,6 @@ export default function ProductsPage() {
   const secondaryPrice =
     currency === "USD" ? formatPkr(totalPricePkr) : totalPriceUsd;
 
-  const orderId = useMemo(
-    () => `EOS-${Math.floor(100000 + Math.random() * 900000)}`,
-    []
-  );
   const addToCart = () => {
     setCartItems((prev) => {
       const existing = prev.find((item) => item.sizeLabel === selectedSize.label);
@@ -231,9 +231,116 @@ export default function ProductsPage() {
   const cityMissing = customerCity.trim().length === 0;
   const isCheckoutValid = !nameMissing && !phoneMissing && !cityMissing;
 
+  const emailLink = useMemo(() => {
+    if (!orderMeta) return "";
+    const now = new Date(orderMeta.createdAt);
+    const dateLocale = isUrdu ? "ur-PK" : "en-GB";
+    const orderDate = now.toLocaleDateString(dateLocale, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+    const orderTime = now.toLocaleTimeString(dateLocale, {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+    const nameValue =
+      customerName.trim() || (isUrdu ? "نام درج نہیں" : "Not provided");
+    const phoneValue =
+      customerPhone.trim() || (isUrdu ? "فون درج نہیں" : "Not provided");
+    const cityValue =
+      customerCity.trim() || (isUrdu ? "شہر درج نہیں" : "Not provided");
+    const noteValue = customerNote.trim();
+    const productName = isUrdu ? "پریمیم ریزن جار" : "Premium Resin Jar";
+    const productLines = effectiveCartItems.flatMap((item, index) => {
+      const subtotal = formatPkr(item.unitPricePkr * item.quantity);
+      const unitPrice = formatPkr(item.unitPricePkr);
+      return [
+        `${index + 1}️⃣ ${productName} — ${item.sizeLabel}`,
+        isUrdu ? `مقدار: ${item.quantity}` : `Quantity: ${item.quantity}`,
+        isUrdu ? `فی یونٹ قیمت: ${unitPrice}` : `Price Per Unit: ${unitPrice}`,
+        isUrdu ? `سب ٹوٹل: ${subtotal}` : `Subtotal: ${subtotal}`,
+        "",
+      ];
+    });
+    const usdValue = cartTotalUsd || (isUrdu ? "دستیاب نہیں" : "Not available");
+    const lines = isUrdu
+      ? [
+          "ایورسٹ آرگینک سلاجیت",
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          `آرڈر آئی ڈی: ${orderMeta.id}`,
+          `تاریخ: ${orderDate}`,
+          `وقت: ${orderTime}`,
+          `کسٹمر: ${nameValue}`,
+          `فون نمبر: ${phoneValue}`,
+          `شہر: ${cityValue}`,
+          noteValue ? `نوٹ: ${noteValue}` : null,
+          "",
+          "━━━━━━━━━━━━━━━━━━━━",
+          "پروڈکٹ تفصیلات",
+          "",
+          ...productLines,
+          "━━━━━━━━━━━━━━━━━━━━",
+          "کل آرڈر",
+          `کل قیمت: ${formatPkr(cartTotalPkr)}`,
+          `USD مساوی: ${usdValue}`,
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          "ویب سائٹ",
+          "everestorganicshilajit.com",
+          "",
+          "شکریہ۔ میں یہ آرڈر دینا چاہتا/چاہتی ہوں۔",
+        ]
+      : [
+          "EVEREST ORGANIC SHILAJIT",
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          `Order ID: ${orderMeta.id}`,
+          `Date: ${orderDate}`,
+          `Time: ${orderTime}`,
+          `Customer: ${nameValue}`,
+          `Phone: ${phoneValue}`,
+          `City: ${cityValue}`,
+          noteValue ? `Note: ${noteValue}` : null,
+          "",
+          "━━━━━━━━━━━━━━━━━━━━",
+          "PRODUCT DETAILS",
+          "",
+          ...productLines,
+          "━━━━━━━━━━━━━━━━━━━━",
+          "TOTAL ORDER",
+          `Total Price: ${formatPkr(cartTotalPkr)}`,
+          `USD Equivalent: ${usdValue}`,
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          "Website",
+          "everestorganicshilajit.com",
+          "",
+          "Thank you. I would like to place this order.",
+        ];
+    const subject = "New Order - Everest Organic Shilajit";
+    const body = lines.filter(Boolean).join("\n");
+    return `mailto:everestorganicshilajet@gmail.com?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+  }, [
+    isUrdu,
+    orderMeta,
+    customerName,
+    customerPhone,
+    customerCity,
+    customerNote,
+    effectiveCartItems,
+    formatPkr,
+    cartTotalPkr,
+    cartTotalUsd,
+  ]);
+
   const whatsappLink = useMemo(() => {
-    if (!isCheckoutValid) return "";
-    const now = new Date();
+    if (!isCheckoutValid || !orderMeta) return "";
+    const now = new Date(orderMeta.createdAt);
     const dateLocale = isUrdu ? "ur-PK" : "en-GB";
     const orderDate = now.toLocaleDateString(dateLocale, {
       day: "numeric",
@@ -269,7 +376,7 @@ export default function ProductsPage() {
           "EVEREST ORGANIC SHILAJIT",
           "━━━━━━━━━━━━━━━━━━━━",
           "",
-          `آرڈر آئی ڈی: ${orderId}`,
+          `آرڈر آئی ڈی: ${orderMeta.id}`,
           `تاریخ: ${orderDate}`,
           `وقت: ${orderTime}`,
           `کسٹمر: ${nameValue}`,
@@ -296,7 +403,7 @@ export default function ProductsPage() {
           "EVEREST ORGANIC SHILAJIT",
           "━━━━━━━━━━━━━━━━━━━━",
           "",
-          `Order ID: ${orderId}`,
+          `Order ID: ${orderMeta.id}`,
           `Date: ${orderDate}`,
           `Time: ${orderTime}`,
           `Customer: ${nameValue}`,
@@ -323,7 +430,7 @@ export default function ProductsPage() {
     return `https://wa.me/923454490326?text=${encodeURIComponent(message)}`;
   }, [
     isUrdu,
-    orderId,
+    orderMeta,
     customerName,
     customerPhone,
     customerCity,
