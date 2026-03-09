@@ -17,7 +17,11 @@ const resinImages = [
   "/images/products/product_3.jpg",
 ];
 
-
+type CartItem = {
+  sizeLabel: string;
+  quantity: number;
+  unitPricePkr: number;
+};
 
 const highlights = [
   {
@@ -45,6 +49,12 @@ export default function FeaturedProduct() {
   const [currency, setCurrency] = useState<"PKR" | "USD">("PKR");
   const [usdRate, setUsdRate] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerCity, setCustomerCity] = useState("");
+  const [customerNote, setCustomerNote] = useState("");
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [checkoutAttempted, setCheckoutAttempted] = useState(false);
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -88,13 +98,6 @@ export default function FeaturedProduct() {
     };
   }, []);
 
-  const whatsappLink = useMemo(() => {
-    const message = isUrdu
-      ? `آرڈر کی درخواست: ایورسٹ آرگینک سلاجیت (${selectedSize.label})`
-      : `Order request: Everest Organic Shilajit (${selectedSize.label})`;
-    return `https://wa.me/923001234567?text=${encodeURIComponent(message)}`;
-  }, [isUrdu, selectedSize.label]);
-
   const emailLink = useMemo(() => {
     const subject = isUrdu
       ? `آرڈر: ایورسٹ آرگینک سلاجیت (${selectedSize.label})`
@@ -131,9 +134,156 @@ export default function FeaturedProduct() {
   const pkrFormatted = formatPkr(totalPricePkr);
   const usdFormatted = formatUsd ? formatUsd(totalPricePkr) : null;
   const unitPriceUsd = formatUsd ? formatUsd(unitPricePkr) : null;
+  const unitPricePkrFormatted = formatPkr(unitPricePkr);
+  const totalPriceUsd = formatUsd ? formatUsd(totalPricePkr) : null;
   const primaryPrice =
     currency === "USD" && canShowUsd ? usdFormatted : pkrFormatted;
   const secondaryPrice = currency === "USD" ? pkrFormatted : usdFormatted;
+
+  const orderId = useMemo(
+    () => `EOS-${Math.floor(100000 + Math.random() * 900000)}`,
+    []
+  );
+  const addToCart = () => {
+    setCartItems((prev) => {
+      const existing = prev.find((item) => item.sizeLabel === selectedSize.label);
+      if (!existing) {
+        return [
+          ...prev,
+          { sizeLabel: selectedSize.label, quantity, unitPricePkr },
+        ];
+      }
+      return prev.map((item) =>
+        item.sizeLabel === selectedSize.label
+          ? {
+              ...item,
+              quantity: Math.min(500, item.quantity + quantity),
+              unitPricePkr,
+            }
+          : item
+      );
+    });
+  };
+  const removeFromCart = (sizeLabel: string) => {
+    setCartItems((prev) => prev.filter((item) => item.sizeLabel !== sizeLabel));
+  };
+  const effectiveCartItems =
+    cartItems.length > 0
+      ? cartItems
+      : [{ sizeLabel: selectedSize.label, quantity, unitPricePkr }];
+  const cartTotalPkr = effectiveCartItems.reduce(
+    (sum, item) => sum + item.unitPricePkr * item.quantity,
+    0
+  );
+  const cartTotalUsd = formatUsd ? formatUsd(cartTotalPkr) : null;
+  const nameMissing = customerName.trim().length === 0;
+  const phoneMissing = customerPhone.trim().length === 0;
+  const cityMissing = customerCity.trim().length === 0;
+  const isCheckoutValid = !nameMissing && !phoneMissing && !cityMissing;
+
+  const whatsappLink = useMemo(() => {
+    if (!isCheckoutValid) return "";
+    const now = new Date();
+    const dateLocale = isUrdu ? "ur-PK" : "en-GB";
+    const orderDate = now.toLocaleDateString(dateLocale, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+    const orderTime = now.toLocaleTimeString(dateLocale, {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+    const nameValue =
+      customerName.trim() || (isUrdu ? "نام درج نہیں" : "Not provided");
+    const phoneValue =
+      customerPhone.trim() || (isUrdu ? "فون درج نہیں" : "Not provided");
+    const cityValue =
+      customerCity.trim() || (isUrdu ? "شہر درج نہیں" : "Not provided");
+    const noteValue = customerNote.trim();
+    const productName = isUrdu ? "پریمیم ریزن جار" : "Premium Resin Jar";
+    const productLines = effectiveCartItems.flatMap((item, index) => {
+      const subtotal = formatPkr(item.unitPricePkr * item.quantity);
+      const unitPrice = formatPkr(item.unitPricePkr);
+      return [
+        `${index + 1}️⃣ ${productName} — ${item.sizeLabel}`,
+        isUrdu ? `مقدار: ${item.quantity}` : `Qty: ${item.quantity}`,
+        isUrdu ? `فی یونٹ قیمت: ${unitPrice}` : `Unit Price: ${unitPrice}`,
+        isUrdu ? `سب ٹوٹل: ${subtotal}` : `Subtotal: ${subtotal}`,
+        "",
+      ];
+    });
+    const lines = isUrdu
+      ? [
+          "EVEREST ORGANIC SHILAJIT",
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          `آرڈر آئی ڈی: ${orderId}`,
+          `تاریخ: ${orderDate}`,
+          `وقت: ${orderTime}`,
+          `کسٹمر: ${nameValue}`,
+          `فون: ${phoneValue}`,
+          `شہر: ${cityValue}`,
+          noteValue ? `نوٹ: ${noteValue}` : null,
+          "",
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          "پروڈکٹس",
+          ...productLines,
+          "━━━━━━━━━━━━━━━━━━━━",
+          "کل رقم",
+          `${formatPkr(cartTotalPkr)}`,
+          cartTotalUsd ? `USD: ${cartTotalUsd}` : null,
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          "ویب سائٹ",
+          "everestorganicshilajit.com",
+          "",
+          "السلام علیکم، میں یہ آرڈر دینا چاہتا/چاہتی ہوں۔",
+        ]
+      : [
+          "EVEREST ORGANIC SHILAJIT",
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          `Order ID: ${orderId}`,
+          `Date: ${orderDate}`,
+          `Time: ${orderTime}`,
+          `Customer: ${nameValue}`,
+          `Phone: ${phoneValue}`,
+          `City: ${cityValue}`,
+          noteValue ? `Note: ${noteValue}` : null,
+          "",
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          "Products",
+          ...productLines,
+          "━━━━━━━━━━━━━━━━━━━━",
+          "TOTAL",
+          `${formatPkr(cartTotalPkr)}`,
+          cartTotalUsd ? `USD ${cartTotalUsd}` : null,
+          "━━━━━━━━━━━━━━━━━━━━",
+          "",
+          "Website",
+          "everestorganicshilajit.com",
+          "",
+          "Hello, I would like to place this order.",
+        ];
+    const message = lines.filter(Boolean).join("\n");
+    return `https://wa.me/923454490326?text=${encodeURIComponent(message)}`;
+  }, [
+    isUrdu,
+    orderId,
+    customerName,
+    customerPhone,
+    customerCity,
+    customerNote,
+    effectiveCartItems,
+    formatPkr,
+    cartTotalPkr,
+    cartTotalUsd,
+    isCheckoutValid,
+  ]);
 
   return (
     <section id="featured" className="section-padding bg-stone-50">
@@ -375,11 +525,139 @@ export default function FeaturedProduct() {
               ))}
             </div>
 
+            <div
+              className={`mt-7 rounded-2xl border border-stone-200/60 bg-white p-5 shadow-soft ${
+                isUrdu ? "text-right font-urdu" : "text-left"
+              }`}
+            >
+              <div className="text-sm font-semibold text-charcoal-900">
+                {isUrdu ? "چیک آؤٹ تفصیلات" : "Checkout Details"}
+              </div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <input
+                    type="text"
+                    required
+                    value={customerName}
+                    onChange={(event) => setCustomerName(event.target.value)}
+                    placeholder={isUrdu ? "اپنا نام درج کریں" : "Enter your name"}
+                    className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none"
+                  />
+                  {checkoutAttempted && nameMissing ? (
+                    <div className={`text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
+                      {isUrdu ? "براہ کرم اپنا نام درج کریں" : "Please enter your name"}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="space-y-1">
+                  <input
+                    type="tel"
+                    required
+                    value={customerPhone}
+                    onChange={(event) => setCustomerPhone(event.target.value)}
+                    placeholder={isUrdu ? "فون نمبر" : "Phone number"}
+                    className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none"
+                  />
+                  {checkoutAttempted && phoneMissing ? (
+                    <div className={`text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
+                      {isUrdu ? "براہ کرم فون نمبر درج کریں" : "Please enter your phone number"}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="space-y-1">
+                  <input
+                    type="text"
+                    required
+                    value={customerCity}
+                    onChange={(event) => setCustomerCity(event.target.value)}
+                    placeholder={isUrdu ? "شہر" : "City"}
+                    className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none"
+                  />
+                  {checkoutAttempted && cityMissing ? (
+                    <div className={`text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
+                      {isUrdu ? "براہ کرم اپنا شہر درج کریں" : "Please enter your city"}
+                    </div>
+                  ) : null}
+                </div>
+                <textarea
+                  rows={2}
+                  value={customerNote}
+                  onChange={(event) => setCustomerNote(event.target.value)}
+                  placeholder={isUrdu ? "آرڈر نوٹ" : "Order note (optional)"}
+                  className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none sm:col-span-2"
+                />
+              </div>
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500">
+                <span>
+                  {isUrdu
+                    ? `${selectedSize.label} جار × ${quantity}`
+                    : `${selectedSize.label} jar × ${quantity}`}
+                </span>
+                <button
+                  type="button"
+                  onClick={addToCart}
+                  className="inline-flex items-center rounded-full border border-stone-200 bg-white px-4 py-2 text-xs font-semibold text-stone-700 shadow-soft transition-colors hover:border-primary-300"
+                >
+                  {isUrdu ? "آرڈر میں شامل کریں" : "Add to Order"}
+                </button>
+              </div>
+              <div className="mt-4 space-y-3 text-sm text-stone-700">
+                {effectiveCartItems.map((item) => (
+                  <div
+                    key={item.sizeLabel}
+                    className="rounded-2xl border border-stone-200/70 bg-stone-50 px-4 py-3"
+                  >
+                    <div className={`flex items-center justify-between ${isUrdu ? "flex-row-reverse" : ""}`}>
+                      <div className="font-semibold text-charcoal-900">
+                        {isUrdu
+                          ? `پریمیم ریزن جار — ${item.sizeLabel}`
+                          : `Premium Resin Jar — ${item.sizeLabel}`}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeFromCart(item.sizeLabel)}
+                        className="text-xs font-semibold text-stone-500 hover:text-stone-700"
+                      >
+                        {isUrdu ? "ہٹائیں" : "Remove"}
+                      </button>
+                    </div>
+                    <div className={`mt-2 flex flex-wrap gap-3 text-xs text-stone-600 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                      <span>{isUrdu ? `مقدار: ${item.quantity}` : `Qty: ${item.quantity}`}</span>
+                      <span>
+                        {isUrdu ? "فی یونٹ: " : "Unit: "}
+                        {formatPkr(item.unitPricePkr)}
+                      </span>
+                      <span>
+                        {isUrdu ? "سب ٹوٹل: " : "Subtotal: "}
+                        {formatPkr(item.unitPricePkr * item.quantity)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className={`mt-4 flex items-center justify-between text-sm font-semibold text-charcoal-900 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                <span>{isUrdu ? "کل رقم" : "Total"}</span>
+                <span>{formatPkr(cartTotalPkr)}</span>
+              </div>
+              {cartTotalUsd ? (
+                <div className={`mt-1 flex items-center justify-between text-xs text-stone-500 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                  <span>{isUrdu ? "USD" : "USD"}</span>
+                  <span>{cartTotalUsd}</span>
+                </div>
+              ) : null}
+            </div>
+
             <div className="mt-8 grid gap-3">
               <a
                 href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(event) => {
+                  if (!isCheckoutValid) {
+                    event.preventDefault();
+                    setCheckoutAttempted(true);
+                  }
+                }}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-premium lux-button"
               >
                 <MessageCircle className="w-4 h-4" />
@@ -402,6 +680,12 @@ export default function FeaturedProduct() {
             href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(event) => {
+              if (!isCheckoutValid) {
+                event.preventDefault();
+                setCheckoutAttempted(true);
+              }
+            }}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-premium lux-button"
           >
             <MessageCircle className="w-4 h-4" />
