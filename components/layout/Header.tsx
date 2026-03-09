@@ -34,27 +34,13 @@ export default function Header() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const loadCount = () => {
-      const storedOrderCount = window.localStorage.getItem("everestCartOrders");
+      const storedOrderCount = window.sessionStorage.getItem("everestCartOrders");
       if (storedOrderCount) {
         const parsedOrderCount = Number(storedOrderCount);
         setCartCount(Number.isNaN(parsedOrderCount) ? 0 : parsedOrderCount);
         return;
       }
-      const storedItems = window.localStorage.getItem("everestCartItems");
-      if (!storedItems) {
-        setCartCount(0);
-        return;
-      }
-      try {
-        const parsed = JSON.parse(storedItems);
-        if (Array.isArray(parsed)) {
-          setCartCount(parsed.length);
-        } else {
-          setCartCount(0);
-        }
-      } catch {
-        setCartCount(0);
-      }
+      setCartCount(0);
     };
     const handleCartUpdate = (event: Event) => {
       const detail = (event as CustomEvent).detail as { count?: number } | undefined;
@@ -66,13 +52,11 @@ export default function Header() {
     };
     loadCount();
     window.addEventListener("everest-cart-updated", handleCartUpdate as EventListener);
-    window.addEventListener("storage", loadCount);
     return () => {
       window.removeEventListener(
         "everest-cart-updated",
         handleCartUpdate as EventListener
       );
-      window.removeEventListener("storage", loadCount);
     };
   }, []);
 

@@ -121,20 +121,27 @@ export default function FeaturedProduct() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem("everestCartItems");
-    if (!stored) return;
+    const stored = window.sessionStorage.getItem("everestCartItems");
+    if (!stored) {
+      setCartItems([]);
+      window.sessionStorage.setItem("everestCartOrders", "0");
+      window.dispatchEvent(
+        new CustomEvent("everest-cart-updated", { detail: { count: 0 } })
+      );
+      return;
+    }
     try {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed)) {
         setCartItems(parsed);
-        const storedOrderCount = window.localStorage.getItem("everestCartOrders");
+        const storedOrderCount = window.sessionStorage.getItem("everestCartOrders");
         const parsedOrderCount = storedOrderCount
           ? Number(storedOrderCount)
           : Number.NaN;
         const nextOrderCount = Number.isNaN(parsedOrderCount)
           ? parsed.length
           : parsedOrderCount;
-        window.localStorage.setItem(
+        window.sessionStorage.setItem(
           "everestCartOrders",
           String(Math.max(0, nextOrderCount))
         );
@@ -198,11 +205,11 @@ export default function FeaturedProduct() {
 
   const persistCart = (items: CartItem[]) => {
     if (typeof window === "undefined") return;
-    window.localStorage.setItem("everestCartItems", JSON.stringify(items));
+    window.sessionStorage.setItem("everestCartItems", JSON.stringify(items));
   };
   const getStoredOrderCount = () => {
     if (typeof window === "undefined") return 0;
-    const storedCount = window.localStorage.getItem("everestCartOrders");
+    const storedCount = window.sessionStorage.getItem("everestCartOrders");
     if (!storedCount) return 0;
     const parsedCount = Number(storedCount);
     return Number.isNaN(parsedCount) ? 0 : parsedCount;
@@ -210,7 +217,7 @@ export default function FeaturedProduct() {
   const setStoredOrderCount = (nextCount: number) => {
     if (typeof window === "undefined") return;
     const safeCount = Math.max(0, nextCount);
-    window.localStorage.setItem("everestCartOrders", String(safeCount));
+    window.sessionStorage.setItem("everestCartOrders", String(safeCount));
     window.dispatchEvent(
       new CustomEvent("everest-cart-updated", { detail: { count: safeCount } })
     );
