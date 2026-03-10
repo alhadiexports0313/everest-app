@@ -719,7 +719,7 @@ export default function FeaturedProduct() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: "easeOut" }}
-            className="rounded-3xl border border-stone-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-soft"
+            className="rounded-3xl border border-stone-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-soft lg:sticky top-[100px] self-start"
           >
             <div className="group relative aspect-square overflow-hidden rounded-2xl bg-stone-100">
               <Image
@@ -738,7 +738,7 @@ export default function FeaturedProduct() {
               {resinImages.map((image) => (
                 <div
                   key={image}
-                  className="relative aspect-video overflow-hidden rounded-xl border border-stone-200/60 bg-stone-100"
+                  className="relative aspect-[5/4] min-h-[84px] sm:min-h-[92px] overflow-hidden rounded-2xl border border-stone-200/60 bg-stone-100 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-300/70 hover:shadow-soft"
                 >
                   <Image src={image} alt="Shilajet resin texture" fill className="object-cover lux-image" />
                 </div>
@@ -751,7 +751,7 @@ export default function FeaturedProduct() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.05 }}
-            className="rounded-3xl border border-stone-200/60 bg-white/80 backdrop-blur-sm p-7 shadow-soft sticky top-24 lg:static"
+            className="rounded-3xl border border-stone-200/60 bg-white/80 backdrop-blur-sm p-7 shadow-soft"
           >
             <div className={`flex items-center justify-between ${isUrdu ? "flex-row-reverse" : ""}`}>
               <div className={isUrdu ? "text-right" : "text-left"}>

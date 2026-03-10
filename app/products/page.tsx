@@ -759,7 +759,7 @@ export default function ProductsPage() {
       <section className="section-padding bg-stone-50">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
-            <div className="space-y-8">
+            <div className="space-y-8 lg:sticky top-[100px] self-start">
               <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -799,7 +799,7 @@ export default function ProductsPage() {
                       key={image}
                       type="button"
                       onClick={() => setActiveImage(image)}
-                      className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl border transition-all ${
+                      className={`relative aspect-[5/4] min-h-[84px] sm:min-h-[92px] w-full overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft ${
                         activeImage === image
                           ? "border-primary-600 shadow-premium"
                           : "border-stone-200/70 hover:border-primary-300"
