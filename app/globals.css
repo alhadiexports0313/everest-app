@@ -19,6 +19,42 @@
 
   html[dir="rtl"] body {
     direction: rtl;
+    text-align: right;
+    line-height: 1.9;
+    letter-spacing: 0.01em;
+    word-spacing: 0.08em;
+    font-family: var(--font-urdu);
+  }
+
+  .font-urdu {
+    font-family: var(--font-urdu);
+    direction: rtl;
+    text-align: right;
+    line-height: 1.9;
+    letter-spacing: 0.01em;
+    word-spacing: 0.08em;
+  }
+
+  html[dir="rtl"] h1,
+  html[dir="rtl"] h2,
+  html[dir="rtl"] h3,
+  html[dir="rtl"] h4,
+  html[dir="rtl"] h5,
+  html[dir="rtl"] h6,
+  h1.font-urdu,
+  h2.font-urdu,
+  h3.font-urdu,
+  h4.font-urdu,
+  h5.font-urdu,
+  h6.font-urdu {
+    font-weight: 600;
+    line-height: 2;
+    letter-spacing: normal;
+  }
+
+  html[dir="rtl"] .home-urdu-center-headings .text-center .font-urdu {
+    text-align: center;
+    direction: rtl;
   }
 
   html[dir="rtl"] .font-display,

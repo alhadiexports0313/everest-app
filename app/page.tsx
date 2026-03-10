@@ -82,7 +82,7 @@ export default async function Home() {
       locale
     )) ?? [];
   return (
-    <>
+    <div className={locale === "ur" ? "home-urdu-center-headings" : undefined}>
       <Hero />
       <TickerStrip
         items={tickerItems.map((item) => {
@@ -117,6 +117,6 @@ export default async function Home() {
       <OriginStory />
       <Testimonials />
       <CTA />
-    </>
+    </div>
   );
 }
