@@ -103,7 +103,6 @@ export default function ProductShowcase() {
   const { locale } = useLanguage();
   const isUrdu = locale === "ur";
   const [selectedSize, setSelectedSize] = useState(sizes[1]);
-  const [quantity, setQuantity] = useState(1);
   const [currency, setCurrency] = useState<(typeof currencies)[number]["code"]>(
     "PKR"
   );
@@ -212,7 +211,7 @@ export default function ProductShowcase() {
               : null;
             const canShowUsd = Boolean(formatUsd);
             const unitPricePkr = selectedSize.price;
-            const totalPricePkr = unitPricePkr * quantity;
+            const totalPricePkr = unitPricePkr;
             const priceLabel =
               currency === "USD" && canShowUsd && formatUsd
                 ? formatUsd(totalPricePkr)
@@ -369,66 +368,6 @@ export default function ProductShowcase() {
                 )}
 
                 {isResin && (
-                  <div className="mb-6">
-                    <div
-                      className={`text-xs text-stone-500 font-semibold ${
-                        isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-[0.28em]"
-                      }`}
-                    >
-                      {isUrdu ? "مقدار" : "Quantity"}
-                    </div>
-                    <div
-                      className={`mt-3 inline-flex items-center rounded-full border border-stone-200 bg-white px-2 py-1 shadow-soft ${
-                        isUrdu ? "flex-row-reverse" : ""
-                      }`}
-                    >
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setQuantity((prev) => (prev > 1 ? prev - 1 : prev))
-                        }
-                        className="h-9 w-9 rounded-full text-stone-600 transition-colors hover:bg-stone-100"
-                        aria-label={isUrdu ? "مقدار کم کریں" : "Decrease quantity"}
-                      >
-                        −
-                      </button>
-                      <input
-                        type="number"
-                        min={1}
-                        max={500}
-                        step={1}
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        value={quantity}
-                        onChange={(event) => {
-                          const nextValue = event.target.value;
-                          if (nextValue === "") {
-                            setQuantity(1);
-                            return;
-                          }
-                          const parsed = Number(nextValue);
-                          if (Number.isNaN(parsed)) return;
-                          const clamped = Math.min(500, Math.max(1, parsed));
-                          setQuantity(clamped);
-                        }}
-                        className="min-w-[64px] bg-transparent text-center text-base font-semibold text-charcoal-900 focus:outline-none"
-                        aria-label={isUrdu ? "مقدار درج کریں" : "Enter quantity"}
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setQuantity((prev) => (prev < 500 ? prev + 1 : prev))
-                        }
-                        className="h-9 w-9 rounded-full text-stone-600 transition-colors hover:bg-stone-100"
-                        aria-label={isUrdu ? "مقدار بڑھائیں" : "Increase quantity"}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {isResin && (
                   <div className={`flex items-center justify-between pt-5 border-t border-stone-200 ${isUrdu ? "flex-row-reverse" : ""}`}>
                     <AnimatePresence mode="wait">
                       <motion.div
@@ -450,14 +389,15 @@ export default function ProductShowcase() {
                         </div>
                       </motion.div>
                     </AnimatePresence>
-                    <button
+                    <Link
+                      href="/products"
                       className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-semibold text-white lux-gold-button shadow-[0_15px_35px_rgba(198,160,82,0.35)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 ${
                         isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-[0.24em]"
                       }`}
                     >
                       <ShoppingCart className="w-4 h-4" />
-                      {isUrdu ? "کارٹ میں شامل کریں" : "Shop Now"}
-                    </button>
+                      {isUrdu ? "ابھی خریدیں" : "Shop Now"}
+                    </Link>
                   </div>
                 )}
 
