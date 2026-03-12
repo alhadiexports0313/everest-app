@@ -128,6 +128,7 @@ export default function FeaturedProduct() {
   const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
   const [customerCity, setCustomerCity] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [customerNote, setCustomerNote] = useState("");
   const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
   const [noteDropdownOpen, setNoteDropdownOpen] = useState(false);
@@ -136,12 +137,15 @@ export default function FeaturedProduct() {
   const phoneInputRef = useRef<HTMLInputElement | null>(null);
   const countryButtonRef = useRef<HTMLButtonElement | null>(null);
   const cityInputRef = useRef<HTMLInputElement | null>(null);
+  const emailInputRef = useRef<HTMLInputElement | null>(null);
   const quantityInputRef = useRef<HTMLInputElement | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [checkoutAttempted, setCheckoutAttempted] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [whatsappModalOpen, setWhatsappModalOpen] = useState(false);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [emailSubmitting, setEmailSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [lastAdded, setLastAdded] = useState<{
     sizeLabel: string;
     quantity: number;
@@ -363,6 +367,9 @@ export default function FeaturedProduct() {
     );
   }, [countrySearch]);
   const cityMissing = customerCity.trim().length === 0;
+  const emailMissing = customerEmail.trim().length === 0;
+  const emailInvalid =
+    !emailMissing && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail.trim());
   const quantityInvalid =
     Number.isNaN(quantity) || quantity < 1 || quantity > 500;
   const formatLocalPhone = (code: string, digits: string) => {
@@ -390,6 +397,8 @@ export default function FeaturedProduct() {
     !countryMissing &&
     !phoneInvalid &&
     !cityMissing &&
+    !emailMissing &&
+    !emailInvalid &&
     !quantityInvalid;
   const scrollToField = (element: HTMLElement | null) => {
     if (!element) return;
@@ -413,6 +422,10 @@ export default function FeaturedProduct() {
     }
     if (cityMissing) {
       scrollToField(cityInputRef.current);
+      return;
+    }
+    if (emailMissing || emailInvalid) {
+      scrollToField(emailInputRef.current);
       return;
     }
     if (quantityInvalid) {
@@ -469,115 +482,56 @@ export default function FeaturedProduct() {
     setSelectedNotes((prev) => [...prev, note]);
   };
 
-  const emailLink = useMemo(() => {
-    if (!orderMeta) return "";
-    const now = new Date(orderMeta.createdAt);
-    const dateLocale = isUrdu ? "ur-PK" : "en-GB";
-    const orderDate = now.toLocaleDateString(dateLocale, {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-    const orderTime = now.toLocaleTimeString(dateLocale, {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-    const nameValue =
-      customerName.trim() || (isUrdu ? "نام درج نہیں" : "Not provided");
-    const phoneValue =
-      formattedPhone || (isUrdu ? "فون درج نہیں" : "Not provided");
-    const cityValue =
-      customerCity.trim() || (isUrdu ? "پتہ درج نہیں" : "Not provided");
-    const noteValue = customerNote.trim();
-    const productName = isUrdu ? "پریمیم ریزن جار" : "Premium Resin Jar";
-    const productLines = effectiveCartItems.flatMap((item, index) => {
-      const subtotal = formatPkr(item.unitPricePkr * item.quantity);
-      const unitPrice = formatPkr(item.unitPricePkr);
-      return [
-        `${index + 1}️⃣ ${productName} — ${item.sizeLabel}`,
-        isUrdu ? `مقدار: ${item.quantity}` : `Quantity: ${item.quantity}`,
-        isUrdu ? `فی یونٹ قیمت: ${unitPrice}` : `Price Per Unit: ${unitPrice}`,
-        isUrdu ? `سب ٹوٹل: ${subtotal}` : `Subtotal: ${subtotal}`,
-        "",
-      ];
-    });
-    const usdValue = cartTotalUsd || (isUrdu ? "دستیاب نہیں" : "Not available");
-    const lines = isUrdu
-      ? [
-          "ایورسٹ آرگینک سلاجیت",
-          "━━━━━━━━━━━━━━━━━━━━",
-          "",
-          `آرڈر آئی ڈی: ${orderMeta.id}`,
-          `تاریخ: ${orderDate}`,
-          `وقت: ${orderTime}`,
-          `کسٹمر: ${nameValue}`,
-          `فون نمبر: ${phoneValue}`,
-          `پتہ: ${cityValue}`,
-          noteValue ? "آرڈر نوٹ:" : null,
-          noteValue || null,
-          "",
-          "━━━━━━━━━━━━━━━━━━━━",
-          "پروڈکٹ تفصیلات",
-          "",
-          ...productLines,
-          "━━━━━━━━━━━━━━━━━━━━",
-          "کل آرڈر",
-          `کل قیمت: ${formatPkr(cartTotalPkr)}`,
-          `USD مساوی: ${usdValue}`,
-          "━━━━━━━━━━━━━━━━━━━━",
-          "",
-          "ویب سائٹ",
-          "everestorganicshilajit.com",
-          "",
-          "شکریہ۔ میں یہ آرڈر دینا چاہتا/چاہتی ہوں۔",
-        ]
-      : [
-          "EVEREST ORGANIC SHILAJIT",
-          "━━━━━━━━━━━━━━━━━━━━",
-          "",
-          `Order ID: ${orderMeta.id}`,
-          `Date: ${orderDate}`,
-          `Time: ${orderTime}`,
-          `Customer: ${nameValue}`,
-          `Phone: ${phoneValue}`,
-          `Address: ${cityValue}`,
-          noteValue ? "Order Note:" : null,
-          noteValue || null,
-          "",
-          "━━━━━━━━━━━━━━━━━━━━",
-          "PRODUCT DETAILS",
-          "",
-          ...productLines,
-          "━━━━━━━━━━━━━━━━━━━━",
-          "TOTAL ORDER",
-          `Total Price: ${formatPkr(cartTotalPkr)}`,
-          `USD Equivalent: ${usdValue}`,
-          "━━━━━━━━━━━━━━━━━━━━",
-          "",
-          "Website",
-          "everestorganicshilajit.com",
-          "",
-          "Thank you. I would like to place this order.",
-        ];
-    const subject = "New Order - Everest Organic Shilajit";
-    const body = lines.filter(Boolean).join("\n");
-    return `mailto:everestorganicshilajet@gmail.com?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-  }, [
-    isUrdu,
-    orderMeta,
-    customerName,
-    customerPhone,
-    countryCode,
-    customerCity,
-    customerNote,
-    effectiveCartItems,
-    formatPkr,
-    cartTotalPkr,
-    cartTotalUsd,
-  ]);
+  const handleEmailOrder = async () => {
+    if (!isCheckoutValid) {
+      setCheckoutAttempted(true);
+      focusFirstInvalidField();
+      return;
+    }
+    if (!orderMeta) return;
+    setEmailSubmitting(true);
+    setEmailError(null);
+    const payload = {
+      locale: isUrdu ? "ur" : "en",
+      orderId: orderMeta.id,
+      createdAt: orderMeta.createdAt,
+      customer: {
+        name: customerName.trim(),
+        phone: formattedPhone,
+        email: customerEmail.trim(),
+        city: customerCity.trim(),
+      },
+      note: customerNote.trim(),
+      items: effectiveCartItems,
+      totals: {
+        pkr: cartTotalPkr,
+        usd: cartTotalUsd,
+      },
+    };
+    try {
+      const response = await fetch("/api/send-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error || "Unable to send email");
+      }
+      setEmailModalOpen(true);
+      window.setTimeout(() => {
+        setEmailModalOpen(false);
+      }, 2500);
+    } catch {
+      setEmailError(
+        isUrdu
+          ? "ای میل بھیجنے میں مسئلہ آیا۔ براہ کرم دوبارہ کوشش کریں۔"
+          : "We could not send the email. Please try again."
+      );
+    } finally {
+      setEmailSubmitting(false);
+    }
+  };
 
   const whatsappLink = useMemo(() => {
     if (!isCheckoutValid || !orderMeta) return "";
@@ -1029,6 +983,33 @@ export default function FeaturedProduct() {
                 </div>
                 <div className="space-y-1">
                   <input
+                    ref={emailInputRef}
+                    type="email"
+                    required
+                    value={customerEmail}
+                    onChange={(event) => setCustomerEmail(event.target.value)}
+                    placeholder={
+                      isUrdu ? "اپنا ای میل ایڈریس درج کریں" : "Enter your email address"
+                    }
+                    className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-charcoal-900 shadow-soft focus:border-primary-300 focus:outline-none"
+                  />
+                  {checkoutAttempted && emailMissing ? (
+                    <div className={`text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
+                      {isUrdu
+                        ? "براہ کرم اپنا ای میل درج کریں"
+                        : "Please enter your email address"}
+                    </div>
+                  ) : null}
+                  {checkoutAttempted && emailInvalid ? (
+                    <div className={`text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
+                      {isUrdu
+                        ? "براہ کرم درست ای میل درج کریں"
+                        : "Please enter a valid email"}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="space-y-1">
+                  <input
                     ref={cityInputRef}
                     type="text"
                     required
@@ -1186,32 +1167,28 @@ export default function FeaturedProduct() {
                 <MessageCircle className="w-4 h-4" />
                 {isUrdu ? "واٹس ایپ پر آرڈر کریں" : "Order on WhatsApp"}
               </a>
-              <a
-                href={emailLink}
-                onClick={(event) => {
-                  if (!isCheckoutValid) {
-                    event.preventDefault();
-                    setCheckoutAttempted(true);
-                    focusFirstInvalidField();
-                    return;
-                  }
-                  if (!emailLink) {
-                    event.preventDefault();
-                    return;
-                  }
-                  event.preventDefault();
-                  setEmailModalOpen(true);
-                  window.setTimeout(() => {
-                    window.location.href = emailLink;
-                    setEmailModalOpen(false);
-                  }, 700);
-                }}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button hover:border-primary-300"
+              <button
+                type="button"
+                onClick={handleEmailOrder}
+                disabled={emailSubmitting}
+                aria-busy={emailSubmitting}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button hover:border-primary-300 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Mail className="w-4 h-4" />
-                {isUrdu ? "ای میل کے ذریعے آرڈر کریں" : "Order via Email"}
-              </a>
+                {emailSubmitting
+                  ? isUrdu
+                    ? "ای میل بھیجا جا رہا ہے"
+                    : "Sending email"
+                  : isUrdu
+                  ? "ای میل کے ذریعے آرڈر کریں"
+                  : "Order via Email"}
+              </button>
             </div>
+            {emailError ? (
+              <div className={`mt-3 text-xs text-rose-500 ${isUrdu ? "text-right" : "text-left"}`}>
+                {emailError}
+              </div>
+            ) : null}
           </motion.div>
         </div>
       </div>
@@ -1240,31 +1217,22 @@ export default function FeaturedProduct() {
             <MessageCircle className="w-4 h-4" />
             {isUrdu ? "واٹس ایپ پر آرڈر کریں" : "Order on WhatsApp"}
           </a>
-          <a
-            href={emailLink}
-            onClick={(event) => {
-              if (!isCheckoutValid) {
-                event.preventDefault();
-                setCheckoutAttempted(true);
-                focusFirstInvalidField();
-                return;
-              }
-              if (!emailLink) {
-                event.preventDefault();
-                return;
-              }
-              event.preventDefault();
-              setEmailModalOpen(true);
-              window.setTimeout(() => {
-                window.location.href = emailLink;
-                setEmailModalOpen(false);
-              }, 700);
-            }}
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button"
+          <button
+            type="button"
+            onClick={handleEmailOrder}
+            disabled={emailSubmitting}
+            aria-busy={emailSubmitting}
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-700 shadow-soft lux-button disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Mail className="w-4 h-4" />
-            {isUrdu ? "ای میل کے ذریعے آرڈر کریں" : "Order via Email"}
-          </a>
+            {emailSubmitting
+              ? isUrdu
+                ? "ای میل بھیجا جا رہا ہے"
+                : "Sending email"
+              : isUrdu
+              ? "ای میل کے ذریعے آرڈر کریں"
+              : "Order via Email"}
+          </button>
         </div>
       </div>
       <AnimatePresence>
@@ -1465,17 +1433,17 @@ export default function FeaturedProduct() {
                 <Check className="h-6 w-6" />
               </div>
               <div className="mt-4 text-lg font-semibold text-charcoal-900">
-                {isUrdu ? "ای میل آرڈر تیار ہے" : "Email Order Prepared"}
+                {isUrdu ? "آرڈر کامیابی سے بھیج دیا گیا" : "Order Sent Successfully"}
               </div>
               <div className="mt-2 text-sm text-stone-600">
                 {isUrdu
-                  ? "آپ کی آرڈر تفصیلات ای میل کے لیے تیار ہیں۔"
-                  : "Your order details are ready to send via email."}
+                  ? "آپ کی آرڈر کی تفصیلات موصول ہو گئی ہیں۔"
+                  : "Your order details have been sent."}
               </div>
               <div className="mt-2 text-xs text-stone-500">
                 {isUrdu
-                  ? "آپ کا میل کلائنٹ آرڈر مکمل کرنے کے لیے کھل جائے گا۔"
-                  : "Your mail client will open to complete the order."}
+                  ? "ہم جلد آپ سے رابطہ کریں گے۔"
+                  : "Our team will contact you shortly."}
               </div>
             </motion.div>
           </motion.div>
