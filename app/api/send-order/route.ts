@@ -91,20 +91,38 @@ const isDuplicate = (key: string) => {
 const formatPkr = (value: number) =>
   `PKR ${new Intl.NumberFormat("en-PK").format(Math.round(value))}`;
 
+const formatUsd = (value: string | null | undefined) => {
+  if (!value) return "N/A";
+  const parsed = Number(String(value).replace(/[^0-9.-]/g, ""));
+  if (!Number.isFinite(parsed)) return escapeHtml(String(value));
+  return `$${parsed.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+};
+
 const buildRows = (items: OrderItem[], isUrdu: boolean) =>
   items
-    .map((item) => {
+    .map((item, index) => {
       const subtotal = item.quantity * item.unitPricePkr;
+      const rowBg = index % 2 === 0 ? "#ffffff" : "#f8f8f8";
       return `
-        <tr>
-          <td style="padding:12px 10px;border-bottom:1px solid #e7e2d9;">${escapeHtml(
+        <tr style="background:${rowBg};">
+          <td style="padding:12px 10px;border-bottom:1px solid #ece7dd;text-align:${
+            isUrdu ? "right" : "left"
+          };font-weight:600;color:#111827;">${escapeHtml(
             isUrdu ? "پریمیم ریزن جار" : "Premium Resin Jar"
-          )} — ${escapeHtml(item.sizeLabel)}</td>
-          <td style="padding:12px 10px;border-bottom:1px solid #e7e2d9;text-align:center;">${item.quantity}</td>
-          <td style="padding:12px 10px;border-bottom:1px solid #e7e2d9;text-align:right;">${formatPkr(
+          )}</td>
+          <td style="padding:12px 10px;border-bottom:1px solid #ece7dd;text-align:center;color:#374151;">${escapeHtml(
+            item.sizeLabel
+          )}</td>
+          <td style="padding:12px 10px;border-bottom:1px solid #ece7dd;text-align:center;color:#374151;">${
+            item.quantity
+          }</td>
+          <td style="padding:12px 10px;border-bottom:1px solid #ece7dd;text-align:right;color:#374151;">${formatPkr(
             item.unitPricePkr
           )}</td>
-          <td style="padding:12px 10px;border-bottom:1px solid #e7e2d9;text-align:right;">${formatPkr(
+          <td style="padding:12px 10px;border-bottom:1px solid #ece7dd;text-align:right;font-weight:600;color:#111827;">${formatPkr(
             subtotal
           )}</td>
         </tr>
@@ -130,78 +148,190 @@ const buildTemplate = (payload: OrderPayload) => {
   const customerHeading = isUrdu ? "کسٹمر" : "Customer Information";
   const notesHeading = isUrdu ? "آرڈر نوٹس" : "Order Notes";
   const productsHeading = isUrdu ? "پروڈکٹس" : "Products";
-  const totalHeading = isUrdu ? "کل قیمت" : "TOTAL";
+  const totalHeading = isUrdu ? "آرڈر ٹوٹل" : "Order Total";
   const websiteHeading = isUrdu ? "ویب سائٹ" : "Website";
-  const noteText = payload.note ? escapeHtml(payload.note).replace(/\n/g, "<br/>") : "—";
+  const tagline = isUrdu
+    ? "قدرتی ہمالیائی طاقت"
+    : "Premium Himalayan Wellness";
+  const noteText = payload.note
+    ? escapeHtml(payload.note).replace(/\n/g, "<br/>")
+    : "";
   const rowHtml = buildRows(payload.items, isUrdu);
   const dir = isUrdu ? "rtl" : "ltr";
   const alignStart = isUrdu ? "right" : "left";
   const alignEnd = isUrdu ? "left" : "right";
-  return `
-    <div style="margin:0;padding:24px;background:#f7f5f1;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;direction:${dir};">
-      <div style="max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #e7e2d9;border-radius:16px;overflow:hidden;box-shadow:0 10px 35px rgba(16,24,40,0.08);">
-        <div style="padding:22px 24px;background:linear-gradient(135deg,#faf7ef,#f3ecde);border-bottom:1px solid #e7e2d9;">
-          <div style="font-size:22px;font-weight:700;letter-spacing:0.6px;color:#1f2937;text-align:center;">${heading}</div>
-          <div style="margin-top:14px;display:flex;justify-content:space-between;font-size:13px;color:#4b5563;gap:12px;flex-wrap:wrap;">
-            <span>${isUrdu ? "آرڈر آئی ڈی" : "Order ID"}: <strong>${escapeHtml(payload.orderId)}</strong></span>
-            <span>${isUrdu ? "تاریخ" : "Date"}: ${dateText}</span>
-            <span>${isUrdu ? "وقت" : "Time"}: ${timeText}</span>
-          </div>
-        </div>
-        <div style="padding:22px 24px;">
-          <div style="font-size:15px;font-weight:700;color:#111827;margin-bottom:10px;">${customerHeading}</div>
-          <table style="width:100%;border-collapse:collapse;font-size:14px;color:#374151;">
-            <tr>
-              <td style="padding:7px 0;text-align:${alignStart};">${isUrdu ? "نام" : "Name"}</td>
-              <td style="padding:7px 0;text-align:${alignEnd};font-weight:600;">${escapeHtml(payload.customer.name)}</td>
-            </tr>
-            <tr>
-              <td style="padding:7px 0;text-align:${alignStart};">${isUrdu ? "فون نمبر" : "Phone"}</td>
-              <td style="padding:7px 0;text-align:${alignEnd};font-weight:600;">${escapeHtml(payload.customer.phone)}</td>
-            </tr>
-            <tr>
-              <td style="padding:7px 0;text-align:${alignStart};">${isUrdu ? "ای میل" : "Email"}</td>
-              <td style="padding:7px 0;text-align:${alignEnd};font-weight:600;">${escapeHtml(payload.customer.email)}</td>
-            </tr>
-            <tr>
-              <td style="padding:7px 0;text-align:${alignStart};">${isUrdu ? "شہر" : "City"}</td>
-              <td style="padding:7px 0;text-align:${alignEnd};font-weight:600;">${escapeHtml(payload.customer.city)}</td>
-            </tr>
-          </table>
-          <div style="height:1px;background:#ece7dd;margin:18px 0;"></div>
-          <div style="font-size:15px;font-weight:700;color:#111827;margin-bottom:8px;">${notesHeading}</div>
-          <div style="font-size:14px;line-height:1.6;color:#4b5563;">${noteText}</div>
-          <div style="height:1px;background:#ece7dd;margin:18px 0;"></div>
-          <div style="font-size:15px;font-weight:700;color:#111827;margin-bottom:10px;">${productsHeading}</div>
-          <table style="width:100%;border-collapse:collapse;font-size:14px;color:#374151;">
-            <thead>
-              <tr style="background:#faf7ef;">
-                <th style="padding:11px 10px;text-align:${alignStart};font-weight:700;border-bottom:1px solid #e7e2d9;">${isUrdu ? "پروڈکٹ" : "Product"}</th>
-                <th style="padding:11px 10px;text-align:center;font-weight:700;border-bottom:1px solid #e7e2d9;">${isUrdu ? "Qty" : "Qty"}</th>
-                <th style="padding:11px 10px;text-align:right;font-weight:700;border-bottom:1px solid #e7e2d9;">${isUrdu ? "یونٹ قیمت" : "Unit Price"}</th>
-                <th style="padding:11px 10px;text-align:right;font-weight:700;border-bottom:1px solid #e7e2d9;">${isUrdu ? "سب ٹوٹل" : "Subtotal"}</th>
+  const notesSection = noteText
+    ? `
+        <tr>
+          <td style="padding:0 24px 18px 24px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:0;background:#faf7ef;border:1px solid #e9dec7;border-radius:12px;">
+              <tr>
+                <td style="padding:14px 16px 8px 16px;font-size:14px;font-weight:700;color:#1f2937;text-align:${alignStart};">${notesHeading}</td>
               </tr>
-            </thead>
-            <tbody>${rowHtml}</tbody>
-          </table>
-          <div style="margin-top:16px;border-top:1px dashed #dacfb8;padding-top:12px;">
-            <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:700;color:#111827;">
-              <span>${totalHeading}</span>
-              <span>${formatPkr(payload.totals.pkr)}</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;color:#6b7280;margin-top:6px;">
-              <span>USD</span>
-              <span>${escapeHtml(payload.totals.usd || "N/A")}</span>
-            </div>
-          </div>
-          <div style="height:1px;background:#ece7dd;margin:18px 0;"></div>
-          <div style="font-size:12px;color:#6b7280;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
-            <span>${websiteHeading}</span>
-            <span>everestorganicshilajit.com</span>
-          </div>
-        </div>
-      </div>
-    </div>
+              <tr>
+                <td style="padding:0 16px 14px 16px;font-size:13px;line-height:1.7;color:#4b5563;text-align:${alignStart};">${noteText}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      `
+    : "";
+  return `
+    <!doctype html>
+    <html lang="${isUrdu ? "ur" : "en"}" dir="${dir}">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
+      <body style="margin:0;padding:0;background:#f4f1ea;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#f4f1ea;">
+          <tr>
+            <td align="center" style="padding:24px 12px;">
+              <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;border-collapse:separate;border-spacing:0;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e8e2d6;box-shadow:0 10px 30px rgba(15,15,15,0.08);">
+                <tr>
+                  <td style="background:#0f0f0f;padding:26px 24px;text-align:center;">
+                    <div style="font-size:22px;line-height:1.1;font-weight:800;color:#d9bf87;letter-spacing:4px;text-transform:uppercase;text-shadow:0 1px 0 rgba(0,0,0,0.85),0 2px 8px rgba(198,163,90,0.25);">~ EOS ~</div>
+                    <div style="margin-top:10px;font-size:24px;line-height:1.25;font-weight:800;color:#f0dfb5;letter-spacing:2.6px;text-transform:uppercase;text-shadow:0 1px 0 rgba(0,0,0,0.9),0 2px 10px rgba(198,163,90,0.22);">${isUrdu ? "ایورسٹ آرگینک سلاجیت" : "Everest Organic Shilajit"}</div>
+                    <div style="margin-top:8px;font-size:12px;line-height:1.6;color:#c6a35a;letter-spacing:1.2px;text-transform:uppercase;">${tagline}</div>
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;border-collapse:collapse;">
+                      <tr>
+                        <td style="border-top:1px solid #3a3327;font-size:1px;line-height:1px;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:18px 24px 0 24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:0;background:#ffffff;border:1px solid #ebe6da;border-radius:12px;">
+                      <tr>
+                        <td style="padding:14px 16px 8px 16px;font-size:14px;font-weight:700;color:#111827;text-align:${alignStart};">${isUrdu ? "آرڈر سمری" : "Order Summary"}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:0 16px 14px 16px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                            <tr>
+                              <td style="padding:6px 0;font-size:13px;color:#6b7280;text-align:${alignStart};">${isUrdu ? "آرڈر آئی ڈی" : "Order ID"}</td>
+                              <td style="padding:6px 0;font-size:13px;color:#111827;font-weight:700;text-align:${alignEnd};">${escapeHtml(payload.orderId)}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding:6px 0;font-size:13px;color:#6b7280;text-align:${alignStart};">${isUrdu ? "تاریخ" : "Date"}</td>
+                              <td style="padding:6px 0;font-size:13px;color:#111827;font-weight:600;text-align:${alignEnd};">${dateText}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding:6px 0;font-size:13px;color:#6b7280;text-align:${alignStart};">${isUrdu ? "وقت" : "Time"}</td>
+                              <td style="padding:6px 0;font-size:13px;color:#111827;font-weight:600;text-align:${alignEnd};">${timeText}</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:0 16px 12px 16px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                            <tr><td style="border-top:1px solid #eee7da;font-size:1px;line-height:1px;">&nbsp;</td></tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:18px 24px 0 24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:0;background:#fcfcfc;border:1px solid #ebe6da;border-radius:12px;">
+                      <tr>
+                        <td style="padding:14px 16px 8px 16px;font-size:14px;font-weight:700;color:#111827;text-align:${alignStart};">${customerHeading}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:0 16px 14px 16px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                            <tr>
+                              <td style="padding:6px 0;font-size:13px;color:#6b7280;text-align:${alignStart};">${isUrdu ? "نام" : "Name"}</td>
+                              <td style="padding:6px 0;font-size:13px;color:#111827;font-weight:600;text-align:${alignEnd};">${escapeHtml(payload.customer.name)}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding:6px 0;font-size:13px;color:#6b7280;text-align:${alignStart};">${isUrdu ? "فون نمبر" : "Phone"}</td>
+                              <td style="padding:6px 0;font-size:13px;color:#111827;font-weight:600;text-align:${alignEnd};">${escapeHtml(payload.customer.phone)}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding:6px 0;font-size:13px;color:#6b7280;text-align:${alignStart};">${isUrdu ? "ای میل" : "Email"}</td>
+                              <td style="padding:6px 0;font-size:13px;color:#111827;font-weight:600;text-align:${alignEnd};">${escapeHtml(payload.customer.email)}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding:6px 0;font-size:13px;color:#6b7280;text-align:${alignStart};">${isUrdu ? "شہر" : "City"}</td>
+                              <td style="padding:6px 0;font-size:13px;color:#111827;font-weight:600;text-align:${alignEnd};">${escapeHtml(payload.customer.city)}</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                ${notesSection}
+                <tr>
+                  <td style="padding:0 24px 0 24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                      <tr><td style="padding-top:18px;font-size:14px;font-weight:700;color:#111827;text-align:${alignStart};">${productsHeading}</td></tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 24px 0 24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:0;border:1px solid #ebe6da;border-radius:12px;overflow:hidden;">
+                      <thead>
+                        <tr style="background:#f6f1e7;">
+                          <th style="padding:11px 10px;text-align:${alignStart};font-size:12px;color:#1f2937;font-weight:700;border-bottom:1px solid #e8dfce;">${isUrdu ? "پروڈکٹ" : "Product"}</th>
+                          <th style="padding:11px 10px;text-align:center;font-size:12px;color:#1f2937;font-weight:700;border-bottom:1px solid #e8dfce;">${isUrdu ? "سائز" : "Size"}</th>
+                          <th style="padding:11px 10px;text-align:center;font-size:12px;color:#1f2937;font-weight:700;border-bottom:1px solid #e8dfce;">${isUrdu ? "مقدار" : "Quantity"}</th>
+                          <th style="padding:11px 10px;text-align:right;font-size:12px;color:#1f2937;font-weight:700;border-bottom:1px solid #e8dfce;">${isUrdu ? "یونٹ قیمت" : "Unit Price"}</th>
+                          <th style="padding:11px 10px;text-align:right;font-size:12px;color:#1f2937;font-weight:700;border-bottom:1px solid #e8dfce;">${isUrdu ? "سب ٹوٹل" : "Subtotal"}</th>
+                        </tr>
+                      </thead>
+                      <tbody>${rowHtml}</tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:18px 24px 24px 24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:0;background:#ffffff;border:1px solid #e7dcc4;border-radius:12px;">
+                      <tr>
+                        <td style="padding:14px 16px 0 16px;text-align:center;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                            <tr><td style="border-top:2px solid #c6a35a;font-size:1px;line-height:1px;">&nbsp;</td></tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:12px 16px 4px 16px;font-size:16px;font-weight:700;color:#111827;text-align:center;">${totalHeading}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:0 16px 4px 16px;font-size:15px;font-weight:700;color:#111827;text-align:center;">PKR: ${formatPkr(payload.totals.pkr)}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:0 16px 14px 16px;font-size:13px;color:#6b7280;text-align:center;">USD: ${formatUsd(
+                          payload.totals.usd
+                        )}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="background:#0f0f0f;padding:22px 24px;text-align:center;">
+                    <div style="font-size:15px;line-height:1.5;font-weight:700;color:#ffffff;">${heading}</div>
+                    <div style="font-size:12px;line-height:1.6;color:#c6a35a;margin-top:3px;">${tagline}</div>
+                    <div style="font-size:12px;line-height:1.7;color:#d1d5db;margin-top:14px;">${websiteHeading}</div>
+                    <div style="font-size:13px;line-height:1.7;color:#ffffff;">everestorganicshilajit.com</div>
+                    <div style="font-size:12px;line-height:1.7;color:#9ca3af;margin-top:12px;">${
+                      isUrdu
+                        ? "آپ کے آرڈر کا شکریہ۔ ہماری ٹیم جلد آپ سے رابطہ کرے گی۔"
+                        : "Thank you for your order. Our team will contact you shortly."
+                    }</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
   `;
 };
 
