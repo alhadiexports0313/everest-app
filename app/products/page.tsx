@@ -590,6 +590,7 @@ export default function ProductsPage() {
     if (!isCheckoutValid || !orderMeta) return "";
     const now = new Date(orderMeta.createdAt);
     const dateLocale = isUrdu ? "ur-PK" : "en-GB";
+    const divider = "━━━━━━━━━━━━━━━━━━━━";
     const orderDate = now.toLocaleDateString(dateLocale, {
       day: "numeric",
       month: "short",
@@ -604,15 +605,17 @@ export default function ProductsPage() {
       customerName.trim() || (isUrdu ? "نام درج نہیں" : "Not provided");
     const phoneValue =
       formattedPhone || (isUrdu ? "فون درج نہیں" : "Not provided");
+    const emailValue =
+      customerEmail.trim() || (isUrdu ? "ای میل درج نہیں" : "Not provided");
     const cityValue =
       customerCity.trim() || (isUrdu ? "پتہ درج نہیں" : "Not provided");
     const noteValue = customerNote.trim();
     const productName = isUrdu ? "پریمیم ریزن جار" : "Premium Resin Jar";
-    const productLines = effectiveCartItems.flatMap((item, index) => {
+    const productLines = effectiveCartItems.flatMap((item) => {
       const subtotal = formatPkr(item.unitPricePkr * item.quantity);
       const unitPrice = formatPkr(item.unitPricePkr);
       return [
-        `${index + 1}️⃣ ${productName} — ${item.sizeLabel}`,
+        `📦 ${productName} — ${item.sizeLabel}`,
         isUrdu ? `مقدار: ${item.quantity}` : `Qty: ${item.quantity}`,
         isUrdu ? `فی یونٹ قیمت: ${unitPrice}` : `Unit Price: ${unitPrice}`,
         isUrdu ? `سب ٹوٹل: ${subtotal}` : `Subtotal: ${subtotal}`,
@@ -621,60 +624,88 @@ export default function ProductsPage() {
     });
     const lines = isUrdu
       ? [
-          "EVEREST ORGANIC SHILAJIT",
-          "━━━━━━━━━━━━━━━━━━━━",
+          "🟫 ایورسٹ آرگینک سلاجیت",
+          "قدرتی ہمالیائی طاقت",
+          "",
+          divider,
+          "📦 آرڈر تفصیلات",
           "",
           `آرڈر آئی ڈی: ${orderMeta.id}`,
           `تاریخ: ${orderDate}`,
           `وقت: ${orderTime}`,
-          `کسٹمر: ${nameValue}`,
+          "",
+          divider,
+          "👤 کسٹمر معلومات",
+          "",
+          `نام: ${nameValue}`,
           `فون: ${phoneValue}`,
-          `پتہ: ${cityValue}`,
-          noteValue ? "آرڈر نوٹ:" : null,
+          `ای میل: ${emailValue}`,
+          `شہر: ${cityValue}`,
+          noteValue ? "" : null,
+          noteValue ? divider : null,
+          noteValue ? "📝 آرڈر نوٹ" : null,
+          noteValue ? "" : null,
           noteValue || null,
           "",
-          "━━━━━━━━━━━━━━━━━━━━",
+          divider,
+          "🛒 پروڈکٹس",
           "",
-          "پروڈکٹس",
           ...productLines,
-          "━━━━━━━━━━━━━━━━━━━━",
-          "کل رقم",
-          `${formatPkr(cartTotalPkr)}`,
-          cartTotalUsd ? `USD: ${cartTotalUsd}` : null,
-          "━━━━━━━━━━━━━━━━━━━━",
+          divider,
+          "💰 کل آرڈر",
           "",
-          "ویب سائٹ",
+          `PKR: ${formatPkr(cartTotalPkr)}`,
+          cartTotalUsd ? `USD: ${cartTotalUsd}` : "USD: N/A",
+          "",
+          divider,
+          "🌐 ویب سائٹ",
+          "",
           "everestorganicshilajit.com",
           "",
-          "السلام علیکم، میں یہ آرڈر دینا چاہتا/چاہتی ہوں۔",
+          "السلام علیکم،",
+          "میں یہ آرڈر دینا چاہتا/چاہتی ہوں۔",
         ]
       : [
-          "EVEREST ORGANIC SHILAJIT",
-          "━━━━━━━━━━━━━━━━━━━━",
+          "🟫 EVEREST ORGANIC SHILAJIT",
+          "Premium Himalayan Wellness",
+          "",
+          divider,
+          "📦 ORDER DETAILS",
           "",
           `Order ID: ${orderMeta.id}`,
           `Date: ${orderDate}`,
           `Time: ${orderTime}`,
-          `Customer: ${nameValue}`,
+          "",
+          divider,
+          "👤 CUSTOMER INFORMATION",
+          "",
+          `Name: ${nameValue}`,
           `Phone: ${phoneValue}`,
-          `Address: ${cityValue}`,
-          noteValue ? "Order Note:" : null,
+          `Email: ${emailValue}`,
+          `City: ${cityValue}`,
+          noteValue ? "" : null,
+          noteValue ? divider : null,
+          noteValue ? "📝 ORDER NOTE" : null,
+          noteValue ? "" : null,
           noteValue || null,
           "",
-          "━━━━━━━━━━━━━━━━━━━━",
+          divider,
+          "🛒 PRODUCTS",
           "",
-          "Products",
           ...productLines,
-          "━━━━━━━━━━━━━━━━━━━━",
-          "TOTAL",
-          `${formatPkr(cartTotalPkr)}`,
-          cartTotalUsd ? `USD ${cartTotalUsd}` : null,
-          "━━━━━━━━━━━━━━━━━━━━",
+          divider,
+          "💰 ORDER TOTAL",
           "",
-          "Website",
+          `PKR: ${formatPkr(cartTotalPkr)}`,
+          cartTotalUsd ? `USD: ${cartTotalUsd}` : "USD: N/A",
+          "",
+          divider,
+          "🌐 WEBSITE",
+          "",
           "everestorganicshilajit.com",
           "",
-          "Hello, I would like to place this order.",
+          "Hello,",
+          "I would like to place this order.",
         ];
     const message = lines.filter(Boolean).join("\n");
     return `https://wa.me/923454490326?text=${encodeURIComponent(message)}`;
@@ -683,6 +714,7 @@ export default function ProductsPage() {
     orderMeta,
     customerName,
     customerPhone,
+    customerEmail,
     countryCode,
     customerCity,
     customerNote,
