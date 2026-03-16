@@ -12,6 +12,8 @@ import {
   Truck,
   MessageCircle,
   Mail,
+  Copy,
+  X,
   Sparkles,
 } from "lucide-react";
 import CTA from "@/components/sections/CTA";
@@ -107,6 +109,29 @@ type CartItem = {
   unitPricePkr: number;
 };
 
+type OrderPopupData = {
+  channel: "whatsapp" | "email";
+  whatsappUrl?: string;
+  orderId: string;
+  orderDate: string;
+  orderTime: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  customerCity: string;
+  note: string;
+  items: {
+    product: string;
+    size: string;
+    quantity: number;
+    unitPrice: string;
+    subtotal: string;
+  }[];
+  totalPkr: string;
+  totalUsd: string;
+  copyText: string;
+};
+
 const authenticityPoints = [
   {
     text: "Verified Himalayan origin from Gilgit-Baltistan",
@@ -167,6 +192,10 @@ const futureProducts = [
 ];
 
 export default function ProductsPage() {
+  const createOrderMeta = () => ({
+    id: `EOS-${Math.floor(100000 + Math.random() * 900000)}`,
+    createdAt: Date.now(),
+  });
   const [selectedSize, setSelectedSize] = useState(sizes[1]);
   const [activeImage, setActiveImage] = useState(galleryImages[0]);
   const [currency, setCurrency] = useState<"PKR" | "USD">("PKR");
@@ -192,8 +221,9 @@ export default function ProductsPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [checkoutAttempted, setCheckoutAttempted] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [whatsappModalOpen, setWhatsappModalOpen] = useState(false);
-  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [orderPopupOpen, setOrderPopupOpen] = useState(false);
+  const [orderPopupData, setOrderPopupData] = useState<OrderPopupData | null>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
   const [emailSubmitting, setEmailSubmitting] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [lastAdded, setLastAdded] = useState<{
@@ -253,10 +283,7 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => {
-    setOrderMeta({
-      id: `EOS-${Math.floor(100000 + Math.random() * 900000)}`,
-      createdAt: Date.now(),
-    });
+    setOrderMeta(createOrderMeta());
   }, []);
 
   useEffect(() => {
@@ -535,6 +562,170 @@ export default function ProductsPage() {
     setSelectedNotes((prev) => [...prev, note]);
   };
 
+  const resetOrderStateAfterPopup = () => {
+    setCustomerName("");
+    setCountryCode("");
+    setCustomerPhone("");
+    setCountryDropdownOpen(false);
+    setCountrySearch("");
+    setCustomerCity("");
+    setCustomerEmail("");
+    setCustomerNote("");
+    setSelectedNotes([]);
+    setNoteDropdownOpen(false);
+    setQuantity(1);
+    setSelectedSize(sizes[1]);
+    setCartItems([]);
+    setCheckoutAttempted(false);
+    setEmailError(null);
+    setLastAdded(null);
+    setStoredOrderCount(0);
+    setOrderMeta(createOrderMeta());
+  };
+
+  const buildOrderPopupData = (
+    channel: "whatsapp" | "email",
+    whatsappUrl?: string
+  ): OrderPopupData | null => {
+    if (!orderMeta) return null;
+    const now = new Date(orderMeta.createdAt);
+    const dateLocale = isUrdu ? "ur-PK" : "en-GB";
+    const orderDate = now.toLocaleDateString(dateLocale, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+    const orderTime = now.toLocaleTimeString(dateLocale, {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+    const customerNameValue =
+      customerName.trim() || (isUrdu ? "نام درج نہیں" : "Not provided");
+    const customerPhoneValue =
+      formattedPhone || (isUrdu ? "فون درج نہیں" : "Not provided");
+    const customerEmailValue =
+      customerEmail.trim() || (isUrdu ? "ای میل درج نہیں" : "Not provided");
+    const customerCityValue =
+      customerCity.trim() || (isUrdu ? "پتہ درج نہیں" : "Not provided");
+    const noteValue = customerNote.trim();
+    const productLabel = isUrdu ? "پریمیم ریزن جار" : "Premium Resin Jar";
+    const items = effectiveCartItems.map((item) => ({
+      product: productLabel,
+      size: item.sizeLabel,
+      quantity: item.quantity,
+      unitPrice: formatPkr(item.unitPricePkr),
+      subtotal: formatPkr(item.unitPricePkr * item.quantity),
+    }));
+    const totalPkr = formatPkr(cartTotalPkr);
+    const totalUsd = cartTotalUsd || "N/A";
+    const divider = "━━━━━━━━━━━━━━━━━━━━";
+    const copyLines = isUrdu
+      ? [
+          "✓ آرڈر کامیابی سے تیار ہو گیا",
+          divider,
+          `چینل: ${channel === "whatsapp" ? "واٹس ایپ" : "ای میل"}`,
+          `آرڈر آئی ڈی: ${orderMeta.id}`,
+          `تاریخ: ${orderDate}`,
+          `وقت: ${orderTime}`,
+          divider,
+          "کسٹمر معلومات",
+          `نام: ${customerNameValue}`,
+          `فون: ${customerPhoneValue}`,
+          `ای میل: ${customerEmailValue}`,
+          `شہر: ${customerCityValue}`,
+          divider,
+          "پروڈکٹس",
+          ...items.flatMap((item) => [
+            `${item.product} — ${item.size}`,
+            `مقدار: ${item.quantity}`,
+            `فی یونٹ: ${item.unitPrice}`,
+            `سب ٹوٹل: ${item.subtotal}`,
+            "",
+          ]),
+          divider,
+          `کل PKR: ${totalPkr}`,
+          `کل USD: ${totalUsd}`,
+          noteValue ? divider : null,
+          noteValue ? `نوٹ: ${noteValue}` : null,
+        ]
+      : [
+          "✓ Order prepared successfully",
+          divider,
+          `Channel: ${channel === "whatsapp" ? "WhatsApp" : "Email"}`,
+          `Order ID: ${orderMeta.id}`,
+          `Date: ${orderDate}`,
+          `Time: ${orderTime}`,
+          divider,
+          "Customer Information",
+          `Name: ${customerNameValue}`,
+          `Phone: ${customerPhoneValue}`,
+          `Email: ${customerEmailValue}`,
+          `City: ${customerCityValue}`,
+          divider,
+          "Products",
+          ...items.flatMap((item) => [
+            `${item.product} — ${item.size}`,
+            `Qty: ${item.quantity}`,
+            `Unit: ${item.unitPrice}`,
+            `Subtotal: ${item.subtotal}`,
+            "",
+          ]),
+          divider,
+          `Total PKR: ${totalPkr}`,
+          `Total USD: ${totalUsd}`,
+          noteValue ? divider : null,
+          noteValue ? `Note: ${noteValue}` : null,
+        ];
+    return {
+      channel,
+      whatsappUrl,
+      orderId: orderMeta.id,
+      orderDate,
+      orderTime,
+      customerName: customerNameValue,
+      customerPhone: customerPhoneValue,
+      customerEmail: customerEmailValue,
+      customerCity: customerCityValue,
+      note: noteValue,
+      items,
+      totalPkr,
+      totalUsd,
+      copyText: copyLines.filter(Boolean).join("\n"),
+    };
+  };
+
+  const closeOrderPopup = () => {
+    setOrderPopupOpen(false);
+    setOrderPopupData(null);
+    setCopySuccess(false);
+  };
+
+  const triggerOrderPopup = (
+    channel: "whatsapp" | "email",
+    whatsappUrl?: string
+  ) => {
+    const nextPopupData = buildOrderPopupData(channel, whatsappUrl);
+    if (!nextPopupData) return;
+    setOrderPopupData(nextPopupData);
+    setCopySuccess(false);
+    setOrderPopupOpen(true);
+    resetOrderStateAfterPopup();
+  };
+
+  const handleCopyOrderDetails = async () => {
+    if (!orderPopupData || typeof window === "undefined" || !navigator.clipboard) return;
+    try {
+      await navigator.clipboard.writeText(orderPopupData.copyText);
+      setCopySuccess(true);
+      window.setTimeout(() => {
+        setCopySuccess(false);
+      }, 1800);
+    } catch {
+      return;
+    }
+  };
+
   const handleEmailOrder = async () => {
     if (!isCheckoutValid) {
       setCheckoutAttempted(true);
@@ -571,10 +762,7 @@ export default function ProductsPage() {
         const data = await response.json().catch(() => null);
         throw new Error(data?.error || "Unable to send email");
       }
-      setEmailModalOpen(true);
-      window.setTimeout(() => {
-        setEmailModalOpen(false);
-      }, 2500);
+      triggerOrderPopup("email");
     } catch {
       setEmailError(
         isUrdu
@@ -1328,11 +1516,7 @@ export default function ProductsPage() {
                         return;
                       }
                       event.preventDefault();
-                      setWhatsappModalOpen(true);
-                      window.setTimeout(() => {
-                        window.open(whatsappLink, "_blank", "noopener,noreferrer");
-                        setWhatsappModalOpen(false);
-                      }, 700);
+                      triggerOrderPopup("whatsapp", whatsappLink);
                     }}
                     className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-premium lux-button"
                   >
@@ -1424,11 +1608,7 @@ export default function ProductsPage() {
                 return;
               }
               event.preventDefault();
-              setWhatsappModalOpen(true);
-              window.setTimeout(() => {
-                window.open(whatsappLink, "_blank", "noopener,noreferrer");
-                setWhatsappModalOpen(false);
-              }, 700);
+              triggerOrderPopup("whatsapp", whatsappLink);
             }}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-premium"
           >
@@ -1597,76 +1777,179 @@ export default function ProductsPage() {
         ) : null}
       </AnimatePresence>
       <AnimatePresence>
-        {whatsappModalOpen ? (
+        {orderPopupOpen && orderPopupData ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4"
           >
-            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+            <button
+              type="button"
+              onClick={closeOrderPopup}
+              className="absolute inset-0 bg-black/35 backdrop-blur-sm"
+            />
             <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 12 }}
-              transition={{ duration: 0.2 }}
-              className={`relative w-full max-w-md rounded-3xl border border-white/40 bg-white/90 p-6 text-center shadow-[0_20px_60px_rgba(15,23,42,0.25)] backdrop-blur-xl ${
-                isUrdu ? "font-urdu" : ""
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              className={`relative w-full max-w-3xl max-h-[80vh] overflow-hidden rounded-2xl border border-amber-100/70 bg-gradient-to-b from-white via-stone-50 to-white p-4 shadow-xl sm:p-6 flex flex-col ${
+                isUrdu ? "font-urdu text-right" : "text-left"
               }`}
+              dir={isUrdu ? "rtl" : "ltr"}
             >
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600">
-                <Check className="h-6 w-6" />
+              <button
+                type="button"
+                onClick={closeOrderPopup}
+                className={`absolute top-4 rounded-full border border-stone-200 bg-white/95 p-2 text-stone-500 transition-colors hover:text-stone-800 ${
+                  isUrdu ? "left-4" : "right-4"
+                }`}
+                aria-label={isUrdu ? "بند کریں" : "Close"}
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <div className={`flex items-start gap-3 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600">
+                  <Check className="h-5 w-5" />
+                </div>
+                <div className="pr-10">
+                  <div className="text-lg font-semibold text-charcoal-900 sm:text-xl">
+                    {isUrdu ? "آرڈر کامیابی سے تیار ہو گیا" : "Order Prepared Successfully"}
+                  </div>
+                  <div className="mt-1 text-sm text-stone-600">
+                    {orderPopupData.channel === "whatsapp"
+                      ? isUrdu
+                        ? "واٹس ایپ آرڈر کی تفصیل تیار ہے۔ براہ کرم نیچے سے کاپی یا اوپن کریں۔"
+                        : "Your WhatsApp order details are ready. Copy or open WhatsApp below."
+                      : isUrdu
+                      ? "ای میل آرڈر کامیابی سے بھیج دیا گیا ہے۔ تفصیل آپ کے ریکارڈ کے لیے موجود ہے۔"
+                      : "Your email order has been sent successfully. Details are available for your records."}
+                  </div>
+                </div>
               </div>
-              <div className="mt-4 text-lg font-semibold text-charcoal-900">
-                {isUrdu ? "آرڈر کی درخواست بھیج دی گئی" : "Order Request Sent"}
+              <div className="mt-4 flex-1 overflow-y-auto pr-1">
+                <div className="grid gap-3 rounded-2xl border border-stone-200/80 bg-white/90 p-4 text-xs text-stone-700 sm:grid-cols-2 sm:text-sm">
+                  <div>
+                    <span className="font-semibold text-charcoal-900">{isUrdu ? "آرڈر آئی ڈی: " : "Order ID: "}</span>
+                    {orderPopupData.orderId}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-charcoal-900">{isUrdu ? "چینل: " : "Channel: "}</span>
+                    {orderPopupData.channel === "whatsapp"
+                      ? isUrdu
+                        ? "واٹس ایپ"
+                        : "WhatsApp"
+                      : isUrdu
+                      ? "ای میل"
+                      : "Email"}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-charcoal-900">{isUrdu ? "تاریخ: " : "Date: "}</span>
+                    {orderPopupData.orderDate}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-charcoal-900">{isUrdu ? "وقت: " : "Time: "}</span>
+                    {orderPopupData.orderTime}
+                  </div>
+                </div>
+                <div className="mt-4 rounded-2xl border border-stone-200/70 bg-white/80">
+                  <div className="hidden sm:block">
+                    <div className="grid grid-cols-5 gap-2 border-b border-stone-200/70 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-500">
+                      <span>{isUrdu ? "پروڈکٹ" : "Product"}</span>
+                      <span>{isUrdu ? "سائز" : "Size"}</span>
+                      <span className="text-center">{isUrdu ? "مقدار" : "Qty"}</span>
+                      <span className="text-right">{isUrdu ? "یونٹ قیمت" : "Unit"}</span>
+                      <span className="text-right">{isUrdu ? "سب ٹوٹل" : "Subtotal"}</span>
+                    </div>
+                    <div className="divide-y divide-stone-200/60 text-sm text-stone-700">
+                      {orderPopupData.items.map((item, index) => (
+                        <div key={`${item.product}-${item.size}-${index}`} className="grid grid-cols-5 gap-2 px-4 py-3">
+                          <span className="font-semibold text-charcoal-900">{item.product}</span>
+                          <span>{item.size}</span>
+                          <span className="text-center">{item.quantity}</span>
+                          <span className="text-right">{item.unitPrice}</span>
+                          <span className="text-right font-semibold text-charcoal-900">{item.subtotal}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2 p-3 sm:hidden">
+                    {orderPopupData.items.map((item, index) => (
+                      <div key={`${item.product}-${item.size}-${index}`} className="rounded-xl border border-stone-200/70 bg-stone-50/90 p-3 text-sm text-stone-700">
+                        <div className="font-semibold text-charcoal-900">{item.product}</div>
+                        <div className="mt-1 text-xs text-stone-600">
+                          {isUrdu ? `سائز: ${item.size}` : `Size: ${item.size}`}
+                        </div>
+                        <div className="mt-2 flex items-center justify-between text-xs text-stone-600">
+                          <span>{isUrdu ? `مقدار: ${item.quantity}` : `Qty: ${item.quantity}`}</span>
+                          <span>{isUrdu ? `یونٹ: ${item.unitPrice}` : `Unit: ${item.unitPrice}`}</span>
+                          <span>{isUrdu ? `سب ٹوٹل: ${item.subtotal}` : `Subtotal: ${item.subtotal}`}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className={`mt-4 flex items-center justify-between rounded-2xl border border-stone-200/70 bg-stone-100/80 px-4 py-2.5 text-sm font-semibold text-charcoal-900 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                  <span>{isUrdu ? "کل رقم (PKR)" : "Total (PKR)"}</span>
+                  <span>{orderPopupData.totalPkr}</span>
+                </div>
+                <div className={`mt-2 flex items-center justify-between rounded-2xl border border-stone-200/70 bg-stone-100/80 px-4 py-2.5 text-xs text-stone-600 ${isUrdu ? "flex-row-reverse" : ""}`}>
+                  <span>{isUrdu ? "کل رقم (USD)" : "Total (USD)"}</span>
+                  <span>{orderPopupData.totalUsd}</span>
+                </div>
+                {orderPopupData.note ? (
+                  <div className="mt-3 rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-xs text-stone-600 sm:text-sm">
+                    <span className="font-semibold text-charcoal-900">
+                      {isUrdu ? "نوٹ: " : "Note: "}
+                    </span>
+                    {orderPopupData.note}
+                  </div>
+                ) : null}
+                <div className="mt-4 rounded-2xl border border-stone-200 bg-white/90 p-3">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+                    {isUrdu ? "کاپی ایبل تفصیل" : "Copyable Details"}
+                  </div>
+                  <textarea
+                    readOnly
+                    value={orderPopupData.copyText}
+                    className="mt-2 h-32 w-full resize-none rounded-2xl border border-stone-200 bg-white px-3 py-2.5 font-mono text-[11px] leading-5 text-stone-700 focus:outline-none sm:h-36 sm:text-xs"
+                  />
+                </div>
               </div>
-              <div className="mt-2 text-sm text-stone-600">
-                {isUrdu
-                  ? "آپ کی آرڈر کی درخواست واٹس ایپ کے لیے تیار ہے۔"
-                  : "Your order request has been prepared for WhatsApp."}
-              </div>
-              <div className="mt-2 text-xs text-stone-500">
-                {isUrdu
-                  ? "آپ کو آرڈر کی تصدیق کے لیے واٹس ایپ پر ری ڈائریکٹ کیا جائے گا۔"
-                  : "You will be redirected to WhatsApp to confirm your order."}
-              </div>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-      <AnimatePresence>
-        {emailModalOpen ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center px-4"
-          >
-            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 12 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 12 }}
-              transition={{ duration: 0.2 }}
-              className={`relative w-full max-w-md rounded-3xl border border-white/40 bg-white/90 p-6 text-center shadow-[0_20px_60px_rgba(15,23,42,0.25)] backdrop-blur-xl ${
-                isUrdu ? "font-urdu" : ""
-              }`}
-            >
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600">
-                <Check className="h-6 w-6" />
-              </div>
-              <div className="mt-4 text-lg font-semibold text-charcoal-900">
-                {isUrdu ? "آرڈر کامیابی سے بھیج دیا گیا" : "Order Sent Successfully"}
-              </div>
-              <div className="mt-2 text-sm text-stone-600">
-                {isUrdu
-                  ? "آپ کی آرڈر کی تفصیلات موصول ہو گئی ہیں۔"
-                  : "Your order details have been sent."}
-              </div>
-              <div className="mt-2 text-xs text-stone-500">
-                {isUrdu
-                  ? "ہم جلد آپ سے رابطہ کریں گے۔"
-                  : "Our team will contact you shortly."}
+              <div className={`mt-4 flex flex-wrap items-center gap-2 ${isUrdu ? "justify-end" : "justify-start"}`}>
+                <button
+                  type="button"
+                  onClick={handleCopyOrderDetails}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-xs font-semibold text-stone-700 shadow-soft transition-colors hover:border-primary-300"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                  {copySuccess
+                    ? isUrdu
+                      ? "کاپی ہو گیا"
+                      : "Copied"
+                    : isUrdu
+                    ? "تفصیل کاپی کریں"
+                    : "Copy Details"}
+                </button>
+                {orderPopupData.channel === "whatsapp" && orderPopupData.whatsappUrl ? (
+                  <a
+                    href={orderPopupData.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-xs font-semibold text-white shadow-premium"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    {isUrdu ? "واٹس ایپ اوپن کریں" : "Open WhatsApp"}
+                  </a>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={closeOrderPopup}
+                  className="inline-flex items-center justify-center rounded-full bg-stone-900 px-4 py-2 text-xs font-semibold text-white shadow-soft"
+                >
+                  {isUrdu ? "بند کریں" : "Close"}
+                </button>
               </div>
             </motion.div>
           </motion.div>
