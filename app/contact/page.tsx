@@ -1,6 +1,8 @@
 "use client";
 
-import { Mail, MessageCircle, Instagram, Facebook, Music } from "lucide-react";
+import { Mail, MessageCircle, Instagram, Facebook, Music, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactHeader } from "@/components/contact/ContactHeader";
@@ -8,6 +10,16 @@ import { ContactHeader } from "@/components/contact/ContactHeader";
 export default function ContactPage() {
   const { locale } = useLanguage();
   const isUrdu = locale === "ur";
+  const [successOpen, setSuccessOpen] = useState(false);
+
+  useEffect(() => {
+    if (!successOpen) return;
+    const timeout = window.setTimeout(() => {
+      setSuccessOpen(false);
+    }, 3500);
+    return () => window.clearTimeout(timeout);
+  }, [successOpen]);
+
   return (
     <section className="section-padding bg-white">
       <div className="container-custom">
@@ -91,9 +103,55 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-          <ContactForm isUrdu={isUrdu} />
+          <ContactForm isUrdu={isUrdu} onSuccess={() => setSuccessOpen(true)} />
         </div>
       </div>
+      <AnimatePresence>
+        {successOpen ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          >
+            <button
+              type="button"
+              onClick={() => setSuccessOpen(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              aria-label="Close success modal"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ duration: 0.2 }}
+              className={`relative w-full max-w-md max-h-[80vh] rounded-2xl bg-white p-6 shadow-xl ${
+                isUrdu ? "text-right" : "text-left"
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => setSuccessOpen(false)}
+                className="absolute right-4 top-4 rounded-full border border-stone-200/70 bg-white/90 p-2 text-stone-500 transition-colors hover:text-stone-700"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <div className="text-lg font-semibold text-charcoal-900">
+                {isUrdu ? "پیغام کامیابی سے بھیج دیا گیا" : "Message Sent Successfully"}
+              </div>
+              <div className="mt-2 text-sm text-stone-600">
+                {isUrdu
+                  ? "ایورسٹ آرگینک سلاجیت سے رابطہ کرنے کا شکریہ"
+                  : "Thank you for contacting Everest Organic Shilajet"}
+              </div>
+              <div className="mt-3 text-sm text-stone-600">
+                {isUrdu ? "ہماری ٹیم جلد ہی آپ سے رابطہ کرے گی۔" : "Our team will get back to you shortly."}
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </section>
   );
 }

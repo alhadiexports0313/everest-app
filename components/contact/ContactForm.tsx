@@ -7,6 +7,7 @@ import { ContactSubmitButton } from "@/components/contact/ContactSubmitButton";
 
 type ContactFormProps = {
   isUrdu: boolean;
+  onSuccess?: () => void;
 };
 
 type ContactFormValues = {
@@ -25,7 +26,7 @@ type ContactFormErrors = {
   message?: string;
 };
 
-export const ContactForm = ({ isUrdu }: ContactFormProps) => {
+export const ContactForm = ({ isUrdu, onSuccess }: ContactFormProps) => {
   const subjectOptions = useMemo(
     () => [
       { value: "General Inquiry", label: isUrdu ? "عمومی استفسار" : "General Inquiry" },
@@ -44,6 +45,11 @@ export const ContactForm = ({ isUrdu }: ContactFormProps) => {
     orderId: "",
   });
   const [formErrors, setFormErrors] = useState<ContactFormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const handleChange = (field: keyof ContactFormValues, value: string) => {
     setFormValues((prev) => ({ ...prev, [field]: value }));
@@ -52,8 +58,10 @@ export const ContactForm = ({ isUrdu }: ContactFormProps) => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) return;
+    setSubmitStatus(null);
     const nextErrors: ContactFormErrors = {};
     if (!formValues.fullName.trim()) {
       nextErrors.fullName = isUrdu ? "براہ کرم اپنا نام درج کریں" : "Please enter your full name";
@@ -74,19 +82,52 @@ export const ContactForm = ({ isUrdu }: ContactFormProps) => {
       setFormErrors(nextErrors);
       return;
     }
-    const body = [
-      `Full Name: ${formValues.fullName.trim()}`,
-      `Email: ${emailValue}`,
-      `Phone: ${formValues.phone.trim() || "N/A"}`,
-      `Order ID: ${formValues.orderId.trim() || "N/A"}`,
-      `Subject: ${formValues.subject}`,
-      "Message:",
-      formValues.message.trim(),
-    ].join("\n");
-    const mailto = `mailto:everestorganicshilajet@gmail.com?subject=${encodeURIComponent(
-      formValues.subject
-    )}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
+    try {
+      setIsSubmitting(true);
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formValues.fullName.trim(),
+          email: emailValue,
+          subject: formValues.subject,
+          message: formValues.message.trim(),
+          phone: formValues.phone.trim(),
+          orderId: formValues.orderId.trim(),
+        }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error || "Failed to send message");
+      }
+      setFormValues({
+        fullName: "",
+        email: "",
+        subject: "",
+        message: "",
+        phone: "",
+        orderId: "",
+      });
+      setFormErrors({});
+      setSubmitStatus({
+        type: "success",
+        message: isUrdu
+          ? "آپ کا پیغام بھیج دیا گیا ہے۔ ہم جلد رابطہ کریں گے۔"
+          : "Your message has been sent. We will get back to you shortly.",
+      });
+      onSuccess?.();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to send message";
+      setSubmitStatus({
+        type: "error",
+        message: isUrdu
+          ? "پیغام بھیجنے میں مسئلہ آیا۔ براہ کرم دوبارہ کوشش کریں۔"
+          : message || "We could not send your message. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -109,7 +150,16 @@ export const ContactForm = ({ isUrdu }: ContactFormProps) => {
         error={formErrors.message}
         onChange={(value) => handleChange("message", value)}
       />
-      <ContactSubmitButton isUrdu={isUrdu} />
+      <ContactSubmitButton isUrdu={isUrdu} isSubmitting={isSubmitting} />
+      {submitStatus ? (
+        <div
+          className={`text-xs ${
+            submitStatus.type === "success" ? "text-emerald-600" : "text-rose-500"
+          }`}
+        >
+          {submitStatus.message}
+        </div>
+      ) : null}
     </form>
   );
 };
