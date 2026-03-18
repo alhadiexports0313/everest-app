@@ -29,3 +29,12 @@ export interface TrustBadge {
   title: string;
   description: string;
 }
+
+export type { CartItem } from "./cart";
+export type { Customer } from "./customer";
+export type {
+  OrderChannel,
+  OrderPopupData,
+  OrderPopupItem,
+  OrderRequestPayload,
+} from "./order";
