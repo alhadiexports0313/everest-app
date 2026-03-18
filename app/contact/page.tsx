@@ -2,6 +2,8 @@
 
 import { Mail, MessageCircle, Instagram, Facebook, Music } from "lucide-react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
+import { ContactForm } from "@/components/contact/ContactForm";
+import { ContactHeader } from "@/components/contact/ContactHeader";
 
 export default function ContactPage() {
   const { locale } = useLanguage();
@@ -9,16 +11,7 @@ export default function ContactPage() {
   return (
     <section className="section-padding bg-white">
       <div className="container-custom">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="font-display text-display-2 font-bold text-charcoal-900 mb-6 tracking-tight">
-            {isUrdu ? "رابطہ اور کمیونٹی" : "Contact & Community"}
-          </h1>
-          <p className="text-lg text-stone-700 leading-relaxed font-light">
-            {isUrdu
-              ? "ہم بروقت جواب دیتے ہیں اور مقامی کمیونٹیز و پہاڑی حفاظت میں سرمایہ واپس لگاتے ہیں۔"
-              : "We respond quickly and reinvest in local communities and mountain stewardship."}
-          </p>
-        </div>
+        <ContactHeader isUrdu={isUrdu} />
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className="space-y-6">
             <div className="p-6 rounded-2xl glass-card border border-stone-200/50 shadow-soft">
@@ -98,48 +91,7 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-          <form
-            className={`p-8 rounded-2xl glass-card border border-stone-200/50 shadow-soft space-y-5 ${
-              isUrdu ? "text-right" : "text-left"
-            }`}
-          >
-            <div>
-              <label className="block text-sm font-medium text-charcoal-900 mb-2">
-                {isUrdu ? "پورا نام" : "Full Name"}
-              </label>
-              <input
-                type="text"
-                className="w-full rounded-lg border border-stone-200 bg-white px-4 py-3 text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder={isUrdu ? "اپنا نام لکھیں" : "Your name"}
-                dir={isUrdu ? "rtl" : "ltr"}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-charcoal-900 mb-2">
-                {isUrdu ? "ای میل" : "Email"}
-              </label>
-              <input
-                type="email"
-                className="w-full rounded-lg border border-stone-200 bg-white px-4 py-3 text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="you@example.com"
-                dir="ltr"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-charcoal-900 mb-2">
-                {isUrdu ? "پیغام" : "Message"}
-              </label>
-              <textarea
-                rows={5}
-                className="w-full rounded-lg border border-stone-200 bg-white px-4 py-3 text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder={isUrdu ? "ہم کس طرح مدد کر سکتے ہیں؟" : "How can we help?"}
-                dir={isUrdu ? "rtl" : "ltr"}
-              />
-            </div>
-            <button className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary-700 to-primary-800 text-white font-semibold rounded-lg shadow-premium hover:shadow-premium-lg transition-all">
-              {isUrdu ? "پیغام بھیجیں" : "Send Message"}
-            </button>
-          </form>
+          <ContactForm isUrdu={isUrdu} />
         </div>
       </div>
     </section>
