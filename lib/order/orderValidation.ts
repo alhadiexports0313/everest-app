@@ -18,9 +18,8 @@ export const getCheckoutValidation = ({
 }) => {
   const nameMissing = customerName.trim().length === 0;
   const normalizedPhone = customerPhone.replace(/\D/g, "");
-  const selectedCountry = phoneCountries.find(
-    (country) => country.code === countryCode
-  );
+  const selectedCountry =
+    phoneCountries.find((country) => country.code === countryCode) || null;
   const phoneMissing = normalizedPhone.length === 0;
   const countryMissing = countryCode.length === 0;
   const phoneInvalid =
@@ -57,9 +56,8 @@ export const getCheckoutValidation = ({
 };
 
 export const getPhoneExample = (countryCode: string) => {
-  const selectedCountry = phoneCountries.find(
-    (country) => country.code === countryCode
-  );
+  const selectedCountry =
+    phoneCountries.find((country) => country.code === countryCode) || null;
   return selectedCountry
     ? `${selectedCountry.code} ${selectedCountry.placeholder}`
     : "+92 300 1234567";

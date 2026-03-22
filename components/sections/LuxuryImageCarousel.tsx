@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion, useAnimationFrame, useMotionValue, useTransform } from "framer-motion";
+import type { MotionValue } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 
@@ -33,46 +34,46 @@ const productImages = imageNames.map((name) => `/images/products/${name}`);
 type CarouselItemProps = {
   src: string;
   index: number;
-  x: ReturnType<typeof useMotionValue>;
+  x: MotionValue<number>;
   containerWidth: number;
 };
 
 function CarouselItem({ src, index, x, containerWidth }: CarouselItemProps) {
-  const focus = useTransform(x, (latest) => {
+  const focus = useTransform(x, (latest: number) => {
     const center = containerWidth / 2 || 1;
     const position = index * (ITEM_WIDTH + ITEM_GAP) + latest + ITEM_WIDTH / 2;
     const distance = Math.abs(center - position);
     return Math.max(0, 1 - distance / center);
   });
 
-  const scale = useTransform(focus, (v) => 0.86 + v * 0.3);
-  const opacity = useTransform(focus, (v) => 0.45 + v * 0.55);
-  const blur = useTransform(focus, (v) => `blur(${(1 - v) * 3.5}px)`);
-  const translateY = useTransform(x, (latest) => {
+  const scale = useTransform(focus, (v: number) => 0.86 + v * 0.3);
+  const opacity = useTransform(focus, (v: number) => 0.45 + v * 0.55);
+  const blur = useTransform(focus, (v: number) => `blur(${(1 - v) * 3.5}px)`);
+  const translateY = useTransform(x, (latest: number) => {
     const center = containerWidth / 2 || 1;
     const position = index * (ITEM_WIDTH + ITEM_GAP) + latest + ITEM_WIDTH / 2;
     const offset = (position - center) / center;
     return Math.sin(offset * Math.PI) * 18;
   });
-  const rotateY = useTransform(x, (latest) => {
+  const rotateY = useTransform(x, (latest: number) => {
     const center = containerWidth / 2 || 1;
     const position = index * (ITEM_WIDTH + ITEM_GAP) + latest + ITEM_WIDTH / 2;
     const offset = (position - center) / center;
     return `${offset * 10}deg`;
   });
-  const rotateZ = useTransform(x, (latest) => {
+  const rotateZ = useTransform(x, (latest: number) => {
     const center = containerWidth / 2 || 1;
     const position = index * (ITEM_WIDTH + ITEM_GAP) + latest + ITEM_WIDTH / 2;
     const offset = (position - center) / center;
     return `${offset * 2}deg`;
   });
-  const zIndex = useTransform(focus, (v) => Math.round(v * 20));
+  const zIndex = useTransform(focus, (v: number) => Math.round(v * 20));
   const boxShadow = useTransform(
     focus,
-    (v) =>
+    (v: number) =>
       `0 22px ${26 + v * 30}px rgba(0,0,0,${0.28 + v * 0.25}), 0 0 ${14 + v * 26}px rgba(212,165,116,${0.2 + v * 0.4})`
   );
-  const glow = useTransform(focus, (v) => v);
+  const glow = useTransform(focus, (v: number) => v);
 
   return (
     <motion.div
@@ -106,7 +107,7 @@ function CarouselItem({ src, index, x, containerWidth }: CarouselItemProps) {
 
 export default function LuxuryImageCarousel() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const x = useMotionValue(0);
+  const x = useMotionValue<number>(0);
   const [containerWidth, setContainerWidth] = useState(0);
   const { locale } = useLanguage();
   const isUrdu = locale === "ur";

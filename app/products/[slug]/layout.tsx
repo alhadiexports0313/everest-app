@@ -22,8 +22,9 @@ const productMeta: Record<
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const { slug } = await params;
   const locale = await getLocale();
   const isUrdu = locale === "ur";
   const fallbackTitle = isUrdu
@@ -32,7 +33,7 @@ export async function generateMetadata({
   const fallbackDescription = isUrdu
     ? "گلگت بلتستان سے خالص ہمالیائی سلاجیت، لیب ٹیسٹڈ اور فلویِک ایسڈ سے بھرپور۔"
     : "Pure Himalayan Shilajet from Gilgit-Baltistan, lab-tested and rich in fulvic acid.";
-  const product = productMeta[params.slug] ?? {
+  const product = productMeta[slug] ?? {
     title: fallbackTitle,
     description: fallbackDescription,
     image: "/images/products/product_1.jpg",
@@ -41,7 +42,7 @@ export async function generateMetadata({
     ? `${product.title} | ایورسٹ آرگینک سلاجیت`
     : `${product.title} | Everest Organic Shilajit`;
   const description = product.description;
-  const basePath = `/products/${params.slug}`;
+  const basePath = `/products/${slug}`;
   return {
     title,
     description,
@@ -55,7 +56,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      type: "product",
+      type: "website",
       url: basePath,
       images: [
         {

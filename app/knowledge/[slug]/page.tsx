@@ -3,7 +3,30 @@ import { notFound } from "next/navigation";
 import KnowledgeArticleClient from "./KnowledgeArticleClient";
 import { getLocale } from "@/lib/i18n-server";
 
-const articles = {
+interface ArticleSection {
+  title: string;
+  urduTitle: string;
+  body: string;
+  urdu: string;
+  bullets?: { label: string; text: string }[];
+  urduBullets?: { label: string; text: string }[];
+  table?: { label: string; value: string }[];
+  urduTable?: { label: string; value: string }[];
+  list?: string[];
+  urduList?: string[];
+}
+
+interface Article {
+  title: string;
+  urduTitle: string;
+  readTime: string;
+  readTimeUrdu: string;
+  description: string;
+  urduDescription: string;
+  sections: ArticleSection[];
+}
+
+const articles: Record<string, Article> = {
   "understanding-shilajet": {
     title: "Understanding Shilajet: Origins, Formation, and Active Minerals",
     urduTitle: "سلاجیت کو سمجھیں: تشکیل، اصل اور فعال معدنیات",
@@ -276,7 +299,7 @@ const articles = {
       },
     ],
   },
-} as const;
+};
 
 type ArticleKey = keyof typeof articles;
 
@@ -292,7 +315,7 @@ export async function generateMetadata({
   const isUrdu = locale === "ur";
   const title = locale === "ur" ? article.urduTitle : article.title;
   const description =
-    locale === "ur" ? article.urduDescription ?? article.description : article.description;
+    locale === "ur" ? article.urduDescription || article.description : article.description;
   const hubLabel = locale === "ur" ? "نالج ہب" : "Knowledge Hub";
   const basePath = `/knowledge/${slug}`;
   return {
@@ -349,7 +372,7 @@ export default async function KnowledgeArticlePage({
   const isUrdu = locale === "ur";
   const articleTitle = isUrdu ? article.urduTitle : article.title;
   const articleDescription = isUrdu
-    ? article.urduDescription ?? article.description
+    ? article.urduDescription || article.description
     : article.description;
   const articleJsonLd = {
     "@context": "https://schema.org",

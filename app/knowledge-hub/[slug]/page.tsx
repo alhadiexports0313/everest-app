@@ -28,9 +28,10 @@ type ArticleKey = keyof typeof articles;
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const article = articles[params.slug as ArticleKey];
+  const { slug } = await params;
+  const article = articles[slug as ArticleKey];
   if (!article) return {};
   const locale = await getLocale();
   const isUrdu = locale === "ur";
@@ -38,7 +39,7 @@ export async function generateMetadata({
     ? `${article.urdu} | علمی مرکز`
     : `${article.title} | Knowledge Hub`;
   const description = article.description;
-  const basePath = `/knowledge-hub/${params.slug}`;
+  const basePath = `/knowledge-hub/${slug}`;
   return {
     title,
     description,
@@ -81,8 +82,13 @@ export async function generateMetadata({
   };
 }
 
-export default function KnowledgeDetailPage({ params }: { params: { slug: string } }) {
-  const article = articles[params.slug as ArticleKey];
+export default async function KnowledgeDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const article = articles[slug as ArticleKey];
   if (!article) notFound();
 
   return (

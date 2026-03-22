@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import { ArrowLeft, ShoppingCart, Star, Check, Minus, Plus, Heart } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -52,9 +52,10 @@ const defaultProduct = productsBySlug["premium-shilajet-resin"];
 export default function ProductDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const product = productsBySlug[params.slug as keyof typeof productsBySlug] ?? defaultProduct;
+  const { slug } = use(params);
+  const product = productsBySlug[slug as keyof typeof productsBySlug] ?? defaultProduct;
   const [quantity, setQuantity] = useState(1);
 
   const incrementQuantity = () => setQuantity((q) => q + 1);
