@@ -1,18 +1,75 @@
+import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
 import TickerStrip from "@/components/ui/TickerStrip";
 import TrustBadges from "@/components/sections/TrustBadges";
 import BenefitsGrid from "@/components/sections/BenefitsGrid";
-import MountainToBottleJourney from "@/components/sections/MountainToBottleJourney";
 import FeaturedProduct from "@/components/sections/FeaturedProduct";
-import CertificationBlock from "@/components/sections/CertificationBlock";
-import ProductShowcase from "@/components/sections/ProductShowcase";
-import ScienceSection from "@/components/sections/ScienceSection";
-import KnowledgePreview from "@/components/sections/KnowledgePreview";
-import LuxuryImageCarousel from "@/components/sections/LuxuryImageCarousel";
-import OriginStory from "@/components/sections/OriginStory";
-import Testimonials from "@/components/sections/Testimonials";
-import CTA from "@/components/sections/CTA";
+
+const MountainToBottleJourney = dynamic(() => import("@/components/sections/MountainToBottleJourney"));
+const CertificationBlock = dynamic(() => import("@/components/sections/CertificationBlock"));
+const ProductShowcase = dynamic(() => import("@/components/sections/ProductShowcase"));
+const ScienceSection = dynamic(() => import("@/components/sections/ScienceSection"));
+const KnowledgePreview = dynamic(() => import("@/components/sections/KnowledgePreview"));
+const LuxuryImageCarousel = dynamic(() => import("@/components/sections/LuxuryImageCarousel"));
+const OriginStory = dynamic(() => import("@/components/sections/OriginStory"));
+const Testimonials = dynamic(() => import("@/components/sections/Testimonials"));
+const CTA = dynamic(() => import("@/components/sections/CTA"));
 import { getLocale, getServerMessage } from "@/lib/i18n-server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const isUrdu = locale === "ur";
+  const title = isUrdu
+    ? "ایورسٹ آرگینک سلاجیت | خالص ہمالیائی سلاجیت پاکستان"
+    : "Everest Organic Shilajet | Pure Himalayan Shilajit in Pakistan";
+  const description = isUrdu
+    ? "گلگت بلتستان سے حاصل کردہ خالص ہمالیائی سلاجیت۔ لیب ٹیسٹڈ، قدرتی اور فلویِک ایسڈ سے بھرپور۔ واٹس ایپ پر آرڈر کریں۔"
+    : "Buy 100% pure Everest Organic Shilajit sourced from Gilgit-Baltistan. Lab-tested, natural, and rich in fulvic acid. Order now via WhatsApp.";
+  const basePath = "/";
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: basePath,
+      languages: {
+        en: basePath,
+        ur: `${basePath}?lang=ur`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: basePath,
+      images: [
+        {
+          url: "/images/banners/mountains-peak.jpg",
+          width: 1200,
+          height: 630,
+          alt: isUrdu
+            ? "ہمالیائی سلاجیت — ایورسٹ آرگینک سلاجیت"
+            : "Himalayan Shilajit — Everest Organic Shilajet",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/images/banners/mountains-peak.jpg"],
+    },
+    keywords: [
+      "Shilajet",
+      "Himalayan Shilajit",
+      "Everest Organic Shilajit",
+      "Organic Wellness",
+      "Organic Shilajit Pakistan",
+      "Gilgit Baltistan",
+      "Natural wellness supplement",
+    ],
+  };
+}
 
 const iconClassName = "h-6 w-6 text-amber-300 animate-shimmer";
 
@@ -76,6 +133,23 @@ const iconMapping: Record<string, () => JSX.Element> = {
 
 export default async function Home() {
   const locale = await getLocale();
+  const isUrdu = locale === "ur";
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Everest Organic Shilajit",
+    url: "https://everestorganicshilajet.com",
+    logo: "https://everestorganicshilajet.com/images/brand/logo.jpeg",
+    sameAs: [],
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Gilgit-Baltistan",
+      addressCountry: "PK",
+    },
+    description: isUrdu
+      ? "گلگت بلتستان سے حاصل کردہ خالص ہمالیائی سلاجیت۔"
+      : "Premium Himalayan Shilajit sourced from Gilgit-Baltistan.",
+  };
   const tickerItems =
     (await getServerMessage<{ text: string; icon: string }[]>(
       "home.ticker.items",
@@ -83,6 +157,10 @@ export default async function Home() {
     )) ?? [];
   return (
     <div className={locale === "ur" ? "home-urdu-center-headings" : undefined}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
       <Hero />
       <TickerStrip
         items={tickerItems.map((item) => {

@@ -82,6 +82,7 @@ export default function Header() {
                 alt="Everest Organic Shilajit logo"
                 fill
                 className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.02]"
+                sizes="44px"
               />
             </div>
 

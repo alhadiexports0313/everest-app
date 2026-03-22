@@ -27,6 +27,7 @@ export const ProductGallery = (props: FeaturedGalleryProps | ProductsGalleryProp
               fill
               className="object-cover lux-image"
               priority
+              sizes="(min-width: 1024px) 55vw, 100vw"
             />
           </div>
         </div>
@@ -44,9 +45,10 @@ export const ProductGallery = (props: FeaturedGalleryProps | ProductsGalleryProp
             >
               <Image
                 src={image}
-                alt="Shilajet resin close-up"
+                alt="Himalayan Shilajit resin close-up"
                 fill
                 className="object-cover lux-image"
+                sizes="(min-width: 1024px) 18vw, 30vw"
               />
             </button>
           ))}
@@ -63,6 +65,7 @@ export const ProductGallery = (props: FeaturedGalleryProps | ProductsGalleryProp
           alt={props.primaryAlt}
           fill
           className="object-cover lux-image"
+          sizes="(min-width: 1024px) 40vw, 100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
         <div className="absolute left-4 bottom-4 inline-flex items-center gap-2 rounded-full bg-white/85 px-3 py-1.5 text-xs font-semibold text-stone-700 shadow-soft">
@@ -76,7 +79,13 @@ export const ProductGallery = (props: FeaturedGalleryProps | ProductsGalleryProp
             key={image}
             className="relative aspect-[5/4] min-h-[84px] sm:min-h-[92px] overflow-hidden rounded-2xl border border-stone-200/60 bg-stone-100 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-300/70 hover:shadow-soft"
           >
-            <Image src={image} alt="Shilajet resin texture" fill className="object-cover lux-image" />
+            <Image
+              src={image}
+              alt="Pure Himalayan Shilajit resin texture"
+              fill
+              className="object-cover lux-image"
+              sizes="(min-width: 1024px) 16vw, 32vw"
+            />
           </div>
         ))}
       </div>

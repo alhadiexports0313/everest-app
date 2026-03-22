@@ -88,7 +88,8 @@ export default function HeroCarousel({
                 src={current.image}
                 alt={current.label}
                 fill
-                priority
+                priority={index === 0}
+                sizes="100vw"
                 className="object-cover lux-image"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />

@@ -173,12 +173,20 @@ export default function KnowledgeArticleClient({ article }: { article: Article }
             </div>
 
             <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <Link
-                href="/knowledge-hub"
-                className="inline-flex items-center justify-center rounded-full border border-stone-200 bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-stone-700 shadow-soft transition-all duration-500 hover:border-[#C6A052]/60 hover:text-[#8C6C2B]"
-              >
-                {t("knowledge.back")}
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/knowledge-hub"
+                  className="inline-flex items-center justify-center rounded-full border border-stone-200 bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-stone-700 shadow-soft transition-all duration-500 hover:border-[#C6A052]/60 hover:text-[#8C6C2B]"
+                >
+                  {t("knowledge.back")}
+                </Link>
+                <Link
+                  href="/products/premium-shilajet-resin"
+                  className="inline-flex items-center justify-center rounded-full border border-stone-200 bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-stone-700 shadow-soft transition-all duration-500 hover:border-[#C6A052]/60 hover:text-[#8C6C2B]"
+                >
+                  {isUrdu ? "پریمیم ریزن دیکھیں" : "View Premium Resin"}
+                </Link>
+              </div>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={readTime}

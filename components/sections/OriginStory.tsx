@@ -158,6 +158,7 @@ export default function OriginStory() {
                 alt="Gilgit-Baltistan origin product imagery"
                 fill
                 className="object-cover lux-image"
+                sizes="(min-width: 1024px) 45vw, 100vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/10 bg-black/40 px-6 py-4 backdrop-blur-md">

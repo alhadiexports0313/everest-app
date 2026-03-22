@@ -77,10 +77,11 @@ export default function BenefitsGrid() {
             >
               <Image
                 src="/images/products/product_27.jpg"
-                alt="Himalayan landscape"
+                alt="Himalayan landscape with Everest Organic Shilajit"
                 fill
                 className="object-cover"
                 priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
               />
             </motion.div>
             <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/45 to-black/75" />

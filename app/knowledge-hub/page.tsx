@@ -1,5 +1,58 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getLocale } from "@/lib/i18n-server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const isUrdu = locale === "ur";
+  const title = isUrdu
+    ? "علمی مرکز | ہمالیائی سلاجیت اور ویلنَس"
+    : "Knowledge Hub | Himalayan Shilajit & Organic Wellness";
+  const description = isUrdu
+    ? "سلاجیت، آرگینک ویلنَس، اور گلگت بلتستان کی روایت پر مستند مضامین۔"
+    : "Expert articles on Shilajet, organic wellness, and Himalayan heritage from Gilgit-Baltistan.";
+  const basePath = "/knowledge-hub";
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: basePath,
+      languages: {
+        en: basePath,
+        ur: `${basePath}?lang=ur`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: basePath,
+      images: [
+        {
+          url: "/images/banners/mountains-peak.jpg",
+          width: 1200,
+          height: 630,
+          alt: isUrdu
+            ? "علمی مرکز — سلاجیت اور ویلنَس"
+            : "Knowledge Hub — Shilajet insights",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/images/banners/mountains-peak.jpg"],
+    },
+    keywords: [
+      "Himalayan Shilajit",
+      "Shilajet",
+      "Organic Wellness",
+      "Everest Organic Shilajit",
+      "Gilgit Baltistan",
+    ],
+  };
+}
 
 const posts = [
   {

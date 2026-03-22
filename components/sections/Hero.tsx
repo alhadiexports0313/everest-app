@@ -8,6 +8,7 @@ import {
   useTransform,
   useSpring,
 } from "framer-motion";
+import Image from "next/image";
 import { ArrowRight, Sparkles, Mountain } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
@@ -20,6 +21,15 @@ const images = [
   "/images/banners/purification.jpg",
   "/images/banners/resin-texture-macro-1.jpg",
   "/images/banners/resin-texture-macro-2.jpg",
+];
+const imageAlts = [
+  "Himalayan extraction mountains for Everest Organic Shilajit",
+  "Herbal ingredients with Himalayan Shilajit resin",
+  "Himalayan mountain energy backdrop for Shilajet",
+  "Gilgit-Baltistan mountain peaks with Himalayan Shilajit",
+  "Purification process for organic Shilajet resin",
+  "Himalayan Shilajit resin macro texture",
+  "Pure Shilajit resin texture from the Himalayas",
 ];
 
 const AUTO_DELAY = 7000;
@@ -58,12 +68,18 @@ export default function Hero() {
               duration: 6,
               ease: [0.33, 1, 0.68, 1],
             }}
-            className="absolute inset-0 h-[120%] w-full bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${images[index]})`,
-            }}
+            className="absolute inset-0 h-[120%] w-full"
           />
+            <Image
+              src={images[index]}
+              alt={imageAlts[index] ?? "Himalayan Shilajit background"}
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              className="object-cover"
+            />
         </AnimatePresence>
+
 
         {/* Cinematic Overlays (Reduced opacity for clearer image) */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/10" />

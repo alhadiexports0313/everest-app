@@ -159,6 +159,7 @@ export default function BenefitsPage() {
               fill
               className="object-cover lux-image"
               priority
+              sizes="(min-width: 1024px) 40vw, 100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
           </div>
@@ -228,6 +229,7 @@ export default function BenefitsPage() {
               alt="Brown and blue stone fragment in Shilajit mineral stone"
               fill
               className="object-cover lux-image"
+              sizes="(min-width: 1024px) 40vw, 100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
           </div>
@@ -269,6 +271,7 @@ export default function BenefitsPage() {
               alt="Fulvic acid from Golden Shilajit on top of a white table"
               fill
               className="object-cover lux-image"
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
           </div>
@@ -311,6 +314,7 @@ export default function BenefitsPage() {
               alt="Woman riding on man's back on green field"
               fill
               className="object-cover lux-image"
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
           </div>
@@ -399,6 +403,7 @@ export default function BenefitsPage() {
               alt="Topless man in black pants holding black and yellow exercise equipment"
               fill
               className="object-cover lux-image"
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
           </div>

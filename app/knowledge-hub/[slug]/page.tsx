@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getLocale } from "@/lib/i18n-server";
 
 const articles = {
   benefits: {
@@ -24,12 +25,59 @@ const articles = {
 
 type ArticleKey = keyof typeof articles;
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
   const article = articles[params.slug as ArticleKey];
   if (!article) return {};
+  const locale = await getLocale();
+  const isUrdu = locale === "ur";
+  const title = isUrdu
+    ? `${article.urdu} | علمی مرکز`
+    : `${article.title} | Knowledge Hub`;
+  const description = article.description;
+  const basePath = `/knowledge-hub/${params.slug}`;
   return {
-    title: `${article.title} | Knowledge Hub`,
-    description: article.description,
+    title,
+    description,
+    alternates: {
+      canonical: basePath,
+      languages: {
+        en: basePath,
+        ur: `${basePath}?lang=ur`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      url: basePath,
+      images: [
+        {
+          url: "/images/banners/mountains-peak.jpg",
+          width: 1200,
+          height: 630,
+          alt: isUrdu
+            ? "سلاجیت اور ویلنَس رہنمائی"
+            : "Shilajet wellness guidance",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/images/banners/mountains-peak.jpg"],
+    },
+    keywords: [
+      "Himalayan Shilajit",
+      "Shilajet",
+      "Organic Wellness",
+      "Everest Organic Shilajit",
+      "Gilgit Baltistan",
+    ],
   };
 }
 

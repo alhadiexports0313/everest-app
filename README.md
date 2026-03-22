@@ -1,12 +1,20 @@
-# Everest Organic Shilajet - Premium E-Commerce Website
+# Everest Organic Shilajet
 
-A luxury, conversion-optimized e-commerce website for Everest Organic Shilajet, a premium Himalayan wellness brand from Gilgit-Baltistan.
+Premium Himalayan wellness e‑commerce platform for Everest Organic Shilajet, 
+crafted for trust, conversion, and international presentation.
+
+## Overview
+
+- Brand: Everest Organic Shilajet
+- Origin: Gilgit‑Baltistan, Pakistan
+- Focus: Authentic, lab‑tested Himalayan Shilajit
 
 ## 🎯 Brand Positioning
 
 - **Premium** • **Authentic** • **Scientific** • **Natural** • **Export Quality**
 
 The website communicates purity, Himalayan origin, scientific credibility, authenticity, and premium wellness positioning, competing with international supplement brands.
+
 
 ## 🚀 Tech Stack
 
@@ -15,47 +23,46 @@ The website communicates purity, Himalayan origin, scientific credibility, authe
 - **Tailwind CSS** - Utility-first styling with custom design system
 - **Framer Motion** - Smooth animations and interactions
 - **Lucide React** - Modern icon library
+- Resend (email)
 
-## 🎨 Design System
+## Features
 
-### Colors
-- **Primary (Green)**: Himalayan nature theme (#369862)
-- **Accent (Gold)**: Premium warmth (#f49038)
-- **Neutral**: Clean, modern grays
-
-### Typography
-- **Display**: Playfair Display (serif) for headings
-- **Body**: Inter (sans-serif) for content
-
-### Key Features
-- Mobile-first responsive design
-- Premium shadows and gradients
-- Smooth animations and transitions
-- Conversion-optimized layouts
+- Luxury UI with smooth animations and micro‑interactions
+- Mobile‑first responsive layout
+- SEO‑ready metadata, Open Graph, Twitter cards, JSON‑LD
+- WhatsApp ordering + contact form email delivery
+- Multi‑language support (English + Urdu)
+- Performance optimizations with dynamic sections and Next/Image
 
 ## 📁 Project Structure
 
 ```
 everest_app/
 ├── app/
-│   ├── layout.tsx          # Root layout with metadata
-│   ├── page.tsx             # Homepage
-│   └── globals.css          # Global styles
+│   ├── api/                    # Email + order endpoints
+│   ├── about/                  # About page
+│   ├── authenticity-quality/   # Authenticity page
+│   ├── benefits/               # Benefits page
+│   ├── contact/                # Contact page
+│   ├── knowledge/              # Blog article pages
+│   ├── knowledge-hub/          # Blog hub + categories
+│   ├── products/               # Products list + detail (slug)
+│   ├── usage/                  # Usage guide
+│   ├── layout.tsx              # Root layout + metadata
+│   ├── page.tsx                # Homepage
+│   ├── robots.ts               # Robots
+│   └── sitemap.ts              # Sitemap
 ├── components/
-│   ├── layout/
-│   │   ├── Header.tsx       # Navigation header
-│   │   └── Footer.tsx       # Footer with links
-│   └── sections/
-│       ├── Hero.tsx         # Hero section
-│       ├── TrustBadges.tsx  # Trust indicators
-│       ├── ProductShowcase.tsx # Product grid
-│       ├── ScienceSection.tsx  # Scientific credibility
-│       ├── OriginStory.tsx     # Brand story
-│       ├── Testimonials.tsx    # Customer reviews
-│       └── CTA.tsx            # Call-to-action
-├── tailwind.config.ts       # Tailwind configuration
-├── tsconfig.json            # TypeScript config
-└── package.json             # Dependencies
+│   ├── contact/                # Contact form UI
+│   ├── i18n/                   # Language provider
+│   ├── layout/                 # Header/Footer
+│   ├── order/                  # Order flow UI
+│   ├── product/                # Product UI blocks
+│   ├── sections/               # Home + content sections
+│   └── ui/                     # UI helpers
+├── lib/                        # Utilities, i18n, formatting
+├── messages/                   # en/ur copy
+└── public/                     # Images and static assets
 ```
 
 ## 🛠️ Getting Started
@@ -115,23 +122,16 @@ npm start
 - Fast page load times
 - Mobile-friendly
 
-## 🚀 Next Steps
+## Environment Variables
 
-1. Add product detail pages
-2. Implement shopping cart functionality
-3. Add checkout flow
-4. Integrate payment gateway
-5. Add CMS for content management
-6. Implement analytics
-7. Add email marketing integration
+```
+RESEND_API_KEY=your_resend_key
+NEXT_PUBLIC_GA_ID=your_ga_id
+NEXT_PUBLIC_FB_PIXEL_ID=your_fb_pixel_id
+```
 
-## 📝 Notes
+## Notes
 
-- Images are currently using placeholder URLs - replace with actual product images
-- Product data is hardcoded - consider moving to a CMS or database
-- Payment and cart functionality needs to be implemented
-- Contact forms need backend integration
-
----
-
-**Founded by Fazal** | Premium Himalayan Shilajet from Gilgit-Baltistan
+- Production‑ready SEO and structured data included
+- Optimized images with responsive sizing
+- WhatsApp and email ordering workflows integrated

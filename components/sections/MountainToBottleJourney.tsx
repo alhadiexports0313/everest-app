@@ -143,6 +143,7 @@ export default function MountainToBottleJourney() {
                         alt={isUrdu ? step.altUr : step.altEn}
                         fill
                         className="object-cover lux-image"
+                        sizes="(min-width: 1024px) 45vw, 100vw"
                       />
                     </div>
                   </motion.div>

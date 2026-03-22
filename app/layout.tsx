@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
@@ -24,15 +25,28 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const t = await tServer(locale);
   const ogLocale = locale === "ur" ? "ur_PK" : "en_US";
+  const baseUrl = new URL("https://everestorganicshilajet.com");
+  const titleTemplate =
+    locale === "ur"
+      ? "%s | ایورسٹ آرگینک سلاجیت"
+      : "%s | Everest Organic Shilajit";
   return {
-    title: t("meta.title"),
+    metadataBase: baseUrl,
+    title: {
+      default: t("meta.title"),
+      template: titleTemplate,
+    },
     description: t("meta.description"),
     keywords: [
       "Shilajet",
+      "Himalayan Shilajit",
       "Everest Organic Shilajit",
+      "Organic Wellness",
+      "Organic Shilajit Pakistan",
       "Organic Shilajet",
       "Gilgit-Baltistan",
       "Wellness Supplement",
+      "Natural wellness supplement",
       "Natural Health",
       "Premium Shilajet",
     ],
@@ -42,8 +56,22 @@ export async function generateMetadata(): Promise<Metadata> {
       description: t("meta.ogDescription"),
       type: "website",
       locale: ogLocale,
+      url: baseUrl,
+      siteName: "Everest Organic Shilajit",
+      images: [
+        {
+          url: "/images/banners/mountains-peak.jpg",
+          width: 1200,
+          height: 630,
+          alt:
+            locale === "ur"
+              ? "ایورسٹ آرگینک سلاجیت — ہمالیائی شیلجیت"
+              : "Everest Organic Shilajit — Himalayan Shilajit",
+        },
+      ],
     },
     alternates: {
+      canonical: "/",
       languages: {
         en: "/",
         ur: "/?lang=ur",
@@ -53,6 +81,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: t("meta.twitterTitle"),
       description: t("meta.twitterDescription"),
+      images: ["/images/banners/mountains-peak.jpg"],
     },
     robots: {
       index: true,
@@ -86,6 +115,34 @@ export default async function RootLayout({
           <WhatsAppFloat phoneNumber="923454490326" />
           <Footer />
         </LanguageProvider>
+        {process.env.NEXT_PUBLIC_GA_ID ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');`}
+            </Script>
+          </>
+        ) : null}
+        {process.env.NEXT_PUBLIC_FB_PIXEL_ID ? (
+          <Script id="fb-pixel" strategy="afterInteractive">
+            {`!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '${process.env.NEXT_PUBLIC_FB_PIXEL_ID}');
+fbq('track', 'PageView');`}
+          </Script>
+        ) : null}
       </body>
     </html>
   );

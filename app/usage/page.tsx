@@ -156,6 +156,7 @@ export default function UsagePage() {
               fill
               className="object-cover lux-image"
               priority
+              sizes="(min-width: 1024px) 40vw, 100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
           </div>

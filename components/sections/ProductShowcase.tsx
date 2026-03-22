@@ -235,9 +235,10 @@ export default function ProductShowcase() {
               <div className="relative aspect-square bg-gradient-stone overflow-hidden">
                 <Image
                   src={assignedImages[index]}
-                  alt={product.name}
+                  alt={`${product.name} - Everest Organic Shilajit`}
                   fill
                   className="object-cover lux-image"
+                  sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 90vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                 {product.badge && (

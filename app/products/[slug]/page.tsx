@@ -1,18 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { ArrowLeft, ShoppingCart, Star, Check, Minus, Plus, Heart } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-// Mock product data - replace with actual data fetching
-const product = {
-  id: 1,
-  name: "Premium Shilajet Resin",
-  description:
-    "Pure, unprocessed resin sourced from high-altitude Himalayan mountains. This premium Shilajet is carefully harvested and tested to ensure maximum purity and potency.",
-  longDescription: `Our Premium Shilajet Resin is the most authentic form of Shilajet available. Sourced directly from the pristine mountains of Gilgit-Baltistan at altitudes above 3,000 meters, this resin contains the highest concentration of bioactive compounds.
+const productsBySlug = {
+  "premium-shilajet-resin": {
+    id: 1,
+    name: "Premium Shilajet Resin",
+    description:
+      "Pure, unprocessed resin sourced from high-altitude Himalayan mountains. This premium Shilajet is carefully harvested and tested to ensure maximum purity and potency.",
+    longDescription: `Our Premium Shilajet Resin is the most authentic form of Shilajet available. Sourced directly from the pristine mountains of Gilgit-Baltistan at altitudes above 3,000 meters, this resin contains the highest concentration of bioactive compounds.
 
 Each batch undergoes rigorous third-party testing for purity, heavy metals, and potency. Our resin is 100% pure with no additives, fillers, or processing chemicals.
 
@@ -22,40 +21,72 @@ Each batch undergoes rigorous third-party testing for purity, heavy metals, and 
 - Contains 85+ trace minerals
 - Rich in fulvic and humic acids
 - Traditional Ayurvedic wellness support`,
-  price: "$89",
-  originalPrice: "$119",
-  rating: 4.9,
-  reviews: 1247,
-  image: "/api/placeholder/800/800",
-  features: [
-    "100% Pure Resin",
-    "Lab Tested & Certified",
-    "30g Premium Jar",
-    "3-Month Supply",
-    "No Additives or Fillers",
-    "Third-Party Verified",
-  ],
-  badge: "Best Seller",
-  inStock: true,
-  sku: "EOS-RESIN-30G",
-  benefits: [
-    "Enhanced Energy & Vitality",
-    "Immune System Support",
-    "85+ Essential Minerals",
-    "Cognitive Function Support",
-    "Traditional Wellness",
-  ],
+    price: "$89",
+    originalPrice: "$119",
+    rating: 4.9,
+    reviews: 1247,
+    features: [
+      "100% Pure Resin",
+      "Lab Tested & Certified",
+      "30g Premium Jar",
+      "3-Month Supply",
+      "No Additives or Fillers",
+      "Third-Party Verified",
+    ],
+    badge: "Best Seller",
+    inStock: true,
+    sku: "EOS-RESIN-30G",
+    benefits: [
+      "Enhanced Energy & Vitality",
+      "Immune System Support",
+      "85+ Essential Minerals",
+      "Cognitive Function Support",
+      "Traditional Wellness",
+    ],
+    slug: "premium-shilajet-resin",
+  },
 };
 
-export default function ProductDetailPage() {
+const defaultProduct = productsBySlug["premium-shilajet-resin"];
+
+export default function ProductDetailPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const product = productsBySlug[params.slug as keyof typeof productsBySlug] ?? defaultProduct;
   const [quantity, setQuantity] = useState(1);
 
   const incrementQuantity = () => setQuantity((q) => q + 1);
   const decrementQuantity = () => setQuantity((q) => Math.max(1, q - 1));
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    brand: {
+      "@type": "Brand",
+      name: "Everest Organic Shilajit",
+    },
+    image: "https://everestorganicshilajet.com/images/products/product_1.jpg",
+    sku: product.sku,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "USD",
+      price: product.price.replace(/[^0-9.]/g, ""),
+      availability: product.inStock
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      url: `https://everestorganicshilajet.com/products/${product.slug}`,
+    },
+  };
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Breadcrumb */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <div className="border-b border-neutral-100">
         <div className="container-custom px-4 sm:px-6 lg:px-8 py-4">
           <Link
@@ -70,7 +101,6 @@ export default function ProductDetailPage() {
 
       <div className="container-custom section-padding">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Product Image */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -91,14 +121,12 @@ export default function ProductDetailPage() {
             )}
           </motion.div>
 
-          {/* Product Info */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            {/* Title */}
             <div>
               <h1 className="font-display text-4xl font-bold text-neutral-900 mb-4">
                 {product.name}
@@ -108,7 +136,6 @@ export default function ProductDetailPage() {
               </p>
             </div>
 
-            {/* Rating */}
             <div className="flex items-center space-x-4">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
@@ -127,7 +154,6 @@ export default function ProductDetailPage() {
               </span>
             </div>
 
-            {/* Price */}
             <div className="flex items-baseline space-x-3">
               <span className="text-4xl font-bold text-neutral-900">{product.price}</span>
               {product.originalPrice && (
@@ -138,7 +164,6 @@ export default function ProductDetailPage() {
               <span className="text-sm text-accent-600 font-semibold">Save 25%</span>
             </div>
 
-            {/* Stock Status */}
             {product.inStock ? (
               <div className="flex items-center space-x-2 text-primary-600">
                 <Check className="w-5 h-5" />
@@ -148,9 +173,8 @@ export default function ProductDetailPage() {
               <div className="text-neutral-500">Out of Stock</div>
             )}
 
-            {/* Features */}
             <div>
-              <h3 className="font-semibold text-neutral-900 mb-3">What's Included:</h3>
+              <h2 className="font-semibold text-neutral-900 mb-3">What's Included:</h2>
               <ul className="space-y-2">
                 {product.features.map((feature) => (
                   <li key={feature} className="flex items-center text-neutral-700">
@@ -161,7 +185,22 @@ export default function ProductDetailPage() {
               </ul>
             </div>
 
-            {/* Quantity Selector */}
+            <div className="text-sm text-neutral-500">
+              <Link
+                href="/authenticity-quality"
+                className="text-primary-600 hover:text-primary-700 transition-colors"
+              >
+                Learn about authenticity & quality
+              </Link>
+              <span className="mx-2">•</span>
+              <Link
+                href="/knowledge-hub"
+                className="text-primary-600 hover:text-primary-700 transition-colors"
+              >
+                Explore the knowledge hub
+              </Link>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-neutral-900 mb-2">
                 Quantity
@@ -189,7 +228,6 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* CTA Buttons - desktop */}
             <div className="hidden lg:flex gap-4 pt-4">
               <button className="flex-1 flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-lg shadow-premium lux-button">
                 <ShoppingCart className="w-5 h-5 mr-2" />
@@ -199,80 +237,7 @@ export default function ProductDetailPage() {
                 <Heart className="w-5 h-5 text-neutral-700" />
               </button>
             </div>
-
-            {/* Trust Indicators */}
-            <div className="pt-6 border-t border-neutral-100 space-y-3">
-              <div className="flex items-center text-sm text-neutral-600">
-                <Check className="w-4 h-4 text-primary-600 mr-2" />
-                Free worldwide shipping on orders over $100
-              </div>
-              <div className="flex items-center text-sm text-neutral-600">
-                <Check className="w-4 h-4 text-primary-600 mr-2" />
-                30-day money-back guarantee
-              </div>
-              <div className="flex items-center text-sm text-neutral-600">
-                <Check className="w-4 h-4 text-primary-600 mr-2" />
-                Lab tested & certified pure
-              </div>
-            </div>
           </motion.div>
-        </div>
-
-        {/* Detailed Description */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-16 max-w-4xl"
-        >
-          <h2 className="font-display text-3xl font-bold text-neutral-900 mb-6">
-            Product Details
-          </h2>
-          <div className="prose prose-lg max-w-none">
-            <p className="text-neutral-700 leading-relaxed whitespace-pre-line">
-              {product.longDescription}
-            </p>
-          </div>
-
-          {/* Benefits */}
-          <div className="mt-8">
-            <h3 className="font-display text-2xl font-bold text-neutral-900 mb-4">
-              Key Benefits
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {product.benefits.map((benefit) => (
-                <div
-                  key={benefit}
-                  className="flex items-center p-4 bg-neutral-50 rounded-lg"
-                >
-                  <Check className="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" />
-                  <span className="text-neutral-700">{benefit}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Sticky mobile buy bar */}
-      <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-md">
-        <div className="container-custom px-4 py-3">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <div className="text-xs text-neutral-500">Total</div>
-              <div className="text-lg font-semibold text-neutral-900">
-                {product.price}
-              </div>
-              <div className="flex items-center text-[11px] text-primary-700 mt-1">
-                <Check className="w-3 h-3 mr-1" />
-                Lab tested & 30-day guarantee
-              </div>
-            </div>
-            <button className="flex-1 flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-sm font-semibold rounded-full shadow-premium hover:shadow-premium-lg active:scale-[0.98] transition-all">
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Buy Now
-            </button>
-          </div>
         </div>
       </div>
     </div>

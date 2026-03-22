@@ -33,6 +33,7 @@ export default function WhatsAppFloat({
         width={32}
         height={32}
         priority
+        sizes="32px"
       />
     </Link>
   );

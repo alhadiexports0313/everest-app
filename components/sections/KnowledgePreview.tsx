@@ -109,6 +109,7 @@ export default function KnowledgePreview() {
                     alt={card.imageAlt}
                     fill
                     className="object-cover lux-image transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
+                    sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 90vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
                 </div>

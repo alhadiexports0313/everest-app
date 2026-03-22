@@ -289,13 +289,51 @@ export async function generateMetadata({
   const article = articles[slug as ArticleKey];
   if (!article) return {};
   const locale = await getLocale();
+  const isUrdu = locale === "ur";
   const title = locale === "ur" ? article.urduTitle : article.title;
   const description =
     locale === "ur" ? article.urduDescription ?? article.description : article.description;
   const hubLabel = locale === "ur" ? "نالج ہب" : "Knowledge Hub";
+  const basePath = `/knowledge/${slug}`;
   return {
     title: `${title} | ${hubLabel}`,
     description,
+    alternates: {
+      canonical: basePath,
+      languages: {
+        en: basePath,
+        ur: `${basePath}?lang=ur`,
+      },
+    },
+    openGraph: {
+      title: `${title} | ${hubLabel}`,
+      description,
+      type: "article",
+      url: basePath,
+      images: [
+        {
+          url: "/images/banners/mountains-peak.jpg",
+          width: 1200,
+          height: 630,
+          alt: isUrdu
+            ? "ہمالیائی سلاجیت اور ویلنَس مضمون"
+            : "Himalayan Shilajit knowledge article",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | ${hubLabel}`,
+      description,
+      images: ["/images/banners/mountains-peak.jpg"],
+    },
+    keywords: [
+      "Himalayan Shilajit",
+      "Shilajet",
+      "Organic Wellness",
+      "Everest Organic Shilajit",
+      "Gilgit Baltistan",
+    ],
   };
 }
 
@@ -307,5 +345,38 @@ export default async function KnowledgeArticlePage({
   const { slug } = await params;
   const article = articles[slug as ArticleKey];
   if (!article) notFound();
-  return <KnowledgeArticleClient article={article} />;
+  const locale = await getLocale();
+  const isUrdu = locale === "ur";
+  const articleTitle = isUrdu ? article.urduTitle : article.title;
+  const articleDescription = isUrdu
+    ? article.urduDescription ?? article.description
+    : article.description;
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: articleTitle,
+    description: articleDescription,
+    author: {
+      "@type": "Organization",
+      name: "Everest Organic Shilajit",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Everest Organic Shilajit",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://everestorganicshilajet.com/images/brand/logo.jpeg",
+      },
+    },
+    mainEntityOfPage: `https://everestorganicshilajet.com/knowledge/${slug}`,
+  };
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <KnowledgeArticleClient article={article} />
+    </>
+  );
 }
