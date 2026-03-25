@@ -77,6 +77,15 @@ export async function generateMetadata(): Promise<Metadata> {
         ur: "/?lang=ur",
       },
     },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+        { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/favicon.ico",
+    },
     twitter: {
       card: "summary_large_image",
       title: t("meta.twitterTitle"),
@@ -105,6 +114,9 @@ export default async function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
       </head>
       <body
         className={`${inter.variable} ${playfair.variable} ${fontClass} antialiased bg-stone-50 text-charcoal-900`}
