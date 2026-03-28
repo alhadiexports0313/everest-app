@@ -124,7 +124,7 @@ export default async function RootLayout({
         <LanguageProvider initialLocale={locale}>
           <Header />
           <main className="min-h-screen">{children}</main>
-          <WhatsAppFloat phoneNumber="923454490326" />
+          <WhatsAppFloat phoneNumber="923255203088" />
           <Footer />
         </LanguageProvider>
         {process.env.NEXT_PUBLIC_GA_ID ? (

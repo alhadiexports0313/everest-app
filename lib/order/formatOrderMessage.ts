@@ -146,5 +146,5 @@ export const buildWhatsAppLink = ({
         "I would like to place this order.",
       ];
   const message = lines.filter(Boolean).join("\n");
-  return `https://wa.me/923454490326?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/923255203088?text=${encodeURIComponent(message)}`;
 };

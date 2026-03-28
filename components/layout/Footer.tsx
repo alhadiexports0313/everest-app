@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { Mountain, Mail, MapPin, Instagram, Facebook, MessageCircle } from "lucide-react";
-import { tServer } from "@/lib/i18n-server";
+import { tServer, getLocale } from "@/lib/i18n-server";
 
 export default async function Footer() {
   const currentYear = new Date().getFullYear();
   const t = await tServer();
+  const locale = await getLocale();
+  const isUrdu = locale === "ur";
 
   return (
     <footer className="bg-gradient-forest text-white">
@@ -113,12 +115,12 @@ export default async function Footer() {
               <li className="flex items-start space-x-2">
                 <MessageCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                 <a
-                  href="https://wa.me/923454490326"
+                  href="https://wa.me/923255203088"
                   className="hover:text-white transition-colors duration-300"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {t("footer.whatsapp")}
+                  {isUrdu ? "۰۳۲۵ ۵۲۰۳۰۸۸" : "0325 5203088"}
                 </a>
               </li>
             </ul>

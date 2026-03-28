@@ -70,7 +70,7 @@ export default function CTA() {
           <div className={`flex flex-wrap items-center justify-center gap-8 mt-12 text-sm text-stone-300 font-light ${isUrdu ? "font-urdu" : ""}`}>
             <div className={`flex items-center ${isUrdu ? "flex-row-reverse space-x-reverse space-x-2" : "space-x-2"}`}>
               <span className="text-accent-400">✓</span>
-              <span>{isUrdu ? "عالمی سطح پر مفت ترسیل" : "Free Shipping Worldwide"}</span>
+              <span>{isUrdu ? "کم سے کم ڈیلیوری چارجز | پاکستان بھر میں تیز ترسیل" : "Minimal Delivery Charges | Fast Shipping Across Pakistan"}</span>
             </div>
             <div className={`flex items-center ${isUrdu ? "flex-row-reverse space-x-reverse space-x-2" : "space-x-2"}`}>
               <span className="text-accent-400">✓</span>
