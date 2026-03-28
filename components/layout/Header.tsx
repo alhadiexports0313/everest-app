@@ -7,6 +7,7 @@ import { Menu, X, ShoppingBag, Search, Globe2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
+import HeaderTopTicker from "./HeaderTopTicker";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -61,15 +62,17 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isScrolled
-          ? "bg-gradient-forest backdrop-blur-xl border-b border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
-          : "bg-transparent"
-      }`}
-    >
-      <nav className="max-w-[1400px] mx-auto px-6 lg:px-10">
-        <div className="flex items-center justify-between h-[76px]">
+    <>
+      <HeaderTopTicker />
+      <header
+        className={`sticky top-0 left-0 w-full z-50 transition-all duration-500 ${
+          isScrolled
+            ? "bg-gradient-forest backdrop-blur-xl border-b border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
+            : "bg-transparent"
+        }`}
+      >
+        <nav className="max-w-[1400px] mx-auto px-6 lg:px-10">
+          <div className="flex items-center justify-between h-[76px]">
 
           {/* Logo */}
           <Link
@@ -242,5 +245,6 @@ export default function Header() {
         </AnimatePresence>
       </nav>
     </header>
+  </>
   );
 }
