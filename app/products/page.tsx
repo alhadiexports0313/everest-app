@@ -9,6 +9,7 @@ import {
   Leaf,
   Truck,
   Sparkles,
+  Star,
 } from "lucide-react";
 import CTA from "@/components/sections/CTA";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
@@ -31,15 +32,20 @@ import { createPkrFormatter, createUsdFormatter } from "@/lib/utils/currencyForm
 import { formatFullPhone } from "@/lib/utils/phoneFormat";
 
 const sizes = [
-  { label: "10g", price: 1500 },
-  { label: "20g", price: 3000 },
-  { label: "50g", price: 6000 },
-];
+  { label: "10g", price: 1500, originalPrice: 2000 },
+  { label: "20g", price: 3000, originalPrice: 4000 },
+  { label: "50g", price: 6000, originalPrice: 8000 },
+] as const;
 
 const galleryImages = [
+  "/images/products/product_21.jpg",
+  "/images/products/product_22.jpg",
+  "/images/products/product_25.jpg",
   "/images/banners/resin-texture-macro-1.jpg",
-  "/images/products/product_3.jpg",
 ];
+
+const PRODUCT_SHORT_DESC =
+  "Lab-tested Himalayan resin from Gilgit-Baltistan—pure fulvic-rich Shilajit in airtight jars, trusted for potency and authenticity.";
 
 
 const authenticityPoints = [
@@ -106,7 +112,11 @@ export default function ProductsPage() {
     id: `EOS-${Math.floor(100000 + Math.random() * 900000)}`,
     createdAt: Date.now(),
   });
-  const [selectedSize, setSelectedSize] = useState(sizes[1]);
+  const [selectedSize, setSelectedSize] = useState<{
+    label: string;
+    price: number;
+    originalPrice: number;
+  }>({ ...sizes[1] });
   const [activeImage, setActiveImage] = useState(galleryImages[0]);
   const [currency, setCurrency] = useState<"PKR" | "USD">("PKR");
   const usdRate = useUsdRate();
@@ -264,7 +274,7 @@ export default function ProductsPage() {
     setSelectedNotes([]);
     setNoteDropdownOpen(false);
     setQuantity(1);
-    setSelectedSize(sizes[1]);
+    setSelectedSize({ ...sizes[1] });
     setCheckoutAttempted(false);
     setLastAdded(null);
     resetCartStorage();
@@ -362,6 +372,19 @@ export default function ProductsPage() {
                 : "Premium storytelling of Everest Organic Shilajit, crafted for modern wellness."}
             </p>
           </div>
+          <div
+            className={`mt-5 flex flex-wrap items-center justify-center gap-3 ${isUrdu ? "flex-row-reverse" : ""}`}
+          >
+            <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-black px-3 py-1.5 rounded-full text-sm font-bold shadow-md border border-amber-300/50">
+              25% OFF
+            </div>
+            <div className="flex items-center gap-1 text-amber-500" aria-label="5 star rating">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-current" />
+              ))}
+            </div>
+            <span className="text-sm font-semibold text-charcoal-900">5.0</span>
+          </div>
         </div>
       </section>
 
@@ -387,6 +410,20 @@ export default function ProductsPage() {
                   {isUrdu
                     ? "بلند ہمالیائی چٹانی ساختوں سے حاصل اور خالص کیا گیا، ہر جار پریمیم ویلنَس کا معیار فراہم کرتا ہے۔"
                     : "Harvested from high-altitude Himalayan rock formations and refined to preserve potency, every jar delivers a premium wellness experience."}
+                </p>
+
+                <div
+                  className={`mt-6 flex flex-wrap items-center gap-3 ${isUrdu ? "flex-row-reverse" : ""}`}
+                >
+                  <div className="flex items-center gap-1 text-amber-500" aria-label="5 star rating">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-current" />
+                    ))}
+                  </div>
+                  <span className="text-sm font-semibold text-charcoal-900">5.0</span>
+                </div>
+                <p className="text-sm text-stone-600 leading-relaxed font-light mt-4 max-w-2xl">
+                  {PRODUCT_SHORT_DESC}
                 </p>
               </motion.div>
 
@@ -483,14 +520,19 @@ export default function ProductsPage() {
                   unitPriceUsd={unitPriceUsd}
                   unitPricePkr={unitPricePkr}
                   formatPkr={formatPkr}
+                  originalPrice={selectedSize.originalPrice}
+                  showSaleBadge
                 />
 
                 <ProductSizeSelector
                   variant="products"
                   isUrdu={isUrdu}
-                  sizes={sizes}
+                  sizes={[...sizes]}
                   selectedSizeLabel={selectedSize.label}
-                  onSelect={setSelectedSize}
+                  onSelect={(size) => {
+                    const next = sizes.find((s) => s.label === size.label);
+                    if (next) setSelectedSize({ ...next });
+                  }}
                   formatPkr={formatPkr}
                   formatUsd={formatUsd}
                   currency={currency}

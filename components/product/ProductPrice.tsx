@@ -78,7 +78,7 @@ export const ProductPrice = (props: ProductsPriceProps | FeaturedPriceProps) => 
             {props.primaryPrice}
           </div>
           {props.originalPrice && (
-            <div className="text-lg text-stone-400 line-through">
+            <div className="text-lg text-red-500 line-through">
               {props.formatPkr(props.originalPrice * props.quantity)}
             </div>
           )}

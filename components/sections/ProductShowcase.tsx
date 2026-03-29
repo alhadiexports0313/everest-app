@@ -21,47 +21,51 @@ interface Product {
   href: string;
 }
 
+const PRODUCT_SHORT_DESC_EN =
+  "Lab-tested Himalayan resin from Gilgit-Baltistan—pure fulvic-rich Shilajit in airtight jars, trusted for potency and authenticity.";
+const PRODUCT_SHORT_DESC_UR =
+  "گلگت بلتستان سے لیب ٹیسٹڈ ہمالیائی رال — ائیر ٹائٹ جار میں خالص، فولوک سے بھرپور سلاجیت، قوت اور اصلیت کی ضمانت۔";
+
 const products: Product[] = [
   {
     id: "1",
     image: "/images/products/product_21.jpg",
     title: "Premium Himalayan Shilajit",
     titleUrdu: "پریمیم ہمالیائی سلاجیت",
-    description: "Pure, lab-tested Shilajit from Gilgit-Baltistan mountains. Rich in fulvic acid and minerals.",
-    descriptionUrdu: "گلگت بلتستان کے پہاڑوں سے خالص، لیب ٹیسٹڈ سلاجیت۔ فولوک ایسڈ اور منرلز سے بھرپور۔",
+    description: PRODUCT_SHORT_DESC_EN,
+    descriptionUrdu: PRODUCT_SHORT_DESC_UR,
     originalPrice: 2000,
     discountedPrice: 1500,
     size: "10g",
     sizeUrdu: "١٠ گرام",
-    href: "/products/premium-himalayan-shilajit-10g"
-    // href: "/products/premium-himalayan-shilajit-10g"
+    href: "/products",
   },
   {
     id: "2",
     image: "/images/products/product_22.jpg",
-    title: "Authentic Mountain Shilajit",
-    titleUrdu: "مستند پہاڑی سلاجیت",
-    description: "Premium grade Shilajit directly sourced from high-altitude Himalayan ranges.",
-    descriptionUrdu: "اعلیٰ معیار کی سلاجیت براہِ راست ہمالیائی بلندیوں سے حاصل شدہ۔",
+    title: "Premium Himalayan Shilajit",
+    titleUrdu: "پریمیم ہمالیائی سلاجیت",
+    description: PRODUCT_SHORT_DESC_EN,
+    descriptionUrdu: PRODUCT_SHORT_DESC_UR,
     originalPrice: 4000,
     discountedPrice: 3000,
     size: "20g",
     sizeUrdu: "٢٠ گرام",
-    href: "/products/authentic-mountain-shilajit-20g"
+    href: "/products",
   },
   {
     id: "3",
     image: "/images/products/product_25.jpg",
-    title: "Export Quality Shilajit",
-    titleUrdu: "ایکسپورٹ کوالٹی سلاجیت",
-    description: "Lab-certified, export-grade Shilajit with maximum potency and purity.",
-    descriptionUrdu: "لیب سرٹیفائیڈ، ایکسپورٹ گریڈ سلاجیت زیادہ سے زیادہ قوت اور خلوص کے ساتھ۔",
+    title: "Premium Himalayan Shilajit",
+    titleUrdu: "پریمیم ہمالیائی سلاجیت",
+    description: PRODUCT_SHORT_DESC_EN,
+    descriptionUrdu: PRODUCT_SHORT_DESC_UR,
     originalPrice: 8000,
     discountedPrice: 6000,
     size: "50g",
     sizeUrdu: "٥٠ گرام",
-    href: "/products/export-quality-shilajit-50g"
-  }
+    href: "/products",
+  },
 ];
 
 export default function ProductShowcase() {
@@ -175,7 +179,7 @@ export default function ProductShowcase() {
                         <Star key={i} className="w-4 h-4 fill-current" />
                       ))}
                     </div>
-                    <span className="text-sm text-stone-500 font-medium">(4.9)</span>
+                    <span className="text-sm text-stone-500 font-medium">5.0</span>
                   </div>
 
                   {/* Description */}
@@ -189,7 +193,7 @@ export default function ProductShowcase() {
                       <span className="text-2xl font-bold text-primary-800">
                         PKR {product.discountedPrice.toLocaleString()}
                       </span>
-                       <span className="text-lg text-red-600 line-through"> {/* text-stone-400 */}
+                       <span className="text-lg text-red-500 line-through">
                         PKR {product.originalPrice.toLocaleString()}
                       </span>
                     </div>

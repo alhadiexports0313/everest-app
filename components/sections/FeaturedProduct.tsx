@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useRef, useState } from "react";
-import { Check } from "lucide-react";
+import { Check, Star } from "lucide-react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductPrice } from "@/components/product/ProductPrice";
@@ -23,15 +23,20 @@ import { createPkrFormatter, createUsdFormatter } from "@/lib/utils/currencyForm
 import { formatFullPhone } from "@/lib/utils/phoneFormat";
 
 const sizes = [
-  { label: "10g", price: 1500 },
-  { label: "20g", price: 3000 },
-  { label: "50g", price: 6000 },
-];
+  { label: "10g", price: 1500, originalPrice: 2000 },
+  { label: "20g", price: 3000, originalPrice: 4000 },
+  { label: "50g", price: 6000, originalPrice: 8000 },
+] as const;
 
 const resinImages = [
-  "/images/products/product_1.jpg",
-  "/images/products/product_3.jpg",
+  "/images/products/product_21.jpg",
+  "/images/products/product_22.jpg",
+  "/images/products/product_25.jpg",
+  "/images/banners/resin-texture-macro-1.jpg",
 ];
+
+const PRODUCT_SHORT_DESC =
+  "Lab-tested Himalayan resin from Gilgit-Baltistan—pure fulvic-rich Shilajit in airtight jars, trusted for potency and authenticity.";
 
 
 const highlights = [
@@ -58,7 +63,11 @@ export default function FeaturedProduct() {
     id: `EOS-${Math.floor(100000 + Math.random() * 900000)}`,
     createdAt: Date.now(),
   });
-  const [selectedSize, setSelectedSize] = useState(sizes[1]);
+  const [selectedSize, setSelectedSize] = useState<{
+    label: string;
+    price: number;
+    originalPrice: number;
+  }>({ ...sizes[1] });
   const { locale } = useLanguage();
   const isUrdu = locale === "ur";
   const [currency, setCurrency] = useState<"PKR" | "USD">("PKR");
@@ -216,7 +225,7 @@ export default function FeaturedProduct() {
     setSelectedNotes([]);
     setNoteDropdownOpen(false);
     setQuantity(1);
-    setSelectedSize(sizes[1]);
+    setSelectedSize({ ...sizes[1] });
     setCheckoutAttempted(false);
     setLastAdded(null);
     resetCartStorage();
@@ -325,6 +334,24 @@ export default function FeaturedProduct() {
               ? "گلگت بلتستان سے حاصل کردہ پریمیم رال، خلوص اور اثر کے لیے تیار کی گئی۔"
               : "Premium resin sourced from Gilgit-Baltistan, crafted for purity and potency."}
           </p>
+          <div
+            className={`mt-5 flex flex-wrap items-center justify-center gap-3 ${isUrdu ? "flex-row-reverse" : ""}`}
+          >
+            <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-black px-3 py-1.5 rounded-full text-sm font-bold shadow-md border border-amber-300/50">
+              25% OFF
+            </div>
+            <div className="flex items-center gap-1 text-amber-500" aria-label="5 star rating">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-current" />
+              ))}
+            </div>
+            <span className="text-sm font-semibold text-charcoal-900">5.0</span>
+          </div>
+          <p className={`text-sm text-stone-600 leading-relaxed font-light mt-4 max-w-2xl mx-auto ${isUrdu ? "font-urdu" : ""}`}>
+            {isUrdu
+              ? "گلگت بلتستان سے لیب ٹیسٹڈ ہمالیائی رال — ائیر ٹائٹ جار میں خالص، فولوک سے بھرپور سلاجیت۔"
+              : PRODUCT_SHORT_DESC}
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
@@ -349,10 +376,15 @@ export default function FeaturedProduct() {
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.05 }}
             className="rounded-3xl border border-stone-200/60 bg-white/80 backdrop-blur-sm p-7 shadow-soft"
           >
-            <div className={`flex items-center justify-between ${isUrdu ? "flex-row-reverse" : ""}`}>
+            <div className={`flex items-start justify-between gap-4 ${isUrdu ? "flex-row-reverse" : ""}`}>
               <div className={isUrdu ? "text-right" : "text-left"}>
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-black px-2.5 py-1 rounded-full text-[11px] font-bold shadow-sm border border-amber-300/50">
+                    25% OFF
+                  </div>
+                </div>
                 <div
-                  className={`text-xs text-stone-400 ${
+                  className={`text-xs text-stone-400 mt-3 ${
                     isUrdu ? "tracking-normal font-urdu" : "uppercase tracking-[0.3em]"
                   }`}
                 >
@@ -361,29 +393,56 @@ export default function FeaturedProduct() {
                 <div className={`font-display text-2xl font-bold text-charcoal-900 mt-2 ${isUrdu ? "font-urdu" : ""}`}>
                   {isUrdu ? "ایورسٹ آرگینک سلاجیت" : "Everest Organic Shilajit"}
                 </div>
+                <div
+                  className={`mt-3 flex items-center gap-2 ${isUrdu ? "flex-row-reverse justify-end" : ""}`}
+                >
+                  <div className="flex items-center gap-0.5 text-amber-500">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                    ))}
+                  </div>
+                  <span className="text-xs font-semibold text-charcoal-900">5.0</span>
+                </div>
+                <p className={`text-sm text-stone-600 leading-relaxed font-light mt-3 ${isUrdu ? "font-urdu" : ""}`}>
+                  {isUrdu
+                    ? "گلگت بلتستان سے لیب ٹیسٹڈ ہمالیائی رال — ائیر ٹائٹ جار میں خالص، فولوک سے بھرپور سلاجیت۔"
+                    : PRODUCT_SHORT_DESC}
+                </p>
               </div>
-              <ProductPrice
-                variant="featured"
-                isUrdu={isUrdu}
-                currency={currency}
-                setCurrency={setCurrency}
-                canShowUsd={canShowUsd}
-                primaryPrice={primaryPrice}
-                secondaryPrice={secondaryPrice}
-                selectedSizeLabel={selectedSize.label}
-                quantity={quantity}
-                unitPriceUsd={unitPriceUsd}
-                unitPricePkr={unitPricePkr}
-                formatPkr={formatPkr}
-              />
+              <div className={`shrink-0 ${isUrdu ? "text-left" : "text-right"}`}>
+                {/* <div className="text-[11px] font-semibold uppercase tracking-wide text-amber-500"> */}
+                <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-black text-[11px] px-6 py-1.5 rounded-full text-sm font-bold uppercase shadow-md border border-amber-300/50">
+                  {isUrdu ? "خصوصی قیمت" : "Sale price"}
+                </div>
+                <div className="text-sm text-red-500 line-through">
+                  {formatPkr(selectedSize.originalPrice * quantity)}
+                </div>
+                <ProductPrice
+                  variant="featured"
+                  isUrdu={isUrdu}
+                  currency={currency}
+                  setCurrency={setCurrency}
+                  canShowUsd={canShowUsd}
+                  primaryPrice={primaryPrice}
+                  secondaryPrice={secondaryPrice}
+                  selectedSizeLabel={selectedSize.label}
+                  quantity={quantity}
+                  unitPriceUsd={unitPriceUsd}
+                  unitPricePkr={unitPricePkr}
+                  formatPkr={formatPkr}
+                />
+              </div>
             </div>
 
             <ProductSizeSelector
               variant="featured"
               isUrdu={isUrdu}
-              sizes={sizes}
+              sizes={[...sizes]}
               selectedSizeLabel={selectedSize.label}
-              onSelect={setSelectedSize}
+              onSelect={(size) => {
+                const next = sizes.find((s) => s.label === size.label);
+                if (next) setSelectedSize({ ...next });
+              }}
               formatPkr={formatPkr}
               formatUsd={formatUsd}
               currency={currency}
