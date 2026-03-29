@@ -183,12 +183,12 @@ export default async function Home() {
         })}
         speed={36}
       />
+      <ProductShowcase />
       <TrustBadges />
       <BenefitsGrid />
       <MountainToBottleJourney />
       <FeaturedProduct />
       <CertificationBlock />
-      <ProductShowcase />
       <ScienceSection />
       <KnowledgePreview />
       <LuxuryImageCarousel />

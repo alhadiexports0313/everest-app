@@ -12,6 +12,8 @@ type ProductPriceBaseProps = {
   unitPriceUsd: string | null;
   unitPricePkr: number;
   formatPkr: (value: number) => string;
+  originalPrice?: number;
+  showSaleBadge?: boolean;
 };
 
 type ProductsPriceProps = ProductPriceBaseProps & {
@@ -58,12 +60,30 @@ export const ProductPrice = (props: ProductsPriceProps | FeaturedPriceProps) => 
 
   if (props.variant === "products") {
     return (
-      <div className="mt-5">
+      <div className="mt-5 relative">
+        {/* Sale Badge */}
+        {props.showSaleBadge && props.originalPrice && (
+          <div className="absolute -top-8 right-0">
+            <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-black px-3 py-1.5 rounded-full text-sm font-bold shadow-md border border-amber-300/50">
+              25% OFF
+            </div>
+          </div>
+        )}
+        
         <div className="text-sm text-stone-500">{props.isUrdu ? "قیمت" : "Price"}</div>
         {renderPriceToggle("mt-3")}
-        <div className="text-3xl font-display font-bold text-charcoal-900">
-          {props.primaryPrice}
+        
+        <div className="flex items-center gap-3">
+          <div className="text-3xl font-display font-bold text-charcoal-900">
+            {props.primaryPrice}
+          </div>
+          {props.originalPrice && (
+            <div className="text-lg text-stone-400 line-through">
+              {props.formatPkr(props.originalPrice * props.quantity)}
+            </div>
+          )}
         </div>
+        
         {props.secondaryPrice ? (
           <div className="text-xs text-stone-500 mt-1">{props.secondaryPrice}</div>
         ) : null}
