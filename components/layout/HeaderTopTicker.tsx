@@ -67,8 +67,12 @@ export default function HeaderTopTicker() {
   const items = isUrdu ? urduItems : tickerItems;
 
   return (
-    <div className="bg-gradient-to-r from-stone-50 to-stone-100 border-b border-stone-200/80 overflow-hidden">
-      <div className="relative">
+    <div className="bg-gradient-to-r from-stone-50 to-stone-100 border-b border-stone-200/80 overflow-hidden"
+    
+    >
+      <div className="relative"
+      
+      >
         <motion.div
           className="flex"
           animate={{
@@ -78,18 +82,22 @@ export default function HeaderTopTicker() {
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: 30,
+              duration: 20,
               ease: "linear"
+
             }
           }}
         >
-          <div className="flex whitespace-nowrap py-2.5 px-4">
+          <div className="flex whitespace-nowrap py-2.5 px-4"
+          
+          >
             {[...items, ...items].map((item, index) => (
               <div
                 key={index}
                 className={`flex items-center mx-8 text-sm font-semibold text-stone-700 ${
                   isUrdu ? "font-urdu" : ""
                 }`}
+                
               >
                 {/* <span className="text-stone-900 mr-3">{item.text}</span> */}
                 <span className="text-yellow-600 mr-3">{item.text}</span>
