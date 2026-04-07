@@ -61,12 +61,12 @@ export default function ContactPage() {
                     {isUrdu ? "واٹس ایپ" : "WhatsApp"}
                   </h3>
                   <a
-                    href="https://wa.me/923454490326"
+                    href="https://wa.me/923255203088"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-stone-700 hover:text-primary-700 transition-colors"
                   >
-                    0345 449 0326
+                    +92 325 5203088
                   </a>
                 </div>
               </div>
@@ -77,7 +77,9 @@ export default function ContactPage() {
               </div>
               <div className={`flex flex-wrap gap-3 ${isUrdu ? "justify-end" : ""}`}>
                 <a
-                  href="#"
+                  href="https://www.instagram.com/everestorganicshilajet?igsh=MTNucTZhc3l1dDVnNw=="
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm text-stone-700 hover:border-primary-300 transition-colors"
                   aria-label="Instagram"
                 >
@@ -85,7 +87,9 @@ export default function ContactPage() {
                   Instagram
                 </a>
                 <a
-                  href="#"
+                  href="https://www.facebook.com/share/1Gji7HZ7PH/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm text-stone-700 hover:border-primary-300 transition-colors"
                   aria-label="Facebook"
                 >
@@ -93,7 +97,9 @@ export default function ContactPage() {
                   Facebook
                 </a>
                 <a
-                  href="#"
+                  href="https://www.tiktok.com/@everest.organic.s?_r=1&_t=ZS-957dAZdAaFY"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm text-stone-700 hover:border-primary-300 transition-colors"
                   aria-label="TikTok"
                 >
