@@ -33,7 +33,9 @@ import { formatFullPhone } from "@/lib/utils/phoneFormat";
 
 const sizes = [
   { label: "10g", price: 1500, originalPrice: 2000 },
+  { label: "15g", price: 2250, originalPrice: 3000 },
   { label: "20g", price: 3000, originalPrice: 4000 },
+  { label: "30g", price: 4500, originalPrice: 6000 },
   { label: "50g", price: 6000, originalPrice: 8000 },
 ] as const;
 

@@ -106,10 +106,10 @@ export default async function Footer() {
               <li className="flex items-start space-x-2">
                 <Mail className="w-5 h-5 flex-shrink-0 mt-0.5" />
                 <a
-                  href="mailto:everestorganicshilajet@gmail.com"
+                  href="mailto:everestorganicshilajit@gmail.com"
                   className="hover:text-white transition-colors duration-300"
                 >
-                  {t("footer.email")}
+                  { "everestorganicshilajit@gmail.com"/*{t("footer.email")}*/}
                 </a>
               </li>
               <li className="flex items-start space-x-2">
@@ -120,7 +120,19 @@ export default async function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {isUrdu ? "۰۳۲۵ ۵۲۰۳۰۸۸" : "0325 5203088"}
+                  {isUrdu ? "۰۳۲۵ ۵۲۰۳۰۸۸" : "+92 325 5203088"}
+                </a>
+              </li>
+
+              <li className="flex items-start space-x-2">
+                <MessageCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <a
+                  href="https://wa.me/923135203088"
+                  className="hover:text-white transition-colors duration-300"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {isUrdu ? "۰۳١۳ ۵۲۰۳۰۸۸" : "+92 313 5203088"}
                 </a>
               </li>
             </ul>
